@@ -1,0 +1,46 @@
+package br.com.conectacampus.controller;
+
+import java.io.IOException;
+
+import br.com.conectacampus.model.OpcaoEnquete;
+import br.com.conectacampus.model.Usuario;
+import br.com.conectacampus.model.Voto;
+import br.com.conectacampus.service.VotoService;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+@WebServlet("/votos")
+public class VotoServlet extends HttpServlet {
+
+    private static final long serialVersionUID = 1L;
+
+    private VotoService votoService;
+
+    @Override
+    public void init() throws ServletException {
+        votoService = new VotoService();
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request,
+            HttpServletResponse response)
+            throws ServletException, IOException {
+
+        Usuario usuario = new Usuario();
+        usuario.setIdUsuario(Integer.parseInt(request.getParameter("idUsuario")));
+
+        OpcaoEnquete opcao = new OpcaoEnquete();
+        opcao.setIdOpcao(Integer.parseInt(request.getParameter("idOpcao")));
+
+        Voto voto = new Voto();
+        voto.setUsuario(usuario);
+        voto.setOpcaoEnquete(opcao);
+
+        votoService.votar(voto);
+
+        response.sendRedirect(request.getContextPath() + "/enquetes?acao=listar");
+    }
+}
