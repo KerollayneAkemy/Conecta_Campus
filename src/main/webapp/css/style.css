@@ -106,6 +106,7 @@ a:hover {
     text-decoration: none;
     border-radius: var(--radius);
     font-weight: 700;
+    white-space: nowrap;
 }
 
 .sidebar a:hover {
@@ -480,6 +481,10 @@ textarea:focus-visible {
     .hero-panel {
         align-items: flex-start;
         flex-direction: column;
+    }
+
+    #sidebarToggle {
+        display: none;
     }
 }
 
