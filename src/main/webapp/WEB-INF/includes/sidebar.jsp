@@ -18,6 +18,16 @@
             </a>
         </li>
         <li>
+            <a class="<%= "cargos".equals(paginaAtiva) ? "active" : "" %>" href="${pageContext.request.contextPath}/cargos" title="Cargos">
+                <i class="bi bi-briefcase-fill" aria-hidden="true"></i> <span class="link-text">Cargos</span>
+            </a>
+        </li>
+        <li>
+            <a class="<%= "membros".equals(paginaAtiva) ? "active" : "" %>" href="${pageContext.request.contextPath}/membros" title="Membros">
+                <i class="bi bi-person-badge-fill" aria-hidden="true"></i> <span class="link-text">Membros</span>
+            </a>
+        </li>
+        <li>
             <a class="<%= "comunicados".equals(paginaAtiva) ? "active" : "" %>" href="${pageContext.request.contextPath}/comunicados" title="Comunicados">
                 <i class="bi bi-megaphone-fill" aria-hidden="true"></i> <span class="link-text">Comunicados</span>
             </a>
@@ -42,5 +52,10 @@
                 <i class="bi bi-bar-chart-fill" aria-hidden="true"></i> <span class="link-text">Dashboard</span>
             </a>
         </li>
+        <li>
+		    <a class="<%= "feedbackview".equals(paginaAtiva) ? "active" : "" %>" href="${pageContext.request.contextPath}/feedbackview" title="Visualizar Feedbacks">
+		        <i class="bi bi-eye-fill" aria-hidden="true"></i> <span class="link-text">Ver Feedbacks</span>
+		    </a>
+		</li>
     </ul>
 </aside>

@@ -16,7 +16,7 @@
     #sidebarMenu {
         width: 272px;
         transition: width 0.25s ease, padding 0.25s ease;
-        overflow: hidden;
+        overflow-x: hidden; /* AJUSTE: era "overflow: hidden", quebrava o overflow-y:auto do sidebar no style.css */
         flex-shrink: 0;
     }
     #appShell.sidebar-collapsed #sidebarMenu { width: 76px !important; }
@@ -42,6 +42,13 @@
         cursor: pointer;
     }
     #sidebarToggle:hover { background: #e8f7f1; border-color: #dbe5df; }
+
+    /* NOVO: faz a navbar ficar fixa no topo ao rolar a página */
+    .navbar {
+        position: sticky;
+        top: 0;
+        z-index: 1030;
+    }
 </style>
 </head>
 <body>
