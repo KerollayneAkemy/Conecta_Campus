@@ -18,6 +18,11 @@
             </a>
         </li>
         <li>
+		    <a class="<%= "membros-vitrine".equals(paginaAtiva) ? "active" : "" %>" href="${pageContext.request.contextPath}/membros-vitrine" title="Membros">
+		        <i class="bi bi-people-fill" aria-hidden="true"></i> <span class="link-text">Conheça os Membros</span>
+		    </a>
+		</li>
+        <li>
             <a class="<%= "cargos".equals(paginaAtiva) ? "active" : "" %>" href="${pageContext.request.contextPath}/cargos" title="Cargos">
                 <i class="bi bi-briefcase-fill" aria-hidden="true"></i> <span class="link-text">Cargos</span>
             </a>
