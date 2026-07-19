@@ -10,91 +10,40 @@ public class ComunicadoService {
     private ComunicadoDAO comunicadoDAO;
 
     public ComunicadoService() {
-        comunicadoDAO = new ComunicadoDAO();
+        this.comunicadoDAO = new ComunicadoDAO();
     }
 
-    // ==========================
-    // CADASTRAR
-    // ==========================
-
     public boolean cadastrar(Comunicado comunicado) {
-
-        if (comunicado == null)
-            return false;
-
-        if (comunicado.getTitulo() == null || comunicado.getTitulo().isBlank())
-            return false;
-
-        if (comunicado.getMensagem() == null || comunicado.getMensagem().isBlank())
-            return false;
-
-        if (comunicado.getUsuario() == null)
-            return false;
-
-        if (comunicado.getCategoria() == null)
-            return false;
-
+        if (comunicado == null) return false;
+        if (comunicado.getTitulo() == null || comunicado.getTitulo().isBlank()) return false;
+        if (comunicado.getMensagem() == null || comunicado.getMensagem().isBlank()) return false;
         return comunicadoDAO.inserir(comunicado);
     }
 
-    // ==========================
-    // ATUALIZAR
-    // ==========================
-
     public boolean atualizar(Comunicado comunicado) {
-
-        if (comunicado == null)
-            return false;
-
-        if (comunicado.getIdComunicado() <= 0)
-            return false;
-
+        if (comunicado == null || comunicado.getIdComunicado() <= 0) return false;
         return comunicadoDAO.atualizar(comunicado);
     }
 
-    // ==========================
-    // EXCLUIR
-    // ==========================
-
     public boolean excluir(int idComunicado) {
-
-        if (idComunicado <= 0)
-            return false;
-
+        if (idComunicado <= 0) return false;
         return comunicadoDAO.excluir(idComunicado);
     }
 
-    // ==========================
-    // BUSCAR POR ID
-    // ==========================
+    public boolean incrementarVisualizacao(int idComunicado) {
+        return comunicadoDAO.incrementarVisualizacao(idComunicado);
+    }
 
     public Comunicado buscarPorId(int idComunicado) {
-
-        if (idComunicado <= 0)
-            return null;
-
         return comunicadoDAO.buscarPorId(idComunicado);
     }
 
-    // ==========================
-    // LISTAR
-    // ==========================
-
     public List<Comunicado> listar() {
-
         return comunicadoDAO.listar();
     }
 
-    // ==========================
-    // REGISTRAR VISUALIZAÇÃO
-    // ==========================
-
-    public void registrarVisualizacao(int idComunicado) {
-
-        if (idComunicado > 0) {
-            comunicadoDAO.incrementarVisualizacao(idComunicado);
-        }
-
+    public List<Comunicado> listarAtivos() {
+        return comunicadoDAO.listarAtivos();
     }
 
 }

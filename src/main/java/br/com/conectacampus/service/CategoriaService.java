@@ -7,26 +7,18 @@ import br.com.conectacampus.model.Categoria;
 
 public class CategoriaService {
 
-    private CategoriaDAO dao = new CategoriaDAO();
+    private CategoriaDAO categoriaDAO;
 
-    public boolean cadastrar(Categoria categoria) {
-        return dao.inserir(categoria);
-    }
-
-    public boolean atualizar(Categoria categoria) {
-        return dao.atualizar(categoria);
-    }
-
-    public boolean excluir(int id) {
-        return dao.excluir(id);
-    }
-
-    public Categoria buscarPorId(int id) {
-        return dao.buscarPorId(id);
+    public CategoriaService() {
+        this.categoriaDAO = new CategoriaDAO();
     }
 
     public List<Categoria> listar() {
-        return dao.listar();
+        return categoriaDAO.listar();
+    }
+
+    public Categoria buscarPorId(int id) {
+        return categoriaDAO.buscarPorId(id);
     }
 
 }
