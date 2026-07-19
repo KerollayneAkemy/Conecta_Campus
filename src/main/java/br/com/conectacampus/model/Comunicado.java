@@ -7,34 +7,15 @@ public class Comunicado {
     private int idComunicado;
     private String titulo;
     private String mensagem;
-    private String prioridade;
-    private String status;
+    private String prioridade; // BAIXA, MEDIA, ALTA
+    private String status;     // ATIVO, INATIVO
     private int visualizacoes;
     private LocalDateTime dataPublicacao;
     private LocalDateTime dataAtualizacao;
-
     private Usuario usuario;
-    private Categoria categoria;
+    private int idCategoria;
 
     public Comunicado() {
-    }
-
-    public Comunicado(int idComunicado, String titulo, String mensagem,
-            String prioridade, String status, int visualizacoes,
-            LocalDateTime dataPublicacao,
-            LocalDateTime dataAtualizacao,
-            Usuario usuario, Categoria categoria) {
-
-        this.idComunicado = idComunicado;
-        this.titulo = titulo;
-        this.mensagem = mensagem;
-        this.prioridade = prioridade;
-        this.status = status;
-        this.visualizacoes = visualizacoes;
-        this.dataPublicacao = dataPublicacao;
-        this.dataAtualizacao = dataAtualizacao;
-        this.usuario = usuario;
-        this.categoria = categoria;
     }
 
     public int getIdComunicado() {
@@ -109,17 +90,11 @@ public class Comunicado {
         this.usuario = usuario;
     }
 
-    public Categoria getCategoria() {
-        return categoria;
+    public int getIdCategoria() {
+        return idCategoria;
     }
 
-    public void setCategoria(Categoria categoria) {
-        this.categoria = categoria;
+    public void setIdCategoria(int idCategoria) {
+        this.idCategoria = idCategoria;
     }
-
-    @Override
-    public String toString() {
-        return "Comunicado [idComunicado=" + idComunicado + ", titulo=" + titulo + "]";
-    }
-
 }

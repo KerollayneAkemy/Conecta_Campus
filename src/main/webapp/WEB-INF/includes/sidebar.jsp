@@ -28,10 +28,10 @@
             </a>
         </li>
         <li>
-            <a class="<%= "comunicados".equals(paginaAtiva) ? "active" : "" %>" href="${pageContext.request.contextPath}/comunicados" title="Comunicados">
-                <i class="bi bi-megaphone-fill" aria-hidden="true"></i> <span class="link-text">Comunicados</span>
-            </a>
-        </li>
+		    <a class="<%= "comunicados".equals(paginaAtiva) ? "active" : "" %>" href="${pageContext.request.contextPath}/comunicados" title="Comunicados">
+		        <i class="bi bi-megaphone-fill" aria-hidden="true"></i> <span class="link-text">Comunicados</span>
+		    </a>
+		</li>
         <li>
             <a class="<%= "forum".equals(paginaAtiva) ? "active" : "" %>" href="${pageContext.request.contextPath}/forum" title="Fórum">
                 <i class="bi bi-chat-left-text-fill" aria-hidden="true"></i> <span class="link-text">Fórum</span>
