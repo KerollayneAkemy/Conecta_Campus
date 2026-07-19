@@ -73,7 +73,8 @@
 
         <a href="${pageContext.request.contextPath}/feedbackview?acao=excluir&id=<%=feedback.getIdFeedback()%>"
            class="btn btn-outline-danger w-100 mt-3"
-           onclick="return confirm('Deseja realmente excluir este feedback?');">
+           data-confirm="true"
+           data-confirm-message="Deseja realmente excluir este feedback?">
             <i class="bi bi-trash" aria-hidden="true"></i> Excluir feedback
         </a>
     </div>

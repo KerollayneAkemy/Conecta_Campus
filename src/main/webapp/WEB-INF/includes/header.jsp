@@ -16,7 +16,7 @@
     #sidebarMenu {
         width: 272px;
         transition: width 0.25s ease, padding 0.25s ease;
-        overflow-x: hidden; /* AJUSTE: era "overflow: hidden", quebrava o overflow-y:auto do sidebar no style.css */
+        overflow-x: hidden;
         flex-shrink: 0;
     }
     #appShell.sidebar-collapsed #sidebarMenu { width: 76px !important; }
@@ -43,7 +43,6 @@
     }
     #sidebarToggle:hover { background: #e8f7f1; border-color: #dbe5df; }
 
-    /* NOVO: faz a navbar ficar fixa no topo ao rolar a página */
     .navbar {
         position: sticky;
         top: 0;
@@ -58,3 +57,5 @@
 <div class="app-shell" id="appShell">
 <%@ include file="sidebar.jsp" %>
 <main class="content" id="conteudo">
+<%@ include file="alerta.jsp" %>
+<%@ include file="confirmModal.jsp" %>

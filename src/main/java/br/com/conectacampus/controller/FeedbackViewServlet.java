@@ -55,8 +55,13 @@ public class FeedbackViewServlet extends HttpServlet {
                     .forward(request, response);
             break;
         case "excluir":
-            feedbackViewService.excluir(
+            boolean excluiu = feedbackViewService.excluir(
                     Integer.parseInt(request.getParameter("id")));
+            if (excluiu) {
+                request.getSession().setAttribute("msgSucesso", "Feedback excluído com sucesso.");
+            } else {
+                request.getSession().setAttribute("msgErro", "Não foi possível excluir o feedback.");
+            }
             response.sendRedirect(request.getContextPath()
                     + "/feedbackview?acao=listar");
             break;

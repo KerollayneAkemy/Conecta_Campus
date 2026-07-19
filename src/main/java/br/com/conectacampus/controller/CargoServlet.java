@@ -44,8 +44,14 @@ public class CargoServlet extends HttpServlet {
                     .forward(request, response);
             break;
         case "excluir":
-            cargoService.excluir(
+            boolean excluiu = cargoService.excluir(
                     Integer.parseInt(request.getParameter("id")));
+            if (excluiu) {
+                request.getSession().setAttribute("msgSucesso", "Cargo excluído com sucesso.");
+            } else {
+                request.getSession().setAttribute("msgErro",
+                        "Não foi possível excluir o cargo. Verifique se ele não está vinculado a algum membro.");
+            }
             response.sendRedirect(request.getContextPath()
                     + "/cargos?acao=listar");
             break;
@@ -65,12 +71,21 @@ public class CargoServlet extends HttpServlet {
         cargo.setNome(request.getParameter("nome"));
         cargo.setDescricao(request.getParameter("descricao"));
 
+        boolean sucesso;
         if ("atualizar".equals(acao)) {
             cargo.setIdCargo(
                     Integer.parseInt(request.getParameter("idCargo")));
-            cargoService.atualizar(cargo);
+            sucesso = cargoService.atualizar(cargo);
         } else {
-            cargoService.cadastrar(cargo);
+            sucesso = cargoService.cadastrar(cargo);
+        }
+
+        if (sucesso) {
+            request.getSession().setAttribute("msgSucesso",
+                    "atualizar".equals(acao) ? "Cargo atualizado com sucesso." : "Cargo cadastrado com sucesso.");
+        } else {
+            request.getSession().setAttribute("msgErro",
+                    "Não foi possível salvar o cargo. Verifique os dados informados.");
         }
 
         response.sendRedirect(request.getContextPath()

@@ -61,7 +61,7 @@
                     <td>
                         <div class="action-row">
                             <a class="btn btn-sm btn-outline-primary" aria-label="Editar cargo <%=c.getNome()%>" href="${pageContext.request.contextPath}/cargos?acao=editar&id=<%=c.getIdCargo()%>"><i class="bi bi-pencil" aria-hidden="true"></i></a>
-                            <a class="btn btn-sm btn-outline-danger" aria-label="Excluir cargo <%=c.getNome()%>" href="${pageContext.request.contextPath}/cargos?acao=excluir&id=<%=c.getIdCargo()%>" onclick="return confirm('Deseja realmente excluir o cargo <%=c.getNome()%>?');"><i class="bi bi-trash" aria-hidden="true"></i></a>
+                            <a class="btn btn-sm btn-outline-danger" aria-label="Excluir cargo <%=c.getNome()%>" href="${pageContext.request.contextPath}/cargos?acao=excluir&id=<%=c.getIdCargo()%>" data-confirm="true" data-confirm-message="Deseja realmente excluir o cargo <%=c.getNome()%>?"><i class="bi bi-trash" aria-hidden="true"></i></a>
                         </div>
                     </td>
                 </tr>

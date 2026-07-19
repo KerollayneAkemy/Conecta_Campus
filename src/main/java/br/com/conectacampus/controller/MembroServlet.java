@@ -56,8 +56,13 @@ public class MembroServlet extends HttpServlet {
                     .forward(request, response);
             break;
         case "excluir":
-            membroService.excluir(
+            boolean excluiu = membroService.excluir(
                     Integer.parseInt(request.getParameter("id")));
+            if (excluiu) {
+                request.getSession().setAttribute("msgSucesso", "Membro excluído com sucesso.");
+            } else {
+                request.getSession().setAttribute("msgErro", "Não foi possível excluir o membro.");
+            }
             response.sendRedirect(request.getContextPath()
                     + "/membros?acao=listar");
             break;
@@ -85,12 +90,21 @@ public class MembroServlet extends HttpServlet {
             membro.setCargo(cargo);
         }
 
+        boolean sucesso;
         if ("atualizar".equals(acao)) {
             membro.setIdMembro(
                     Integer.parseInt(request.getParameter("idMembro")));
-            membroService.atualizar(membro);
+            sucesso = membroService.atualizar(membro);
         } else {
-            membroService.cadastrar(membro);
+            sucesso = membroService.cadastrar(membro);
+        }
+
+        if (sucesso) {
+            request.getSession().setAttribute("msgSucesso",
+                    "atualizar".equals(acao) ? "Membro atualizado com sucesso." : "Membro cadastrado com sucesso.");
+        } else {
+            request.getSession().setAttribute("msgErro",
+                    "Não foi possível salvar o membro. Verifique os dados informados.");
         }
 
         response.sendRedirect(request.getContextPath()

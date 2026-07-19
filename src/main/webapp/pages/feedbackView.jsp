@@ -133,7 +133,7 @@
                     <td>
                         <div class="action-row">
                             <a class="btn btn-sm btn-outline-primary" aria-label="Ver feedback <%=f.getIdFeedback()%>" href="${pageContext.request.contextPath}/feedbackview?acao=visualizar&id=<%=f.getIdFeedback()%>"><i class="bi bi-eye" aria-hidden="true"></i></a>
-                            <a class="btn btn-sm btn-outline-danger" aria-label="Excluir feedback <%=f.getIdFeedback()%>" href="${pageContext.request.contextPath}/feedbackview?acao=excluir&id=<%=f.getIdFeedback()%>" onclick="return confirm('Deseja realmente excluir este feedback?');"><i class="bi bi-trash" aria-hidden="true"></i></a>
+                            <a class="btn btn-sm btn-outline-danger" aria-label="Excluir feedback <%=f.getIdFeedback()%>" href="${pageContext.request.contextPath}/feedbackview?acao=excluir&id=<%=f.getIdFeedback()%>" data-confirm="true" data-confirm-message="Deseja realmente excluir este feedback?"><i class="bi bi-trash" aria-hidden="true"></i></a>
                         </div>
                     </td>
                 </tr>

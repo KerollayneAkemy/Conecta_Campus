@@ -65,7 +65,7 @@
                     <td>
                         <div class="action-row">
                             <a class="btn btn-sm btn-outline-primary" aria-label="Editar membro <%=m.getNome()%>" href="${pageContext.request.contextPath}/membros?acao=editar&id=<%=m.getIdMembro()%>"><i class="bi bi-pencil" aria-hidden="true"></i></a>
-                            <a class="btn btn-sm btn-outline-danger" aria-label="Excluir membro <%=m.getNome()%>" href="${pageContext.request.contextPath}/membros?acao=excluir&id=<%=m.getIdMembro()%>" onclick="return confirm('Deseja realmente excluir o membro <%=m.getNome()%>?');"><i class="bi bi-trash" aria-hidden="true"></i></a>
+                            <a class="btn btn-sm btn-outline-danger" aria-label="Excluir membro <%=m.getNome()%>" href="${pageContext.request.contextPath}/membros?acao=excluir&id=<%=m.getIdMembro()%>" data-confirm="true" data-confirm-message="Deseja realmente excluir o membro <%=m.getNome()%>?"><i class="bi bi-trash" aria-hidden="true"></i></a>
                         </div>
                     </td>
                 </tr>
