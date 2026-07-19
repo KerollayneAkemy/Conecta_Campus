@@ -8,6 +8,8 @@ import br.com.conectacampus.model.Enquete;
 import br.com.conectacampus.model.OpcaoEnquete;
 import br.com.conectacampus.service.EnqueteService;
 import br.com.conectacampus.service.OpcaoEnqueteService;
+import br.com.conectacampus.model.Usuario;
+import br.com.conectacampus.util.Autorizacao;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -34,6 +36,7 @@ public class EnqueteServlet extends HttpServlet {
             throws ServletException, IOException {
 
         String acao = request.getParameter("acao");
+        Usuario usuarioLogado = (Usuario) request.getSession().getAttribute("usuarioLogado");
 
         if (acao == null)
             acao = "listar";
@@ -53,12 +56,22 @@ public class EnqueteServlet extends HttpServlet {
 
         case "novo":
 
+            if (!Autorizacao.podePublicarInstitucional(usuarioLogado)) {
+                response.sendError(HttpServletResponse.SC_FORBIDDEN);
+                return;
+            }
+
             request.getRequestDispatcher("/pages/novaEnquete.jsp")
                     .forward(request, response);
 
             break;
 
         case "editar":
+
+            if (!Autorizacao.podePublicarInstitucional(usuarioLogado)) {
+                response.sendError(HttpServletResponse.SC_FORBIDDEN);
+                return;
+            }
 
             request.setAttribute(
                     "enquete",
@@ -71,6 +84,11 @@ public class EnqueteServlet extends HttpServlet {
             break;
 
         case "excluir":
+
+            if (!Autorizacao.podePublicarInstitucional(usuarioLogado)) {
+                response.sendError(HttpServletResponse.SC_FORBIDDEN);
+                return;
+            }
 
             enqueteService.excluir(
                     Integer.parseInt(request.getParameter("id")));
@@ -95,13 +113,19 @@ public class EnqueteServlet extends HttpServlet {
             throws ServletException, IOException {
 
         String acao = request.getParameter("acao");
+        Usuario usuarioLogado = (Usuario) request.getSession().getAttribute("usuarioLogado");
+        if (!Autorizacao.podePublicarInstitucional(usuarioLogado)) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN);
+            return;
+        }
 
         Enquete enquete = new Enquete();
 
         enquete.setTitulo(request.getParameter("titulo"));
         enquete.setDescricao(request.getParameter("descricao"));
         enquete.setDataInicio(LocalDate.now());
-        enquete.setStatus("ATIVA");
+        enquete.setStatus("ABERTA");
+        enquete.setUsuario(usuarioLogado);
 
         if (enqueteService.cadastrar(enquete)) {
             String opcoes = request.getParameter("opcoes");

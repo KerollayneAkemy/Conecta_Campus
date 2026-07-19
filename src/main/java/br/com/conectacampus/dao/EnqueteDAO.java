@@ -17,8 +17,8 @@ public class EnqueteDAO {
 
         String sql = """
                 INSERT INTO enquetes
-                (titulo,descricao,data_inicio,data_fim,status)
-                VALUES (?,?,?,?,?)
+                (titulo,descricao,data_inicio,data_fim,status,id_usuario,id_forum)
+                VALUES (?,?,?,?,?,?,?)
                 """;
 
         try (Connection conn = ConexaoFactory.getConnection();
@@ -34,6 +34,12 @@ public class EnqueteDAO {
                 stmt.setNull(4, Types.DATE);
 
             stmt.setString(5, enquete.getStatus());
+            stmt.setInt(6, enquete.getUsuario().getIdUsuario());
+            if (enquete.getIdForum() > 0) {
+                stmt.setInt(7, enquete.getIdForum());
+            } else {
+                stmt.setNull(7, Types.INTEGER);
+            }
 
             int linhas = stmt.executeUpdate();
 
@@ -151,6 +157,7 @@ public class EnqueteDAO {
                     enquete.setDataFim(rs.getDate("data_fim").toLocalDate());
 
                 enquete.setStatus(rs.getString("status"));
+                enquete.setIdForum(rs.getInt("id_forum"));
                 enquete.setOpcoes(opcaoEnqueteDAO.listarPorEnquete(enquete.getIdEnquete()));
 
             }
@@ -195,6 +202,7 @@ public class EnqueteDAO {
                     enquete.setDataFim(rs.getDate("data_fim").toLocalDate());
 
                 enquete.setStatus(rs.getString("status"));
+                enquete.setIdForum(rs.getInt("id_forum"));
                 enquete.setOpcoes(opcaoEnqueteDAO.listarPorEnquete(enquete.getIdEnquete()));
 
                 lista.add(enquete);
@@ -209,6 +217,20 @@ public class EnqueteDAO {
 
         return lista;
 
+    }
+
+    public Enquete buscarPorForum(int idForum) {
+        String sql = "SELECT id_enquete FROM enquetes WHERE id_forum=? ORDER BY id_enquete DESC LIMIT 1";
+        try (Connection conn = ConexaoFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, idForum);
+            try (ResultSet rs = stmt.executeQuery()) {
+                return rs.next() ? buscarPorId(rs.getInt(1)) : null;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 }

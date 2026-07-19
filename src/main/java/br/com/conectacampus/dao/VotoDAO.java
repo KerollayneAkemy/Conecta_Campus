@@ -20,8 +20,10 @@ public class VotoDAO {
 
         String sql = """
                 INSERT INTO votos
-                (id_usuario,id_opcao)
-                VALUES (?,?)
+                (id_usuario,id_opcao,id_enquete)
+                SELECT ?, o.id_opcao, o.id_enquete
+                FROM opcoes_enquete o
+                WHERE o.id_opcao=?
                 """;
 
         try (Connection conn = ConexaoFactory.getConnection();

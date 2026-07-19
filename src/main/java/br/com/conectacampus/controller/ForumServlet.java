@@ -7,6 +7,12 @@ import br.com.conectacampus.model.Forum;
 import br.com.conectacampus.model.Usuario;
 import br.com.conectacampus.service.ForumService;
 import br.com.conectacampus.service.RespostaForumService;
+import br.com.conectacampus.service.EnqueteService;
+import br.com.conectacampus.service.OpcaoEnqueteService;
+import br.com.conectacampus.model.Enquete;
+import br.com.conectacampus.model.OpcaoEnquete;
+import br.com.conectacampus.util.Autorizacao;
+import java.time.LocalDate;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -20,11 +26,15 @@ public class ForumServlet extends HttpServlet {
 
     private ForumService forumService;
     private RespostaForumService respostaForumService;
+    private EnqueteService enqueteService;
+    private OpcaoEnqueteService opcaoEnqueteService;
 
     @Override
     public void init() throws ServletException {
         forumService = new ForumService();
         respostaForumService = new RespostaForumService();
+        enqueteService = new EnqueteService();
+        opcaoEnqueteService = new OpcaoEnqueteService();
     }
 
     @Override
@@ -67,6 +77,7 @@ public class ForumServlet extends HttpServlet {
                     forumService.buscarPorId(idVisualizar));
             request.setAttribute("respostas",
                     respostaForumService.listarPorForum(idVisualizar));
+            request.setAttribute("enquete", enqueteService.buscarPorForum(idVisualizar));
 
             request.getRequestDispatcher("/pages/topico.jsp")
                     .forward(request, response);
@@ -124,7 +135,33 @@ public class ForumServlet extends HttpServlet {
 
         if ("salvar".equals(acao)) {
 
-            forumService.cadastrar(forum);
+            if (forumService.cadastrar(forum)) {
+                String pergunta = request.getParameter("perguntaEnquete");
+                Usuario usuarioLogado = (Usuario) request.getSession().getAttribute("usuarioLogado");
+                if (pergunta != null && !pergunta.isBlank()
+                        && Autorizacao.podePublicarInstitucional(usuarioLogado)) {
+                    Enquete enquete = new Enquete();
+                    enquete.setTitulo(pergunta.trim());
+                    enquete.setDescricao(request.getParameter("descricaoEnquete"));
+                    enquete.setDataInicio(LocalDate.now());
+                    enquete.setStatus("ABERTA");
+                    enquete.setUsuario(usuarioLogado);
+                    enquete.setIdForum(forum.getIdForum());
+                    if (enqueteService.cadastrar(enquete)) {
+                        String opcoes = request.getParameter("opcoesEnquete");
+                        if (opcoes != null) {
+                            for (String linha : opcoes.split("\\R")) {
+                                if (!linha.isBlank()) {
+                                    OpcaoEnquete opcao = new OpcaoEnquete();
+                                    opcao.setDescricao(linha.trim());
+                                    opcao.setEnquete(enquete);
+                                    opcaoEnqueteService.cadastrar(opcao);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
 
         } else if ("atualizar".equals(acao)) {
 

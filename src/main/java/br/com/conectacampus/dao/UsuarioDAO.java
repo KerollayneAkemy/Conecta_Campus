@@ -20,8 +20,8 @@ public class UsuarioDAO {
 
         String sql = """
                 INSERT INTO usuarios
-                (nome,email,senha,curso,ativo,id_perfil)
-                VALUES (?,?,?,?,?,?)
+                (nome,email,senha,curso,setor_institucional,email_institucional,ativo,id_perfil)
+                VALUES (?,?,?,?,?,?,?,?)
                 """;
 
         try (Connection conn = ConexaoFactory.getConnection();
@@ -31,8 +31,10 @@ public class UsuarioDAO {
             stmt.setString(2, usuario.getEmail());
             stmt.setString(3, usuario.getSenha());
             stmt.setString(4, usuario.getCurso());
-            stmt.setBoolean(5, usuario.isAtivo());
-            stmt.setInt(6, usuario.getPerfil().getIdPerfil());
+            stmt.setString(5, usuario.getSetorInstitucional());
+            stmt.setString(6, usuario.getEmailInstitucional());
+            stmt.setBoolean(7, usuario.isAtivo());
+            stmt.setInt(8, usuario.getPerfil().getIdPerfil());
 
             return stmt.executeUpdate() > 0;
 
@@ -57,6 +59,8 @@ public class UsuarioDAO {
                     email=?,
                     senha=?,
                     curso=?,
+                    setor_institucional=?,
+                    email_institucional=?,
                     ativo=?,
                     id_perfil=?
                 WHERE id_usuario=?
@@ -69,9 +73,11 @@ public class UsuarioDAO {
             stmt.setString(2, usuario.getEmail());
             stmt.setString(3, usuario.getSenha());
             stmt.setString(4, usuario.getCurso());
-            stmt.setBoolean(5, usuario.isAtivo());
-            stmt.setInt(6, usuario.getPerfil().getIdPerfil());
-            stmt.setInt(7, usuario.getIdUsuario());
+            stmt.setString(5, usuario.getSetorInstitucional());
+            stmt.setString(6, usuario.getEmailInstitucional());
+            stmt.setBoolean(7, usuario.isAtivo());
+            stmt.setInt(8, usuario.getPerfil().getIdPerfil());
+            stmt.setInt(9, usuario.getIdUsuario());
 
             return stmt.executeUpdate() > 0;
 
@@ -143,6 +149,8 @@ public class UsuarioDAO {
                     usuario.setEmail(rs.getString("email"));
                     usuario.setSenha(rs.getString("senha"));
                     usuario.setCurso(rs.getString("curso"));
+                    usuario.setSetorInstitucional(rs.getString("setor_institucional"));
+                    usuario.setEmailInstitucional(rs.getString("email_institucional"));
                     usuario.setAtivo(rs.getBoolean("ativo"));
 
                     Timestamp ultimo = rs.getTimestamp("ultimo_acesso");
@@ -206,6 +214,8 @@ public class UsuarioDAO {
                     usuario.setEmail(rs.getString("email"));
                     usuario.setSenha(rs.getString("senha"));
                     usuario.setCurso(rs.getString("curso"));
+                    usuario.setSetorInstitucional(rs.getString("setor_institucional"));
+                    usuario.setEmailInstitucional(rs.getString("email_institucional"));
                     usuario.setAtivo(rs.getBoolean("ativo"));
 
                     Timestamp ultimo = rs.getTimestamp("ultimo_acesso");
@@ -266,6 +276,8 @@ public class UsuarioDAO {
              usuario.setEmail(rs.getString("email"));
              usuario.setSenha(rs.getString("senha"));
              usuario.setCurso(rs.getString("curso"));
+             usuario.setSetorInstitucional(rs.getString("setor_institucional"));
+             usuario.setEmailInstitucional(rs.getString("email_institucional"));
              usuario.setAtivo(rs.getBoolean("ativo"));
 
              Timestamp ultimo = rs.getTimestamp("ultimo_acesso");

@@ -1,4 +1,10 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="br.com.conectacampus.model.Usuario"%>
+<%@ page import="br.com.conectacampus.util.Autorizacao"%>
+<%
+Usuario usuarioLogado = (Usuario) session.getAttribute("usuarioLogado");
+boolean cadastroAdministrativo = Autorizacao.ehAdministrador(usuarioLogado);
+%>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -54,7 +60,20 @@
                         <input type="password" class="form-control" id="senha" name="senha" autocomplete="new-password" minlength="6" required>
                     </div>
 
-                    <input type="hidden" name="idPerfil" value="1">
+                    <% if (cadastroAdministrativo) { %>
+                    <div class="mb-3">
+                        <label class="form-label" for="perfil">Perfil</label>
+                        <select class="form-select" id="perfil" name="perfil" required>
+                            <option value="ALUNO">Aluno</option>
+                            <option value="EQUIPE_INSTITUCIONAL">Equipe institucional</option>
+                            <option value="ADMINISTRADOR">Administrador</option>
+                        </select>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-md-6"><label class="form-label" for="setorInstitucional">Setor da equipe</label><select class="form-select" id="setorInstitucional" name="setorInstitucional"><option value="">Não se aplica</option><option value="REITORIA">Reitoria</option><option value="GREMIO">Grêmio</option></select></div>
+                        <div class="col-md-6"><label class="form-label" for="emailInstitucional">E-mail institucional</label><input type="email" class="form-control" id="emailInstitucional" name="emailInstitucional" placeholder="nome@instituicao.edu.br"></div>
+                    </div>
+                    <% } %>
 
                     <button type="submit" class="btn btn-primary w-100">
                         <i class="bi bi-check-circle" aria-hidden="true"></i> Cadastrar

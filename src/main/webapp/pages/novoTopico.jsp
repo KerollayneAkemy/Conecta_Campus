@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="br.com.conectacampus.model.Usuario"%>
+<%@ page import="br.com.conectacampus.util.Autorizacao"%>
 <%
 Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
 if (usuario == null) {
@@ -46,6 +47,24 @@ if (usuario == null) {
                     <label class="form-label" for="titulo">Título</label>
                     <input class="form-control" id="titulo" type="text" name="titulo" maxlength="120" placeholder="Ex.: Dúvida sobre calendário de provas" required>
                 </div>
+
+                <% if (Autorizacao.podePublicarInstitucional(usuario)) { %>
+                <details class="mb-3">
+                    <summary class="fw-semibold">Adicionar enquete a este tópico (opcional)</summary>
+                    <div class="mt-3">
+                        <label class="form-label" for="perguntaEnquete">Pergunta</label>
+                        <input class="form-control" id="perguntaEnquete" name="perguntaEnquete" maxlength="200" placeholder="Ex.: Qual data é melhor para o evento?">
+                    </div>
+                    <div class="mt-3">
+                        <label class="form-label" for="descricaoEnquete">Contexto</label>
+                        <input class="form-control" id="descricaoEnquete" name="descricaoEnquete" maxlength="300">
+                    </div>
+                    <div class="mt-3">
+                        <label class="form-label" for="opcoesEnquete">Opções (uma por linha)</label>
+                        <textarea class="form-control" id="opcoesEnquete" name="opcoesEnquete" rows="4" placeholder="Opção 1&#10;Opção 2"></textarea>
+                    </div>
+                </details>
+                <% } %>
 
                 <div class="mb-3">
                     <label class="form-label" for="mensagem">Mensagem</label>

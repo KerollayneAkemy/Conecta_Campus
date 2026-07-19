@@ -21,4 +21,13 @@ public class PerfilService {
         return dao.listar();
     }
 
+    public Perfil buscarPorNome(String nome) {
+        for (Perfil perfil : listar()) {
+            if (perfil.getNome().equalsIgnoreCase(nome)) {
+                return perfil;
+            }
+        }
+        return null;
+    }
+
 }

@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.util.List"%>
 <%@ page import="br.com.conectacampus.model.Usuario"%>
+<%@ page import="br.com.conectacampus.util.Autorizacao"%>
 <%
 Usuario usuarioLogado = (Usuario) session.getAttribute("usuarioLogado");
 if (usuarioLogado == null) {
@@ -33,13 +34,15 @@ if (usuarios == null) {
 <main class="content">
     <div class="page-header">
         <div>
-            <p class="eyebrow">Administração</p>
+            <p class="eyebrow"><%=Autorizacao.ehAdministrador(usuarioLogado) ? "Administração" : "Representação estudantil"%></p>
             <h1 class="page-title"><i class="bi bi-people-fill" aria-hidden="true"></i> Usuários</h1>
-            <p class="page-subtitle">Gerencie as pessoas cadastradas na plataforma.</p>
+            <p class="page-subtitle"><%=Autorizacao.ehAdministrador(usuarioLogado) ? "Gerencie as pessoas cadastradas na plataforma." : "Conheça os representantes da Reitoria e do Grêmio."%></p>
         </div>
+        <% if (Autorizacao.ehAdministrador(usuarioLogado)) { %>
         <a href="${pageContext.request.contextPath}/cadastro" class="btn btn-primary">
             <i class="bi bi-person-plus-fill" aria-hidden="true"></i> Novo usuário
         </a>
+        <% } %>
     </div>
 
     <div class="row g-3 mb-4">
@@ -69,8 +72,11 @@ if (usuarios == null) {
                         <th>E-mail</th>
                         <th>Curso</th>
                         <th>Perfil</th>
+                        <th>Setor</th>
                         <th>Status</th>
+                        <% if (Autorizacao.ehAdministrador(usuarioLogado)) { %>
                         <th>Ações</th>
+                        <% } %>
                     </tr>
                 </thead>
                 <tbody>
@@ -83,13 +89,16 @@ if (usuarios == null) {
                         <td><%=u.getEmail()%></td>
                         <td><%=u.getCurso()%></td>
                         <td><%=u.getPerfil() != null ? u.getPerfil().getNome() : "-"%></td>
+                        <td><%=u.getSetorInstitucional() != null ? u.getSetorInstitucional() : "-"%></td>
                         <td><span class="badge <%=u.isAtivo() ? "bg-success" : "bg-danger"%>"><%=u.isAtivo() ? "Ativo" : "Inativo"%></span></td>
+                        <% if (Autorizacao.ehAdministrador(usuarioLogado)) { %>
                         <td>
                             <div class="action-row">
                                 <a class="btn btn-sm btn-outline-primary" aria-label="Editar usuário <%=u.getNome()%>" href="${pageContext.request.contextPath}/usuarios?acao=editar&id=<%=u.getIdUsuario()%>"><i class="bi bi-pencil" aria-hidden="true"></i></a>
                                 <a class="btn btn-sm btn-outline-danger" aria-label="Excluir usuário <%=u.getNome()%>" href="${pageContext.request.contextPath}/usuarios?acao=excluir&id=<%=u.getIdUsuario()%>"><i class="bi bi-trash" aria-hidden="true"></i></a>
                             </div>
                         </td>
+                        <% } %>
                     </tr>
                     <%
                         }

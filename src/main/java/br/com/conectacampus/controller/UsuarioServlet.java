@@ -6,6 +6,8 @@ import java.util.List;
 import br.com.conectacampus.model.Perfil;
 import br.com.conectacampus.model.Usuario;
 import br.com.conectacampus.service.UsuarioService;
+import br.com.conectacampus.service.PerfilService;
+import br.com.conectacampus.util.Autorizacao;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -18,10 +20,12 @@ public class UsuarioServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     private UsuarioService usuarioService;
+    private PerfilService perfilService;
 
     @Override
     public void init() throws ServletException {
         usuarioService = new UsuarioService();
+        perfilService = new PerfilService();
     }
 
     @Override
@@ -30,6 +34,7 @@ public class UsuarioServlet extends HttpServlet {
             throws ServletException, IOException {
 
         String acao = request.getParameter("acao");
+        Usuario usuarioLogado = (Usuario) request.getSession().getAttribute("usuarioLogado");
 
         if (acao == null) {
             acao = "listar";
@@ -41,6 +46,9 @@ public class UsuarioServlet extends HttpServlet {
 
             List<Usuario> lista = usuarioService.listar();
 
+            if (!Autorizacao.ehAdministrador(usuarioLogado)) {
+                lista.removeIf(usuario -> !Autorizacao.ehRepresentante(usuario));
+            }
             request.setAttribute("listaUsuarios", lista);
 
             request.getRequestDispatcher("/pages/usuarios.jsp")
@@ -49,6 +57,11 @@ public class UsuarioServlet extends HttpServlet {
             break;
 
         case "editar":
+
+            if (!Autorizacao.ehAdministrador(usuarioLogado)) {
+                response.sendError(HttpServletResponse.SC_FORBIDDEN);
+                return;
+            }
 
             int id = Integer.parseInt(request.getParameter("id"));
 
@@ -62,6 +75,11 @@ public class UsuarioServlet extends HttpServlet {
             break;
 
         case "excluir":
+
+            if (!Autorizacao.ehAdministrador(usuarioLogado)) {
+                response.sendError(HttpServletResponse.SC_FORBIDDEN);
+                return;
+            }
 
             usuarioService.excluir(
                     Integer.parseInt(request.getParameter("id")));
@@ -87,6 +105,12 @@ public class UsuarioServlet extends HttpServlet {
 
         String acao = request.getParameter("acao");
 
+        Usuario usuarioLogado = (Usuario) request.getSession().getAttribute("usuarioLogado");
+        if (!Autorizacao.ehAdministrador(usuarioLogado)) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN);
+            return;
+        }
+
         if ("atualizar".equals(acao)) {
 
             Usuario usuario = new Usuario();
@@ -98,11 +122,15 @@ public class UsuarioServlet extends HttpServlet {
             usuario.setEmail(request.getParameter("email"));
             usuario.setSenha(request.getParameter("senha"));
             usuario.setCurso(request.getParameter("curso"));
+            usuario.setSetorInstitucional(request.getParameter("setorInstitucional"));
+            usuario.setEmailInstitucional(request.getParameter("emailInstitucional"));
             usuario.setAtivo(Boolean.parseBoolean(request.getParameter("ativo")));
 
-            Perfil perfil = new Perfil();
-            perfil.setIdPerfil(
-                    Integer.parseInt(request.getParameter("idPerfil")));
+            Perfil perfil = perfilService.buscarPorNome(request.getParameter("perfil"));
+            if (perfil == null) {
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Perfil inválido.");
+                return;
+            }
 
             usuario.setPerfil(perfil);
 

@@ -9,6 +9,8 @@ public class Usuario {
     private String email;
     private String senha;
     private String curso;
+    private String setorInstitucional;
+    private String emailInstitucional;
     private boolean ativo;
     private LocalDateTime ultimoAcesso;
     private LocalDateTime dataCadastro;
@@ -72,6 +74,22 @@ public class Usuario {
 
     public void setCurso(String curso) {
         this.curso = curso;
+    }
+
+    public String getSetorInstitucional() {
+        return setorInstitucional;
+    }
+
+    public void setSetorInstitucional(String setorInstitucional) {
+        this.setorInstitucional = setorInstitucional;
+    }
+
+    public String getEmailInstitucional() {
+        return emailInstitucional;
+    }
+
+    public void setEmailInstitucional(String emailInstitucional) {
+        this.emailInstitucional = emailInstitucional;
     }
 
     public boolean isAtivo() {

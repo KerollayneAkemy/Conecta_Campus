@@ -30,6 +30,9 @@ public class EnqueteService {
         if (enquete.getDataInicio() == null)
             return false;
 
+        if (enquete.getUsuario() == null || enquete.getUsuario().getIdUsuario() <= 0)
+            return false;
+
         return enqueteDAO.inserir(enquete);
 
     }
@@ -84,6 +87,10 @@ public class EnqueteService {
 
         return enqueteDAO.listar();
 
+    }
+
+    public Enquete buscarPorForum(int idForum) {
+        return idForum > 0 ? enqueteDAO.buscarPorForum(idForum) : null;
     }
 
 }

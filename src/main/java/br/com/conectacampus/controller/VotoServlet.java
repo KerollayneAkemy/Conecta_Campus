@@ -29,8 +29,11 @@ public class VotoServlet extends HttpServlet {
             HttpServletResponse response)
             throws ServletException, IOException {
 
-        Usuario usuario = new Usuario();
-        usuario.setIdUsuario(Integer.parseInt(request.getParameter("idUsuario")));
+        Usuario usuario = (Usuario) request.getSession().getAttribute("usuarioLogado");
+        if (usuario == null) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
 
         OpcaoEnquete opcao = new OpcaoEnquete();
         opcao.setIdOpcao(Integer.parseInt(request.getParameter("idOpcao")));

@@ -60,11 +60,19 @@ if (usuarioLogado == null) {
                         <input class="form-control" id="curso" name="curso" value="<%=usuario.getCurso() != null ? usuario.getCurso() : ""%>" required>
                     </div>
                     <div class="col-md-3">
+                        <label class="form-label" for="setorInstitucional">Setor</label>
+                        <select class="form-select" id="setorInstitucional" name="setorInstitucional"><option value="">Não se aplica</option><option value="REITORIA" <%= "REITORIA".equals(usuario.getSetorInstitucional()) ? "selected" : ""%>>Reitoria</option><option value="GREMIO" <%= "GREMIO".equals(usuario.getSetorInstitucional()) ? "selected" : ""%>>Grêmio</option></select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label" for="emailInstitucional">E-mail institucional</label>
+                        <input class="form-control" id="emailInstitucional" type="email" name="emailInstitucional" value="<%=usuario.getEmailInstitucional() != null ? usuario.getEmailInstitucional() : ""%>">
+                    </div>
+                    <div class="col-md-3">
                         <label class="form-label" for="idPerfil">Perfil</label>
-                        <select class="form-select" id="idPerfil" name="idPerfil">
-                            <option value="1">Aluno</option>
-                            <option value="2">Professor</option>
-                            <option value="3">Coordenação</option>
+                        <select class="form-select" id="idPerfil" name="perfil">
+                            <option value="ALUNO" <%=usuario.getPerfil() != null && "ALUNO".equals(usuario.getPerfil().getNome()) ? "selected" : ""%>>Aluno</option>
+                            <option value="EQUIPE_INSTITUCIONAL" <%=usuario.getPerfil() != null && "EQUIPE_INSTITUCIONAL".equals(usuario.getPerfil().getNome()) ? "selected" : ""%>>Equipe institucional</option>
+                            <option value="ADMINISTRADOR" <%=usuario.getPerfil() != null && "ADMINISTRADOR".equals(usuario.getPerfil().getNome()) ? "selected" : ""%>>Administrador</option>
                         </select>
                     </div>
                     <div class="col-md-3">

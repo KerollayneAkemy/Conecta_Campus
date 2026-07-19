@@ -5,6 +5,8 @@ import org.mindrot.jbcrypt.BCrypt;
 import br.com.conectacampus.model.Perfil;
 import br.com.conectacampus.model.Usuario;
 import br.com.conectacampus.service.UsuarioService;
+import br.com.conectacampus.service.PerfilService;
+import br.com.conectacampus.util.Autorizacao;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -17,10 +19,12 @@ public class CadastroServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     private UsuarioService usuarioService;
+    private PerfilService perfilService;
 
     @Override
     public void init() throws ServletException {
         usuarioService = new UsuarioService();
+        perfilService = new PerfilService();
     }
 
     @Override
@@ -51,12 +55,23 @@ public class CadastroServlet extends HttpServlet {
                     BCrypt.gensalt(12)
             );
 
-            usuario.setSenha(senhaCriptografada);            usuario.setCurso(request.getParameter("curso"));
+            usuario.setSenha(senhaCriptografada);
+            usuario.setCurso(request.getParameter("curso"));
             usuario.setAtivo(true);
 
             // Todo usuário cadastrado será ALUNO
-            Perfil perfil = new Perfil();
-            perfil.setIdPerfil(1);
+            Usuario administrador = (Usuario) request.getSession().getAttribute("usuarioLogado");
+            boolean cadastroAdministrativo = Autorizacao.ehAdministrador(administrador);
+            String nomePerfil = cadastroAdministrativo
+                    ? request.getParameter("perfil") : Autorizacao.ALUNO;
+            Perfil perfil = perfilService.buscarPorNome(nomePerfil);
+            if (perfil == null) {
+                throw new ServletException("Perfil de acesso inválido.");
+            }
+            if (Autorizacao.EQUIPE.equalsIgnoreCase(nomePerfil)) {
+                usuario.setSetorInstitucional(request.getParameter("setorInstitucional"));
+                usuario.setEmailInstitucional(request.getParameter("emailInstitucional"));
+            }
 
             usuario.setPerfil(perfil);
 

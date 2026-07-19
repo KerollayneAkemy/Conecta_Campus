@@ -7,6 +7,7 @@ import br.com.conectacampus.model.Categoria;
 import br.com.conectacampus.model.Comunicado;
 import br.com.conectacampus.model.Usuario;
 import br.com.conectacampus.service.ComunicadoService;
+import br.com.conectacampus.util.Autorizacao;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -31,6 +32,7 @@ public class ComunicadoServlet extends HttpServlet {
             throws ServletException, IOException {
 
         String acao = request.getParameter("acao");
+        Usuario usuarioLogado = (Usuario) request.getSession().getAttribute("usuarioLogado");
 
         if (acao == null)
             acao = "listar";
@@ -50,12 +52,22 @@ public class ComunicadoServlet extends HttpServlet {
 
         case "novo":
 
+            if (!Autorizacao.podePublicarInstitucional(usuarioLogado)) {
+                response.sendError(HttpServletResponse.SC_FORBIDDEN);
+                return;
+            }
+
             request.getRequestDispatcher("/pages/novoComunicado.jsp")
                     .forward(request, response);
 
             break;
 
         case "editar":
+
+            if (!Autorizacao.podePublicarInstitucional(usuarioLogado)) {
+                response.sendError(HttpServletResponse.SC_FORBIDDEN);
+                return;
+            }
 
             int id = Integer.parseInt(request.getParameter("id"));
 
@@ -68,6 +80,11 @@ public class ComunicadoServlet extends HttpServlet {
             break;
 
         case "excluir":
+
+            if (!Autorizacao.podePublicarInstitucional(usuarioLogado)) {
+                response.sendError(HttpServletResponse.SC_FORBIDDEN);
+                return;
+            }
 
             comunicadoService.excluir(
                     Integer.parseInt(request.getParameter("id")));
@@ -92,6 +109,11 @@ public class ComunicadoServlet extends HttpServlet {
             throws ServletException, IOException {
 
         String acao = request.getParameter("acao");
+        Usuario usuarioLogado = (Usuario) request.getSession().getAttribute("usuarioLogado");
+        if (!Autorizacao.podePublicarInstitucional(usuarioLogado)) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN);
+            return;
+        }
 
         Comunicado comunicado = new Comunicado();
 
@@ -104,7 +126,7 @@ public class ComunicadoServlet extends HttpServlet {
         comunicado.setCategoria(categoria);
 
         Usuario usuario = new Usuario();
-        usuario.setIdUsuario(Integer.parseInt(request.getParameter("idUsuario")));
+        usuario.setIdUsuario(usuarioLogado.getIdUsuario());
         comunicado.setUsuario(usuario);
 
         if ("salvar".equals(acao)) {

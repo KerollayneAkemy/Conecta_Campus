@@ -6,6 +6,7 @@ import java.util.List;
 import br.com.conectacampus.model.Feedback;
 import br.com.conectacampus.model.Usuario;
 import br.com.conectacampus.service.FeedbackService;
+import br.com.conectacampus.util.Autorizacao;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -29,7 +30,9 @@ public class FeedbackServlet extends HttpServlet {
             HttpServletResponse response)
             throws ServletException, IOException {
 
-        List<Feedback> lista = feedbackService.listar();
+        Usuario usuarioLogado = (Usuario) request.getSession().getAttribute("usuarioLogado");
+        List<Feedback> lista = Autorizacao.podePublicarInstitucional(usuarioLogado)
+                ? feedbackService.listar() : java.util.Collections.emptyList();
 
         request.setAttribute("listaFeedback", lista);
 
@@ -54,11 +57,7 @@ public class FeedbackServlet extends HttpServlet {
 
         if (!feedback.isAnonimo()) {
 
-            Usuario usuario = new Usuario();
-
-            usuario.setIdUsuario(
-                    Integer.parseInt(request.getParameter("idUsuario")));
-
+            Usuario usuario = (Usuario) request.getSession().getAttribute("usuarioLogado");
             feedback.setUsuario(usuario);
 
         }

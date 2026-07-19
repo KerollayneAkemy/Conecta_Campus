@@ -12,6 +12,8 @@ public class Enquete {
     private LocalDate dataInicio;
     private LocalDate dataFim;
     private String status;
+    private int idForum;
+    private Usuario usuario;
     private List<OpcaoEnquete> opcoes = new ArrayList<>();
 
     public Enquete() {
@@ -70,6 +72,22 @@ public class Enquete {
 
     public String getStatus() {
         return status;
+    }
+
+    public int getIdForum() {
+        return idForum;
+    }
+
+    public void setIdForum(int idForum) {
+        this.idForum = idForum;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     public void setStatus(String status) {

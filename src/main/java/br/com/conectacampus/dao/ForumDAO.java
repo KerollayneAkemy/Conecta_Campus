@@ -22,13 +22,21 @@ public class ForumDAO {
                 """;
 
         try(Connection conn=ConexaoFactory.getConnection();
-            PreparedStatement stmt=conn.prepareStatement(sql)){
+            PreparedStatement stmt=conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)){
 
             stmt.setString(1,forum.getTitulo());
             stmt.setString(2,forum.getMensagem());
             stmt.setInt(3,forum.getUsuario().getIdUsuario());
 
-            return stmt.executeUpdate()>0;
+            boolean inseriu = stmt.executeUpdate() > 0;
+            if (inseriu) {
+                try (ResultSet chaves = stmt.getGeneratedKeys()) {
+                    if (chaves.next()) {
+                        forum.setIdForum(chaves.getInt(1));
+                    }
+                }
+            }
+            return inseriu;
 
         }catch(SQLException e){
 

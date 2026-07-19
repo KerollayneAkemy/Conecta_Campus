@@ -3,6 +3,8 @@
 <%@ page import="br.com.conectacampus.model.Forum"%>
 <%@ page import="br.com.conectacampus.model.RespostaForum"%>
 <%@ page import="br.com.conectacampus.model.Usuario"%>
+<%@ page import="br.com.conectacampus.model.Enquete"%>
+<%@ page import="br.com.conectacampus.model.OpcaoEnquete"%>
 <%
 Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
 if (usuario == null) {
@@ -11,6 +13,7 @@ if (usuario == null) {
 }
 Forum topico = (Forum) request.getAttribute("forum");
 List<RespostaForum> respostas = (List<RespostaForum>) request.getAttribute("respostas");
+Enquete enquete = (Enquete) request.getAttribute("enquete");
 boolean editando = "editar".equals(request.getParameter("acao"));
 %>
 <!DOCTYPE html>
@@ -65,6 +68,25 @@ boolean editando = "editar".equals(request.getParameter("acao"));
         </div>
     </div>
     <% } else { %>
+    <% if (enquete != null) { %>
+    <section class="card mb-4" aria-labelledby="titulo-enquete">
+        <div class="card-header" id="titulo-enquete"><i class="bi bi-bar-chart-steps" aria-hidden="true"></i> Enquete do tópico</div>
+        <div class="card-body">
+            <h2 class="h5"><%=enquete.getTitulo()%></h2>
+            <% if (enquete.getDescricao() != null && !enquete.getDescricao().isBlank()) { %><p class="text-muted"><%=enquete.getDescricao()%></p><% } %>
+            <form action="${pageContext.request.contextPath}/votos" method="post">
+                <% for (OpcaoEnquete opcao : enquete.getOpcoes()) { %>
+                <div class="form-check mb-2">
+                    <input class="form-check-input" type="radio" name="idOpcao" id="opcao-<%=opcao.getIdOpcao()%>" value="<%=opcao.getIdOpcao()%>" required>
+                    <label class="form-check-label" for="opcao-<%=opcao.getIdOpcao()%>"><%=opcao.getDescricao()%></label>
+                </div>
+                <% } %>
+                <button class="btn btn-primary mt-2" type="submit">Confirmar voto</button>
+            </form>
+        </div>
+    </section>
+    <% } %>
+
     <div class="card mb-4">
         <div class="card-body">
             <p class="eyebrow">Discussão</p>
