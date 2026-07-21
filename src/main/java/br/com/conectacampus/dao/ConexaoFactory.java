@@ -6,14 +6,14 @@ import java.sql.DriverManager;
 public class ConexaoFactory {
 
     private static final String URL =
-            "jdbc:mysql://localhost:3306/conectacampus"
+            "jdbc:mysql://localhost/database"
             + "?useSSL=false"
             + "&allowPublicKeyRetrieval=true"
             + "&serverTimezone=America/Sao_Paulo"
             + "&characterEncoding=UTF-8";
 
-    private static final String USUARIO = "root";
-    private static final String SENHA = "root";
+    private static final String USUARIO = "usuario";
+    private static final String SENHA = "senha";
 
     public static Connection getConnection() {
 
