@@ -13,9 +13,7 @@ public class ForumService {
         forumDAO = new ForumDAO();
     }
 
-    // ==========================
     // CADASTRAR
-    // ==========================
 
     public boolean cadastrar(Forum forum) {
 
@@ -35,9 +33,7 @@ public class ForumService {
 
     }
 
-    // ==========================
     // ATUALIZAR
-    // ==========================
 
     public boolean atualizar(Forum forum) {
 
@@ -51,9 +47,7 @@ public class ForumService {
 
     }
 
-    // ==========================
     // EXCLUIR
-    // ==========================
 
     public boolean excluir(int idForum) {
 
@@ -64,9 +58,7 @@ public class ForumService {
 
     }
 
-    // ==========================
     // BUSCAR POR ID
-    // ==========================
 
     public Forum buscarPorId(int idForum) {
 
@@ -77,9 +69,7 @@ public class ForumService {
 
     }
 
-    // ==========================
     // LISTAR
-    // ==========================
 
     public List<Forum> listar() {
 
@@ -87,9 +77,7 @@ public class ForumService {
 
     }
 
-    // ==========================
     // REGISTRAR VISUALIZAÇÃO
-    // ==========================
 
     public void registrarVisualizacao(int idForum) {
 

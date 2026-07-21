@@ -26,14 +26,10 @@ public class ConexaoFactory {
                     USUARIO,
                     SENHA);
 
-            System.out.println("ConexaoFactory() - 200 OK");
-
             return conexao;
 
         } catch (Exception e) {
 
-            System.out.println("ConexaoFactory() - ERROR");
-            System.out.println(e.getMessage());
             e.printStackTrace();
 
             return null;

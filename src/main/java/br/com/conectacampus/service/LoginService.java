@@ -12,9 +12,7 @@ public class LoginService {
         this.usuarioDAO = new UsuarioDAO();
     }
 
-    // ==========================
     // AUTENTICAR
-    // ==========================
     public Usuario autenticar(String email, String senha) {
 
         if (email == null || email.trim().isEmpty()) {
@@ -25,7 +23,7 @@ public class LoginService {
             return null;
         }
 
-        Usuario usuario = usuarioDAO.buscarPorEmail(email.trim());
+        Usuario usuario = usuarioDAO.buscarPorEmail(email.trim().toLowerCase());
 
         if (usuario == null) {
             return null;

@@ -5,8 +5,8 @@ import java.util.List;
 
 import br.com.conectacampus.model.Perfil;
 import br.com.conectacampus.model.Usuario;
-import br.com.conectacampus.service.UsuarioService;
 import br.com.conectacampus.service.PerfilService;
+import br.com.conectacampus.service.UsuarioService;
 import br.com.conectacampus.util.Autorizacao;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -23,124 +23,153 @@ public class UsuarioServlet extends HttpServlet {
     private PerfilService perfilService;
 
     @Override
-    public void init() throws ServletException {
+    public void init() {
         usuarioService = new UsuarioService();
         perfilService = new PerfilService();
     }
 
     @Override
-    protected void doGet(HttpServletRequest request,
-            HttpServletResponse response)
-            throws ServletException, IOException {
-
-        String acao = request.getParameter("acao");
-        Usuario usuarioLogado = (Usuario) request.getSession().getAttribute("usuarioLogado");
-
-        if (acao == null) {
-            acao = "listar";
-        }
-
-        switch (acao) {
-
-        case "listar":
-
-            List<Usuario> lista = usuarioService.listar();
-
-            if (!Autorizacao.ehAdministrador(usuarioLogado)) {
-                lista.removeIf(usuario -> !Autorizacao.ehRepresentante(usuario));
-            }
-            request.setAttribute("listaUsuarios", lista);
-
-            request.getRequestDispatcher("/pages/usuarios.jsp")
-                    .forward(request, response);
-
-            break;
-
-        case "editar":
-
-            if (!Autorizacao.ehAdministrador(usuarioLogado)) {
-                response.sendError(HttpServletResponse.SC_FORBIDDEN);
-                return;
-            }
-
-            int id = Integer.parseInt(request.getParameter("id"));
-
-            Usuario usuario = usuarioService.buscarPorId(id);
-
-            request.setAttribute("usuario", usuario);
-
-            request.getRequestDispatcher("/pages/editarUsuario.jsp")
-                    .forward(request, response);
-
-            break;
-
-        case "excluir":
-
-            if (!Autorizacao.ehAdministrador(usuarioLogado)) {
-                response.sendError(HttpServletResponse.SC_FORBIDDEN);
-                return;
-            }
-
-            usuarioService.excluir(
-                    Integer.parseInt(request.getParameter("id")));
-
-            response.sendRedirect(request.getContextPath()
-                    + "/usuarios?acao=listar");
-
-            break;
-
-        default:
-
-            response.sendRedirect(request.getContextPath()
-                    + "/usuarios?acao=listar");
-
-        }
-
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request,
-            HttpServletResponse response)
-            throws ServletException, IOException {
-
-        String acao = request.getParameter("acao");
-
-        Usuario usuarioLogado = (Usuario) request.getSession().getAttribute("usuarioLogado");
-        if (!Autorizacao.ehAdministrador(usuarioLogado)) {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+      
+    	if (!ehAdministrador(request)) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN);
+            
             return;
         }
 
-        if ("atualizar".equals(acao)) {
+        String acao = request.getParameter("acao");
+        
+        if (acao == null) acao = "listar";
 
-            Usuario usuario = new Usuario();
-
-            usuario.setIdUsuario(
-                    Integer.parseInt(request.getParameter("id")));
-
-            usuario.setNome(request.getParameter("nome"));
-            usuario.setEmail(request.getParameter("email"));
-            usuario.setSenha(request.getParameter("senha"));
-            usuario.setCurso(request.getParameter("curso"));
-            usuario.setSetorInstitucional(request.getParameter("setorInstitucional"));
-            usuario.setEmailInstitucional(request.getParameter("emailInstitucional"));
-            usuario.setAtivo(Boolean.parseBoolean(request.getParameter("ativo")));
-
-            Perfil perfil = perfilService.buscarPorNome(request.getParameter("perfil"));
-            if (perfil == null) {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Perfil inválido.");
-                return;
-            }
-
-            usuario.setPerfil(perfil);
-
-            usuarioService.atualizar(usuario);
-
+        switch (acao) {
+        
+            case "editar" -> editar(request, response);
+            case "desativar" -> alterarStatus(request, response, false);
+            case "reativar" -> alterarStatus(request, response, true);
+            case "listar" -> listar(request, response);
+            default -> redirecionarParaLista(request, response);
         }
-
-        response.sendRedirect(request.getContextPath()
-                + "/usuarios?acao=listar");
-
     }
 
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        
+    	if (!ehAdministrador(request)) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN);
+           
+            return;
+        }
+
+        if (!"atualizar".equals(request.getParameter("acao"))) {
+            redirecionarParaLista(request, response);
+           
+            return;
+        }
+
+        atualizar(request, response);
+    }
+
+    private void listar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        
+    	List<Usuario> usuarios = usuarioService.listar();
+        request.setAttribute("listaUsuarios", usuarios);
+        request.getRequestDispatcher("/pages/usuarios.jsp").forward(request, response);
+    }
+
+    private void editar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Usuario usuario = buscarUsuarioDaRequisicao(request);
+        
+        if (usuario == null) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            
+            return;
+        }
+
+        request.setAttribute("usuario", usuario);
+        request.getRequestDispatcher("/pages/editarUsuario.jsp").forward(request, response);
+    }
+
+    private void alterarStatus(HttpServletRequest request, HttpServletResponse response, boolean ativo) throws IOException {
+        Usuario usuario = buscarUsuarioDaRequisicao(request);
+        Usuario usuarioLogado = (Usuario) request.getSession().getAttribute("usuarioLogado");
+
+        if (usuario == null) {
+            request.getSession().setAttribute("msgErro", "Usuário não encontrado.");
+            
+        } else if (!ativo && usuario.getIdUsuario() == usuarioLogado.getIdUsuario()) {
+        	request.getSession().setAttribute("msgErro", "Você não pode desativar a própria conta.");
+       
+        } else {
+            
+        	boolean alterou = usuarioService.atualizarAtivo(usuario.getIdUsuario(), ativo);
+            String sucesso = ativo ? "Usuário reativado com sucesso." : "Usuário desativado com sucesso.";
+            String erro = ativo ? "Não foi possível reativar o usuário." : "Não foi possível desativar o usuário.";
+            
+            request.getSession().setAttribute(alterou ? "msgSucesso" : "msgErro", alterou ? sucesso : erro);
+        }
+        
+        redirecionarParaLista(request, response);
+    }
+
+    private void atualizar(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Usuario usuarioAtual = buscarUsuarioDaRequisicao(request);
+       
+        if (usuarioAtual == null) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            
+            return;
+        }
+
+        Perfil perfil = perfilService.buscarPorNome(request.getParameter("perfil"));
+        if (perfil == null) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Perfil inválido.");
+           
+            return;
+        }
+
+        Usuario usuario = montarUsuarioAtualizado(request, usuarioAtual, perfil);
+        boolean atualizou = usuarioService.atualizar(usuario);
+        
+        request.getSession().setAttribute(atualizou ? "msgSucesso" : "msgErro",
+                atualizou ? "Usuário atualizado com sucesso." : "Não foi possível atualizar o usuário.");
+        redirecionarParaLista(request, response);
+    }
+
+    private Usuario montarUsuarioAtualizado(HttpServletRequest request, Usuario usuarioAtual, Perfil perfil) {
+        Usuario usuario = new Usuario();
+        usuario.setIdUsuario(usuarioAtual.getIdUsuario());
+        usuario.setNome(request.getParameter("nome"));
+        usuario.setEmail(request.getParameter("email"));
+        usuario.setCurso(request.getParameter("curso"));
+        usuario.setAtivo(Boolean.parseBoolean(request.getParameter("ativo")));
+        usuario.setPerfil(perfil);
+
+        // Dados administrativos não são alterados nesta tela.
+        usuario.setSenha(usuarioAtual.getSenha());
+        usuario.setSetorInstitucional(usuarioAtual.getSetorInstitucional());
+        usuario.setEmailInstitucional(usuarioAtual.getEmailInstitucional());
+        usuario.setCargo(usuarioAtual.getCargo());
+        
+        return usuario;
+    }
+
+    private Usuario buscarUsuarioDaRequisicao(HttpServletRequest request) {
+        
+    	try {
+            return usuarioService.buscarPorId(Integer.parseInt(request.getParameter("id")));
+       
+    	} catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
+    private boolean ehAdministrador(HttpServletRequest request) {
+        Usuario usuarioLogado = (Usuario) request.getSession().getAttribute("usuarioLogado");
+       
+        return Autorizacao.ehAdministrador(usuarioLogado);
+    }
+
+    private void redirecionarParaLista(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.sendRedirect(request.getContextPath() + "/usuarios?acao=listar");
+    }
 }

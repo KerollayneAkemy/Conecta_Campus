@@ -1,3 +1,4 @@
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%
     request.setAttribute("paginaAtiva", "home");
     request.setAttribute("tituloPagina", "Home - Conecta Campus");
@@ -7,10 +8,10 @@
 <section class="hero-panel">
     <div>
         <p class="eyebrow">Bem-vindo</p>
-        <h1>Olá, ${usuarioLogado.nome}</h1>
-        <p class="mb-0">Acompanhe comunicados, participe de discussões, responda enquetes e envie feedbacks para melhorar a experiência no campus.</p>
+        <h1>OlÃ¡, ${usuarioLogado.nome}</h1>
+        <p class="mb-0">Acompanhe comunicados, participe de discussÃµes e envie feedbacks para melhorar a experiÃªncia no campus.</p>
     </div>
-    <a class="btn btn-light" href="${pageContext.request.contextPath}/dashboard"><i class="bi bi-graph-up-arrow" aria-hidden="true"></i> Ver indicadores</a>
+    <a class="btn btn-light" href="${pageContext.request.contextPath}/dashboard"><i class="bi bi-graph-up-arrow" aria-hidden="true"></i> Ver relatÃ³rio financeiro</a>
 </section>
 
 <div class="row g-4">
@@ -27,17 +28,8 @@
         <a class="card topic-card h-100" href="${pageContext.request.contextPath}/forum">
             <div class="card-body">
                 <span class="metric-icon mb-3"><i class="bi bi-chat-left-text-fill" aria-hidden="true"></i></span>
-                <h3 class="h5">Fórum</h3>
-                <p class="page-subtitle">Espaço para dúvidas, ideias e conversas acadêmicas.</p>
-            </div>
-        </a>
-    </div>
-    <div class="col-md-6 col-xl-3">
-        <a class="card topic-card h-100" href="${pageContext.request.contextPath}/enquetes">
-            <div class="card-body">
-                <span class="metric-icon mb-3"><i class="bi bi-ui-checks-grid" aria-hidden="true"></i></span>
-                <h3 class="h5">Enquetes</h3>
-                <p class="page-subtitle">Votações rápidas para ouvir a comunidade.</p>
+                            <h3 class="h5">FÃ³rum</h3>
+                <p class="page-subtitle">EspaÃ§o para dÃºvidas, ideias e conversas acadÃªmicas.</p>
             </div>
         </a>
     </div>
@@ -46,7 +38,7 @@
             <div class="card-body">
                 <span class="metric-icon mb-3"><i class="bi bi-envelope-heart-fill" aria-hidden="true"></i></span>
                 <h3 class="h5">Feedback</h3>
-                <p class="page-subtitle">Envie sugestões, dúvidas, elogios ou reclamações.</p>
+                <p class="page-subtitle">Envie sugestÃµes, dÃºvidas, elogios ou reclamaÃ§Ãµes.</p>
             </div>
         </a>
     </div>

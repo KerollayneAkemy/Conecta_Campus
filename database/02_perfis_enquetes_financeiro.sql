@@ -10,6 +10,7 @@ ON DUPLICATE KEY UPDATE nome = VALUES(nome);
 ALTER TABLE usuarios
     ADD COLUMN setor_institucional ENUM('REITORIA', 'GREMIO') NULL AFTER curso,
     ADD COLUMN email_institucional VARCHAR(150) NULL AFTER setor_institucional,
+    ADD COLUMN foto_perfil VARCHAR(255) NULL AFTER email_institucional,
     ADD CONSTRAINT uk_usuario_email_institucional UNIQUE (email_institucional);
 
 ALTER TABLE enquetes

@@ -14,6 +14,8 @@ public class Comunicado {
     private LocalDateTime dataAtualizacao;
     private Usuario usuario;
     private int idCategoria;
+    private String nomeCategoria;
+    private String imagem;
 
     public Comunicado() {
     }
@@ -97,4 +99,20 @@ public class Comunicado {
     public void setIdCategoria(int idCategoria) {
         this.idCategoria = idCategoria;
     }
+
+    public String getNomeCategoria() {
+        return nomeCategoria;
+    }
+
+    public void setNomeCategoria(String nomeCategoria) {
+        this.nomeCategoria = nomeCategoria;
+    }
+
+    public String getImagem() { 
+    	return imagem; 
+    	}
+    
+    public void setImagem(String imagem) {
+    	this.imagem = imagem; 
+    	}
 }

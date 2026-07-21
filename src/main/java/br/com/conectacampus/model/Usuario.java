@@ -11,6 +11,8 @@ public class Usuario {
     private String curso;
     private String setorInstitucional;
     private String emailInstitucional;
+    private String fotoPerfil;
+    private Cargo cargo;
     private boolean ativo;
     private LocalDateTime ultimoAcesso;
     private LocalDateTime dataCadastro;
@@ -19,12 +21,7 @@ public class Usuario {
     public Usuario() {
     }
 
-    public Usuario(int idUsuario, String nome, String email, String senha,
-            String curso, boolean ativo,
-            LocalDateTime ultimoAcesso,
-            LocalDateTime dataCadastro,
-            Perfil perfil) {
-
+    public Usuario(int idUsuario, String nome, String email, String senha, String curso, boolean ativo, LocalDateTime ultimoAcesso, LocalDateTime dataCadastro, Perfil perfil) {
         this.idUsuario = idUsuario;
         this.nome = nome;
         this.email = email;
@@ -90,6 +87,22 @@ public class Usuario {
 
     public void setEmailInstitucional(String emailInstitucional) {
         this.emailInstitucional = emailInstitucional;
+    }
+
+    public String getFotoPerfil() {
+        return fotoPerfil;
+    }
+
+    public void setFotoPerfil(String fotoPerfil) {
+        this.fotoPerfil = fotoPerfil;
+    }
+
+    public Cargo getCargo() {
+        return cargo;
+    }
+
+    public void setCargo(Cargo cargo) {
+        this.cargo = cargo;
     }
 
     public boolean isAtivo() {

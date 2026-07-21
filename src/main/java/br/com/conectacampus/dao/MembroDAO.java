@@ -13,9 +13,7 @@ import br.com.conectacampus.model.Membro;
 
 public class MembroDAO {
 
-    // ===========================
     // INSERIR MEMBRO
-    // ===========================
     public boolean inserir(Membro membro) {
 
         String sql = """
@@ -59,9 +57,7 @@ public class MembroDAO {
 
     }
 
-    // ===========================
     // ATUALIZAR
-    // ===========================
     public boolean atualizar(Membro membro) {
 
         String sql = """
@@ -100,9 +96,7 @@ public class MembroDAO {
 
     }
 
-    // ===========================
     // EXCLUIR
-    // ===========================
     public boolean excluir(int id) {
 
         String sql = "DELETE FROM membro WHERE id_membro=?";
@@ -124,9 +118,7 @@ public class MembroDAO {
 
     }
 
-    // ===========================
     // BUSCAR POR ID
-    // ===========================
     public Membro buscarPorId(int id) {
 
         Membro membro = null;
@@ -162,9 +154,7 @@ public class MembroDAO {
 
     }
 
-    // ===========================
     // LISTAR TODOS
-    // ===========================
     public List<Membro> listar() {
 
         List<Membro> lista = new ArrayList<>();
@@ -193,9 +183,7 @@ public class MembroDAO {
 
     }
 
-    // ===========================
     // QUANTIDADE DE MEMBROS
-    // ===========================
     public int quantidadeMembros() {
 
         String sql = "SELECT COUNT(*) FROM membro";
@@ -216,9 +204,7 @@ public class MembroDAO {
 
     }
 
-    // ===========================
     // MAPEAR RESULTSET -> MEMBRO
-    // ===========================
     private Membro mapear(ResultSet rs) throws SQLException {
 
         Membro membro = new Membro();
@@ -229,6 +215,7 @@ public class MembroDAO {
         membro.setTelefone(rs.getString("telefone"));
 
         int idCargo = rs.getInt("id_cargo");
+       
         if (!rs.wasNull()) {
             Cargo cargo = new Cargo();
             cargo.setIdCargo(idCargo);

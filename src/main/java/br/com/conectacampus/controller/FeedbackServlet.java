@@ -26,12 +26,16 @@ public class FeedbackServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request,
-            HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         Usuario usuarioLogado = (Usuario) request.getSession().getAttribute("usuarioLogado");
-        List<Feedback> lista = Autorizacao.podePublicarInstitucional(usuarioLogado)
+       
+        if (!Autorizacao.podeEnviarFeedback(usuarioLogado)) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN);
+            return;
+        }
+        
+        List<Feedback> lista = Autorizacao.ehAdministrador(usuarioLogado)
                 ? feedbackService.listar() : java.util.Collections.emptyList();
 
         request.setAttribute("listaFeedback", lista);
@@ -42,9 +46,14 @@ public class FeedbackServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request,
-            HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        Usuario usuarioLogado = (Usuario) request.getSession().getAttribute("usuarioLogado");
+        
+        if (!Autorizacao.podeEnviarFeedback(usuarioLogado)) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN);
+            return;
+        }
 
         Feedback feedback = new Feedback();
 
@@ -52,20 +61,20 @@ public class FeedbackServlet extends HttpServlet {
         feedback.setTipo(request.getParameter("tipo"));
         feedback.setMensagem(request.getParameter("mensagem"));
 
-        feedback.setAnonimo(
-                Boolean.parseBoolean(request.getParameter("anonimo")));
+        feedback.setAnonimo(Boolean.parseBoolean(request.getParameter("anonimo")));
 
         if (!feedback.isAnonimo()) {
 
-            Usuario usuario = (Usuario) request.getSession().getAttribute("usuarioLogado");
-            feedback.setUsuario(usuario);
+            feedback.setUsuario(usuarioLogado);
 
         }
 
-        feedbackService.cadastrar(feedback);
+        boolean cadastrou = feedbackService.cadastrar(feedback);
+        
+        request.getSession().setAttribute(cadastrou ? "msgSucesso" : "msgErro",
+                cadastrou ? "Feedback enviado com sucesso." : "Não foi possível enviar o feedback.");
 
-        response.sendRedirect(request.getContextPath()
-                + "/feedback");
+        response.sendRedirect(request.getContextPath() + "/feedback");
 
     }
 

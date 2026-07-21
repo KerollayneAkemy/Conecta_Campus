@@ -1,66 +1,70 @@
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="br.com.conectacampus.model.Usuario"%>
+<%@ page import="br.com.conectacampus.util.Autorizacao"%>
 <%
-    String paginaAtiva = (String) request.getAttribute("paginaAtiva");
-    if (paginaAtiva == null) {
-        paginaAtiva = "";
-    }
+Usuario usuarioMenu = (Usuario) session.getAttribute("usuarioLogado");
+boolean adminMenu = Autorizacao.ehAdministrador(usuarioMenu);
+boolean equipeMenu = Autorizacao.ehEquipe(usuarioMenu);
+boolean alunoMenu = Autorizacao.ehAluno(usuarioMenu);
 %>
 <aside class="sidebar" id="sidebarMenu" aria-label="Menu principal">
-    <ul>
-        <li>
-            <a class="<%= "home".equals(paginaAtiva) ? "active" : "" %>" href="${pageContext.request.contextPath}/pages/home.jsp"
-               <%= "home".equals(paginaAtiva) ? "aria-current=\"page\"" : "" %> title="Home">
-                <i class="bi bi-house-door-fill" aria-hidden="true"></i> <span class="link-text">Home</span>
-            </a>
-        </li>
-        <li>
-            <a class="<%= "usuarios".equals(paginaAtiva) ? "active" : "" %>" href="${pageContext.request.contextPath}/usuarios" title="Usu·rios">
-                <i class="bi bi-people-fill" aria-hidden="true"></i> <span class="link-text">Usu·rios</span>
-            </a>
-        </li>
-        <li>
-		    <a class="<%= "membros-vitrine".equals(paginaAtiva) ? "active" : "" %>" href="${pageContext.request.contextPath}/membros-vitrine" title="Membros">
-		        <i class="bi bi-people-fill" aria-hidden="true"></i> <span class="link-text">ConheÁa os Membros</span>
-		    </a>
-		</li>
-        <li>
-            <a class="<%= "cargos".equals(paginaAtiva) ? "active" : "" %>" href="${pageContext.request.contextPath}/cargos" title="Cargos">
-                <i class="bi bi-briefcase-fill" aria-hidden="true"></i> <span class="link-text">Cargos</span>
-            </a>
-        </li>
-        <li>
-            <a class="<%= "membros".equals(paginaAtiva) ? "active" : "" %>" href="${pageContext.request.contextPath}/membros" title="Membros">
-                <i class="bi bi-person-badge-fill" aria-hidden="true"></i> <span class="link-text">Membros</span>
-            </a>
-        </li>
-        <li>
-		    <a class="<%= "comunicados".equals(paginaAtiva) ? "active" : "" %>" href="${pageContext.request.contextPath}/comunicados" title="Comunicados">
-		        <i class="bi bi-megaphone-fill" aria-hidden="true"></i> <span class="link-text">Comunicados</span>
-		    </a>
-		</li>
-        <li>
-            <a class="<%= "forum".equals(paginaAtiva) ? "active" : "" %>" href="${pageContext.request.contextPath}/forum" title="FÛrum">
-                <i class="bi bi-chat-left-text-fill" aria-hidden="true"></i> <span class="link-text">FÛrum</span>
-            </a>
-        </li>
-        <li>
-            <a class="<%= "enquetes".equals(paginaAtiva) ? "active" : "" %>" href="${pageContext.request.contextPath}/enquetes" title="Enquetes">
-                <i class="bi bi-ui-checks-grid" aria-hidden="true"></i> <span class="link-text">Enquetes</span>
-            </a>
-        </li>
-        <li>
-            <a class="<%= "feedback".equals(paginaAtiva) ? "active" : "" %>" href="${pageContext.request.contextPath}/feedback" title="Feedback">
-                <i class="bi bi-envelope-fill" aria-hidden="true"></i> <span class="link-text">Feedback</span>
-            </a>
-        </li>
-        <li>
-            <a class="<%= "dashboard".equals(paginaAtiva) ? "active" : "" %>" href="${pageContext.request.contextPath}/dashboard" title="Dashboard">
-                <i class="bi bi-bar-chart-fill" aria-hidden="true"></i> <span class="link-text">Dashboard</span>
-            </a>
-        </li>
-        <li>
-		    <a class="<%= "feedbackview".equals(paginaAtiva) ? "active" : "" %>" href="${pageContext.request.contextPath}/feedbackview" title="Visualizar Feedbacks">
-		        <i class="bi bi-eye-fill" aria-hidden="true"></i> <span class="link-text">Ver Feedbacks</span>
-		    </a>
-		</li>
-    </ul>
+	<ul>
+		<li><a href="${pageContext.request.contextPath}/pages/home.jsp"><i
+				class="bi bi-house-door-fill"></i> <span class="link-text">Home</span></a></li>
+		<%
+		if (adminMenu) {
+		%>
+		<li><a href="${pageContext.request.contextPath}/usuarios"><i
+				class="bi bi-people-fill"></i> <span class="link-text">Usu√°rios</span></a></li>
+		<li><a href="${pageContext.request.contextPath}/cargos"><i
+				class="bi bi-briefcase-fill"></i> <span class="link-text">Cargos</span></a></li>
+		<li><a href="${pageContext.request.contextPath}/membros"><i
+				class="bi bi-person-badge-fill"></i> <span class="link-text">Membros</span></a></li>
+		<%
+		}
+		%>
+		<%
+		if (adminMenu || equipeMenu) {
+		%>
+		<li><a href="${pageContext.request.contextPath}/categorias"><i
+				class="bi bi-tags-fill"></i> <span class="link-text">Categorias</span></a></li>
+		<%
+		}
+		%>
+		<li><a href="${pageContext.request.contextPath}/membros-vitrine"><i
+				class="bi bi-people-fill"></i> <span class="link-text">Conhe√ßa
+					a equipe</span></a></li>
+		<li><a href="${pageContext.request.contextPath}/comunicados"><i
+				class="bi bi-megaphone-fill"></i> <span class="link-text">Comunicados</span></a></li>
+		<li><a href="${pageContext.request.contextPath}/forum"><i
+				class="bi bi-chat-left-text-fill"></i> <span class="link-text">F√≥rum</span></a></li>
+		<li><a href="${pageContext.request.contextPath}/pesquisas"><i
+				class="bi bi-clipboard2-check-fill"></i> <span class="link-text">Pesquisas</span></a></li>
+		<%
+		if (alunoMenu) {
+		%>
+		<li><a href="${pageContext.request.contextPath}/feedback"><i
+				class="bi bi-envelope-fill"></i> <span class="link-text">Feedback</span></a></li>
+		<%
+		}
+		%>
+		<%
+		if (adminMenu || equipeMenu) {
+		%>
+		<li><a href="${pageContext.request.contextPath}/feedbackview"><i
+				class="bi bi-eye-fill"></i> <span class="link-text">Ver
+					feedbacks</span></a></li>
+		<%
+		}
+		%>
+		<%
+		if (adminMenu || equipeMenu || alunoMenu) {
+		%>
+		<li><a href="${pageContext.request.contextPath}/dashboard"><i
+				class="bi bi-bar-chart-fill"></i> <span class="link-text">Relat√≥rio
+					financeiro</span></a></li>
+		<%
+		}
+		%>
+	</ul>
 </aside>

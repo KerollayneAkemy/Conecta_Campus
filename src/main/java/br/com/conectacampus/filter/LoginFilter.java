@@ -22,10 +22,7 @@ public class LoginFilter extends HttpFilter implements Filter {
     }
 
     @Override
-    public void doFilter(HttpServletRequest request,
-                         HttpServletResponse response,
-                         FilterChain chain)
-            throws IOException, ServletException {
+    public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
 
         String uri = request.getRequestURI();
 
@@ -45,9 +42,7 @@ public class LoginFilter extends HttpFilter implements Filter {
         
         HttpSession session = request.getSession(false);
 
-        boolean logado =
-                session != null &&
-                session.getAttribute("usuarioLogado") != null;
+        boolean logado = session != null && session.getAttribute("usuarioLogado") != null;
 
         if (paginaLivre || logado) {
 

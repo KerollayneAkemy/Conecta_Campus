@@ -10,9 +10,7 @@ public class EnqueteDAO {
 
     private final OpcaoEnqueteDAO opcaoEnqueteDAO = new OpcaoEnqueteDAO();
 
-    // ==========================
-    // INSERIR
-    // ==========================
+   // INSERIR
     public boolean inserir(Enquete enquete) {
 
         String sql = """
@@ -35,8 +33,10 @@ public class EnqueteDAO {
 
             stmt.setString(5, enquete.getStatus());
             stmt.setInt(6, enquete.getUsuario().getIdUsuario());
+            
             if (enquete.getIdForum() > 0) {
                 stmt.setInt(7, enquete.getIdForum());
+            
             } else {
                 stmt.setNull(7, Types.INTEGER);
             }
@@ -49,6 +49,7 @@ public class EnqueteDAO {
                         enquete.setIdEnquete(rs.getInt(1));
                     }
                 }
+                
                 return true;
             }
 
@@ -62,9 +63,7 @@ public class EnqueteDAO {
 
     }
 
-    // ==========================
     // ATUALIZAR
-    // ==========================
     public boolean atualizar(Enquete enquete) {
 
         String sql = """
@@ -86,6 +85,7 @@ public class EnqueteDAO {
 
             if(enquete.getDataFim()!=null)
                 stmt.setDate(4, Date.valueOf(enquete.getDataFim()));
+           
             else
                 stmt.setNull(4, Types.DATE);
 
@@ -104,9 +104,7 @@ public class EnqueteDAO {
 
     }
 
-    // ==========================
     // EXCLUIR
-    // ==========================
     public boolean excluir(int id) {
 
         String sql = "DELETE FROM enquetes WHERE id_enquete=?";
@@ -128,9 +126,7 @@ public class EnqueteDAO {
 
     }
 
-    // ==========================
     // BUSCAR POR ID
-    // ==========================
     public Enquete buscarPorId(int id){
 
         Enquete enquete=null;
@@ -172,9 +168,7 @@ public class EnqueteDAO {
 
     }
 
-    // ==========================
     // LISTAR
-    // ==========================
     public List<Enquete> listar(){
 
         List<Enquete> lista=new ArrayList<>();
@@ -221,14 +215,19 @@ public class EnqueteDAO {
 
     public Enquete buscarPorForum(int idForum) {
         String sql = "SELECT id_enquete FROM enquetes WHERE id_forum=? ORDER BY id_enquete DESC LIMIT 1";
+      
         try (Connection conn = ConexaoFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, idForum);
+            
             try (ResultSet rs = stmt.executeQuery()) {
-                return rs.next() ? buscarPorId(rs.getInt(1)) : null;
+               
+            	return rs.next() ? buscarPorId(rs.getInt(1)) : null;
             }
+       
         } catch (SQLException e) {
             e.printStackTrace();
+           
             return null;
         }
     }

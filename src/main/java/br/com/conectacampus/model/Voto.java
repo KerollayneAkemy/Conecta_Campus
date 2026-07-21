@@ -13,10 +13,7 @@ public class Voto {
     public Voto() {
     }
 
-    public Voto(int idVoto, LocalDateTime dataVoto,
-            Usuario usuario,
-            OpcaoEnquete opcaoEnquete) {
-
+    public Voto(int idVoto, LocalDateTime dataVoto, Usuario usuario, OpcaoEnquete opcaoEnquete) {
         this.idVoto = idVoto;
         this.dataVoto = dataVoto;
         this.usuario = usuario;

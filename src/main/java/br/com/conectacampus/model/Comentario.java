@@ -4,71 +4,66 @@ import java.time.LocalDateTime;
 
 public class Comentario {
 
-    private int idComentario;
-    private String mensagem;
-    private LocalDateTime dataComentario;
+	private int idComentario;
+	private String mensagem;
+	private LocalDateTime dataComentario;
+	private Usuario usuario;
+	private Comunicado comunicado;
 
-    private Usuario usuario;
-    private Comunicado comunicado;
+	public Comentario() {
+	}
 
-    public Comentario() {
-    }
+	public Comentario(int idComentario, String mensagem, LocalDateTime dataComentario, Usuario usuario, Comunicado comunicado) {
+		this.idComentario = idComentario;
+		this.mensagem = mensagem;
+		this.dataComentario = dataComentario;
+		this.usuario = usuario;
+		this.comunicado = comunicado;
+	}
 
-    public Comentario(int idComentario, String mensagem,
-            LocalDateTime dataComentario,
-            Usuario usuario,
-            Comunicado comunicado) {
+	public int getIdComentario() {
+		return idComentario;
+	}
 
-        this.idComentario = idComentario;
-        this.mensagem = mensagem;
-        this.dataComentario = dataComentario;
-        this.usuario = usuario;
-        this.comunicado = comunicado;
-    }
+	public void setIdComentario(int idComentario) {
+		this.idComentario = idComentario;
+	}
 
-    public int getIdComentario() {
-        return idComentario;
-    }
+	public String getMensagem() {
+		return mensagem;
+	}
 
-    public void setIdComentario(int idComentario) {
-        this.idComentario = idComentario;
-    }
+	public void setMensagem(String mensagem) {
+		this.mensagem = mensagem;
+	}
 
-    public String getMensagem() {
-        return mensagem;
-    }
+	public LocalDateTime getDataComentario() {
+		return dataComentario;
+	}
 
-    public void setMensagem(String mensagem) {
-        this.mensagem = mensagem;
-    }
+	public void setDataComentario(LocalDateTime dataComentario) {
+		this.dataComentario = dataComentario;
+	}
 
-    public LocalDateTime getDataComentario() {
-        return dataComentario;
-    }
+	public Usuario getUsuario() {
+		return usuario;
+	}
 
-    public void setDataComentario(LocalDateTime dataComentario) {
-        this.dataComentario = dataComentario;
-    }
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}
 
-    public Usuario getUsuario() {
-        return usuario;
-    }
+	public Comunicado getComunicado() {
+		return comunicado;
+	}
 
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
-    }
+	public void setComunicado(Comunicado comunicado) {
+		this.comunicado = comunicado;
+	}
 
-    public Comunicado getComunicado() {
-        return comunicado;
-    }
-
-    public void setComunicado(Comunicado comunicado) {
-        this.comunicado = comunicado;
-    }
-
-    @Override
-    public String toString() {
-        return "Comentario [idComentario=" + idComentario + "]";
-    }
+	@Override
+	public String toString() {
+		return "Comentario [idComentario=" + idComentario + "]";
+	}
 
 }

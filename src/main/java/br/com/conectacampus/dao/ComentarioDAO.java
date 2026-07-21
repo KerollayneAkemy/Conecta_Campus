@@ -13,9 +13,7 @@ import br.com.conectacampus.model.Usuario;
 
 public class ComentarioDAO {
 
-    // ==========================
     // INSERIR
-    // ==========================
     public boolean inserir(Comentario comentario) {
 
         String sql = """
@@ -42,9 +40,7 @@ public class ComentarioDAO {
         return false;
     }
 
-    // ==========================
     // ATUALIZAR
-    // ==========================
     public boolean atualizar(Comentario comentario) {
 
         String sql = """
@@ -70,9 +66,7 @@ public class ComentarioDAO {
         return false;
     }
 
-    // ==========================
     // EXCLUIR
-    // ==========================
     public boolean excluir(int idComentario) {
 
         String sql = "DELETE FROM comentarios WHERE id_comentario=?";
@@ -93,9 +87,7 @@ public class ComentarioDAO {
         return false;
     }
 
-    // ==========================
     // BUSCAR POR ID
-    // ==========================
     public Comentario buscarPorId(int idComentario) {
 
         Comentario comentario = null;
@@ -149,9 +141,7 @@ public class ComentarioDAO {
 
     }
 
-    // ==========================
     // LISTAR TODOS
-    // ==========================
     public List<Comentario> listar() {
 
         List<Comentario> lista = new ArrayList<>();
@@ -181,61 +171,6 @@ public class ComentarioDAO {
                 Comunicado comunicado = new Comunicado();
                 comunicado.setIdComunicado(rs.getInt("id_comunicado"));
                 comunicado.setTitulo(rs.getString("comunicado"));
-
-                Comentario comentario = new Comentario();
-
-                comentario.setIdComentario(rs.getInt("id_comentario"));
-                comentario.setMensagem(rs.getString("mensagem"));
-                comentario.setDataComentario(rs.getTimestamp("data_comentario").toLocalDateTime());
-                comentario.setUsuario(usuario);
-                comentario.setComunicado(comunicado);
-
-                lista.add(comentario);
-
-            }
-
-        } catch (SQLException e) {
-
-            e.printStackTrace();
-
-        }
-
-        return lista;
-
-    }
-
-    // ==========================
-    // LISTAR POR COMUNICADO
-    // ==========================
-    public List<Comentario> listarPorComunicado(int idComunicado) {
-
-        List<Comentario> lista = new ArrayList<>();
-
-        String sql = """
-                SELECT c.*,
-                       u.nome AS usuario
-                FROM comentarios c
-                INNER JOIN usuarios u
-                    ON c.id_usuario=u.id_usuario
-                WHERE c.id_comunicado=?
-                ORDER BY c.data_comentario ASC
-                """;
-
-        try (Connection conn = ConexaoFactory.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setInt(1, idComunicado);
-
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-
-                Usuario usuario = new Usuario();
-                usuario.setIdUsuario(rs.getInt("id_usuario"));
-                usuario.setNome(rs.getString("usuario"));
-
-                Comunicado comunicado = new Comunicado();
-                comunicado.setIdComunicado(idComunicado);
 
                 Comentario comentario = new Comentario();
 

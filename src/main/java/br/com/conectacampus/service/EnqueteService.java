@@ -15,9 +15,7 @@ public class EnqueteService {
 
     }
 
-    // ==========================
     // CADASTRAR
-    // ==========================
 
     public boolean cadastrar(Enquete enquete) {
 
@@ -37,9 +35,7 @@ public class EnqueteService {
 
     }
 
-    // ==========================
     // ATUALIZAR
-    // ==========================
 
     public boolean atualizar(Enquete enquete) {
 
@@ -53,9 +49,7 @@ public class EnqueteService {
 
     }
 
-    // ==========================
     // EXCLUIR
-    // ==========================
 
     public boolean excluir(int idEnquete) {
 
@@ -66,9 +60,7 @@ public class EnqueteService {
 
     }
 
-    // ==========================
     // BUSCAR POR ID
-    // ==========================
 
     public Enquete buscarPorId(int idEnquete) {
 
@@ -79,9 +71,7 @@ public class EnqueteService {
 
     }
 
-    // ==========================
     // LISTAR
-    // ==========================
 
     public List<Enquete> listar() {
 

@@ -11,60 +11,88 @@ import br.com.conectacampus.model.Categoria;
 
 public class CategoriaDAO {
 
-    // ==========================
-    // LISTAR TODAS
-    // ==========================
-    public List<Categoria> listar() {
+	public boolean inserir(Categoria categoria) {
+		String sql = "INSERT INTO categorias (nome) VALUES (?)";
+		
+		try (Connection conn = ConexaoFactory.getConnection();
+				PreparedStatement stmt = conn.prepareStatement(sql)) {
+			stmt.setString(1, categoria.getNome());
+			
+			return stmt.executeUpdate() > 0;
+		
+		} catch (SQLException e) {
+			e.printStackTrace();
+			
+			return false;
+		}
+	}
 
-        List<Categoria> lista = new ArrayList<>();
+	public boolean excluir(int idCategoria) {
+		String sql = "DELETE FROM categorias WHERE id_categoria=?";
+		
+		try (Connection conn = ConexaoFactory.getConnection();
+				PreparedStatement stmt = conn.prepareStatement(sql)) {
+			stmt.setInt(1, idCategoria);
+		
+			return stmt.executeUpdate() > 0;
+		
+		} catch (SQLException e) {
+			e.printStackTrace();
+			
+			return false;
+		}
+	}
 
-        String sql = "SELECT id_categoria, nome FROM categorias ORDER BY nome";
+	// LISTAR TODAS
+	public List<Categoria> listar() {
 
-        try (Connection conn = ConexaoFactory.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
+		List<Categoria> lista = new ArrayList<>();
 
-            while (rs.next()) {
-                Categoria categoria = new Categoria();
-                categoria.setIdCategoria(rs.getInt("id_categoria"));
-                categoria.setNome(rs.getString("nome"));
-                lista.add(categoria);
-            }
+		String sql = "SELECT id_categoria, nome FROM categorias ORDER BY nome";
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+		try (Connection conn = ConexaoFactory.getConnection();
+				PreparedStatement stmt = conn.prepareStatement(sql);
+				ResultSet rs = stmt.executeQuery()) {
 
-        return lista;
-    }
+			while (rs.next()) {
+				Categoria categoria = new Categoria();
+				categoria.setIdCategoria(rs.getInt("id_categoria"));
+				categoria.setNome(rs.getString("nome"));
+				lista.add(categoria);
+			}
 
-    // ==========================
-    // BUSCAR POR ID
-    // ==========================
-    public Categoria buscarPorId(int id) {
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 
-        Categoria categoria = null;
+		return lista;
+	}
 
-        String sql = "SELECT id_categoria, nome FROM categorias WHERE id_categoria = ?";
+	// BUSCAR POR ID
+	public Categoria buscarPorId(int id) {
 
-        try (Connection conn = ConexaoFactory.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+		Categoria categoria = null;
 
-            stmt.setInt(1, id);
+		String sql = "SELECT id_categoria, nome FROM categorias WHERE id_categoria = ?";
 
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    categoria = new Categoria();
-                    categoria.setIdCategoria(rs.getInt("id_categoria"));
-                    categoria.setNome(rs.getString("nome"));
-                }
-            }
+		try (Connection conn = ConexaoFactory.getConnection();
+				PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+			stmt.setInt(1, id);
 
-        return categoria;
-    }
+			try (ResultSet rs = stmt.executeQuery()) {
+				if (rs.next()) {
+					categoria = new Categoria();
+					categoria.setIdCategoria(rs.getInt("id_categoria"));
+					categoria.setNome(rs.getString("nome"));
+				}
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return categoria;
+	}
 
 }

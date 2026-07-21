@@ -7,6 +7,7 @@ public class RespostaForum {
     private int idResposta;
     private String resposta;
     private LocalDateTime dataResposta;
+    private boolean anonimo;
 
     private Usuario usuario;
     private Forum forum;
@@ -14,11 +15,7 @@ public class RespostaForum {
     public RespostaForum() {
     }
 
-    public RespostaForum(int idResposta, String resposta,
-            LocalDateTime dataResposta,
-            Usuario usuario,
-            Forum forum) {
-
+    public RespostaForum(int idResposta, String resposta, LocalDateTime dataResposta, Usuario usuario, Forum forum) {
         this.idResposta = idResposta;
         this.resposta = resposta;
         this.dataResposta = dataResposta;
@@ -48,6 +45,14 @@ public class RespostaForum {
 
     public void setDataResposta(LocalDateTime dataResposta) {
         this.dataResposta = dataResposta;
+    }
+
+    public boolean isAnonimo() {
+        return anonimo;
+    }
+
+    public void setAnonimo(boolean anonimo) {
+        this.anonimo = anonimo;
     }
 
     public Usuario getUsuario() {

@@ -5,7 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import br.com.conectacampus.model.OpcaoEnquete;
 import br.com.conectacampus.model.Usuario;
@@ -13,9 +15,7 @@ import br.com.conectacampus.model.Voto;
 
 public class VotoDAO {
 
-    // ==========================
     // INSERIR VOTO
-    // ==========================
     public boolean inserir(Voto voto) {
 
         String sql = """
@@ -41,9 +41,7 @@ public class VotoDAO {
         return false;
     }
 
-    // ==========================
     // EXCLUIR
-    // ==========================
     public boolean excluir(int idVoto) {
 
         String sql = "DELETE FROM votos WHERE id_voto=?";
@@ -62,9 +60,7 @@ public class VotoDAO {
         return false;
     }
 
-    // ==========================
     // BUSCAR POR ID
-    // ==========================
     public Voto buscarPorId(int idVoto) {
 
         Voto voto = null;
@@ -114,9 +110,7 @@ public class VotoDAO {
         return voto;
     }
 
-    // ==========================
     // LISTAR TODOS
-    // ==========================
     public List<Voto> listar() {
 
         List<Voto> lista = new ArrayList<>();
@@ -165,9 +159,7 @@ public class VotoDAO {
         return lista;
     }
 
-    // ==========================
     // VERIFICAR SE JÁ VOTOU
-    // ==========================
     public boolean usuarioJaVotou(int idUsuario, int idOpcao) {
 
         String sql = """
@@ -191,6 +183,54 @@ public class VotoDAO {
         }
 
         return false;
+    }
+
+    public boolean usuarioJaVotouNaEnquete(int idUsuario, int idEnquete) {
+        String sql = "SELECT 1 FROM votos WHERE id_usuario=? AND id_enquete=?";
+
+        try (Connection conn = ConexaoFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+           
+        	stmt.setInt(1, idUsuario);
+            stmt.setInt(2, idEnquete);
+            
+            try (ResultSet rs = stmt.executeQuery()) {
+                return rs.next();
+            }
+        
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return false;
+    }
+
+    public Map<Integer, Integer> contarVotosPorOpcao(int idEnquete) {
+        Map<Integer, Integer> totais = new LinkedHashMap<>();
+        String sql = """
+                SELECT o.id_opcao, COUNT(v.id_voto) AS total
+                FROM opcoes_enquete o
+                LEFT JOIN votos v ON v.id_opcao = o.id_opcao
+                WHERE o.id_enquete=?
+                GROUP BY o.id_opcao
+                """;
+
+        try (Connection conn = ConexaoFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, idEnquete);
+            
+            try (ResultSet rs = stmt.executeQuery()) {
+               
+            	while (rs.next()) {
+                    totais.put(rs.getInt("id_opcao"), rs.getInt("total"));
+                }
+            }
+       
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+       
+        return totais;
     }
 
 }

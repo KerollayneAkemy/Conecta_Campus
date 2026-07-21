@@ -12,9 +12,7 @@ import br.com.conectacampus.model.Cargo;
 
 public class CargoDAO {
 
-    // ===========================
     // INSERIR CARGO
-    // ===========================
     public boolean inserir(Cargo cargo) {
 
         String sql = """
@@ -51,9 +49,7 @@ public class CargoDAO {
 
     }
 
-    // ===========================
     // ATUALIZAR
-    // ===========================
     public boolean atualizar(Cargo cargo) {
 
         String sql = """
@@ -82,9 +78,7 @@ public class CargoDAO {
 
     }
 
-    // ===========================
     // EXCLUIR
-    // ===========================
     public boolean excluir(int id) {
 
         String sql = "DELETE FROM cargo WHERE id_cargo=?";
@@ -106,9 +100,7 @@ public class CargoDAO {
 
     }
 
-    // ===========================
     // BUSCAR POR ID
-    // ===========================
     public Cargo buscarPorId(int id) {
 
         Cargo cargo = null;
@@ -148,9 +140,7 @@ public class CargoDAO {
 
     }
 
-    // ===========================
     // LISTAR TODOS
-    // ===========================
     public List<Cargo> listar() {
 
         List<Cargo> lista = new ArrayList<>();
@@ -185,9 +175,7 @@ public class CargoDAO {
 
     }
 
-    // ===========================
     // QUANTIDADE DE CARGOS
-    // ===========================
     public int quantidadeCargos() {
 
         String sql = "SELECT COUNT(*) FROM cargo";

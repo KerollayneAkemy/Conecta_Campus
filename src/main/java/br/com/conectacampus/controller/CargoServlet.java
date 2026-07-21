@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.util.List;
 
 import br.com.conectacampus.model.Cargo;
+import br.com.conectacampus.model.Usuario;
 import br.com.conectacampus.service.CargoService;
+import br.com.conectacampus.util.Autorizacao;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -13,6 +15,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @WebServlet("/cargos")
 public class CargoServlet extends HttpServlet {
+	
     private static final long serialVersionUID = 1L;
     private CargoService cargoService;
 
@@ -22,20 +25,29 @@ public class CargoServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request,
-            HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Usuario usuarioLogado = (Usuario) request.getSession().getAttribute("usuarioLogado");
+        
+        if (!Autorizacao.ehAdministrador(usuarioLogado)) { response.sendError(HttpServletResponse.SC_FORBIDDEN); 
+        
+        return;  
+        }
+        
         String acao = request.getParameter("acao");
+        
         if (acao == null) {
             acao = "listar";
         }
+        
         switch (acao) {
+        
         case "listar":
             List<Cargo> lista = cargoService.listar();
             request.setAttribute("listaCargos", lista);
             request.getRequestDispatcher("/pages/cargos.jsp")
                     .forward(request, response);
             break;
+            
         case "editar":
             int id = Integer.parseInt(request.getParameter("id"));
             Cargo cargo = cargoService.buscarPorId(id);
@@ -62,9 +74,10 @@ public class CargoServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request,
-            HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Usuario usuarioLogado = (Usuario) request.getSession().getAttribute("usuarioLogado");
+       
+        if (!Autorizacao.ehAdministrador(usuarioLogado)) { response.sendError(HttpServletResponse.SC_FORBIDDEN); return; }
         String acao = request.getParameter("acao");
 
         Cargo cargo = new Cargo();

@@ -1,6 +1,7 @@
 package br.com.conectacampus.service;
 
 import java.util.List;
+import java.util.Map;
 
 import br.com.conectacampus.dao.VotoDAO;
 import br.com.conectacampus.model.Voto;
@@ -31,6 +32,14 @@ public class VotoService {
 
     public boolean usuarioJaVotou(int idUsuario, int idOpcao) {
         return dao.usuarioJaVotou(idUsuario, idOpcao);
+    }
+
+    public boolean usuarioJaVotouNaEnquete(int idUsuario, int idEnquete) {
+        return dao.usuarioJaVotouNaEnquete(idUsuario, idEnquete);
+    }
+
+    public Map<Integer, Integer> contarVotosPorOpcao(int idEnquete) {
+        return dao.contarVotosPorOpcao(idEnquete);
     }
 
 }

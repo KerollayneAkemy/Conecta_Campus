@@ -24,35 +24,42 @@
     request.setAttribute("paginaAtiva", "membros-vitrine");
     request.setAttribute("tituloPagina", "Membros - Conecta Campus");
 %>
-<%@ include file="/WEB-INF/includes/header.jsp" %>
+<%@ include file="/WEB-INF/includes/header.jsp"%>
 
 <div class="page-header">
-    <div>
-        <p class="eyebrow">Comunidade</p>
-        <h1 class="page-title"><i class="bi bi-people-fill" aria-hidden="true"></i> Conheça os membros</h1>
-        <p class="page-subtitle">Cada membro tem uma função específica. Encontre quem pode te ajudar.</p>
-    </div>
+	<div>
+		<p class="eyebrow">Comunidade</p>
+		<h1 class="page-title">
+			<i class="bi bi-people-fill" aria-hidden="true"></i> Conheça os
+			membros
+		</h1>
+		<p class="page-subtitle">Cada membro tem uma função específica.
+			Encontre quem pode te ajudar.</p>
+	</div>
 </div>
 
 <% if (grupos.isEmpty()) { %>
 <div class="card">
-    <div class="empty-state">
-        <i class="bi bi-people display-5" aria-hidden="true"></i>
-        <h2 class="h5 mt-3">Nenhum membro cadastrado ainda</h2>
-    </div>
+	<div class="empty-state">
+		<i class="bi bi-people display-5" aria-hidden="true"></i>
+		<h2 class="h5 mt-3">Nenhum membro cadastrado ainda</h2>
+	</div>
 </div>
 <% } else { %>
 
 <div class="abas-cargo">
-    <%
+	<%
     boolean primeiro = true;
     for (String nomeCargo : grupos.keySet()) {
         String idGrupo = nomeCargo.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
     %>
-    <button type="button" class="aba-cargo-btn <%=primeiro ? "ativo" : ""%>" onclick="mostrarGrupoCargo('grupo-<%=idGrupo%>', this)">
-        <i class="bi bi-diagram-3-fill" aria-hidden="true"></i> <%=nomeCargo%>
-    </button>
-    <%
+	<button type="button"
+		class="aba-cargo-btn <%=primeiro ? "ativo" : ""%>"
+		onclick="mostrarGrupoCargo('grupo-<%=idGrupo%>', this)">
+		<i class="bi bi-diagram-3-fill" aria-hidden="true"></i>
+		<%=nomeCargo%>
+	</button>
+	<%
         primeiro = false;
     }
     %>
@@ -66,20 +73,21 @@ for (Map.Entry<String, List<Membro>> entry : grupos.entrySet()) {
     String descricaoCargo = descricoesCargo.get(nomeCargo);
     String idGrupo = nomeCargo.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
 %>
-<section class="grupo-cargo <%=primeiro ? "ativo" : ""%>" id="grupo-<%=idGrupo%>">
+<section class="grupo-cargo <%=primeiro ? "ativo" : ""%>"
+	id="grupo-<%=idGrupo%>">
 
-    <% if (descricaoCargo != null && !descricaoCargo.isBlank()) { %>
-    <div class="box-cargo-info">
-        <span class="icone"><i class="bi bi-bank2" aria-hidden="true"></i></span>
-        <div>
-            <h3><%=nomeCargo%></h3>
-            <p><%=descricaoCargo%></p>
-        </div>
-    </div>
-    <% } %>
+	<% if (descricaoCargo != null && !descricaoCargo.isBlank()) { %>
+	<div class="box-cargo-info">
+		<span class="icone"><i class="bi bi-bank2" aria-hidden="true"></i></span>
+		<div>
+			<h3><%=nomeCargo%></h3>
+			<p><%=descricaoCargo%></p>
+		</div>
+	</div>
+	<% } %>
 
-    <div class="grade-membros-vitrine">
-        <%
+	<div class="grade-membros-vitrine">
+		<%
         for (Membro m : membrosDoGrupo) {
             String nome = m.getNome() != null ? m.getNome() : "";
             String[] partes = nome.trim().split("\\s+");
@@ -92,19 +100,20 @@ for (Map.Entry<String, List<Membro>> entry : grupos.entrySet()) {
             }
             iniciais = iniciais.toUpperCase();
         %>
-        <div class="card-membro-vitrine">
-            <div class="avatar-iniciais-vitrine"><%=iniciais%></div>
-            <h4><%=nome%></h4>
-            <p class="funcao-membro"><%=nomeCargo%></p>
-            <div class="info-contato-vitrine">
-                <span><i class="bi bi-envelope-fill" aria-hidden="true"></i> <%=m.getEmail()%></span>
-                <span><i class="bi bi-whatsapp" aria-hidden="true"></i> <%=m.getTelefone()%></span>
-            </div>
-        </div>
-        <%
+		<div class="card-membro-vitrine">
+			<div class="avatar-iniciais-vitrine"><%=iniciais%></div>
+			<h4><%=nome%></h4>
+			<p class="funcao-membro"><%=nomeCargo%></p>
+			<div class="info-contato-vitrine">
+				<span><i class="bi bi-envelope-fill" aria-hidden="true"></i>
+					<%=m.getEmail()%></span> <span><i class="bi bi-whatsapp"
+					aria-hidden="true"></i> <%=m.getTelefone()%></span>
+			</div>
+		</div>
+		<%
         }
         %>
-    </div>
+	</div>
 </section>
 <%
     primeiro = false;
@@ -127,4 +136,4 @@ for (Map.Entry<String, List<Membro>> entry : grupos.entrySet()) {
     }
 </script>
 
-<%@ include file="/WEB-INF/includes/footer.jsp" %>
+<%@ include file="/WEB-INF/includes/footer.jsp"%>

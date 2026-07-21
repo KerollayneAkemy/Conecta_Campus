@@ -14,122 +14,89 @@ import java.util.List;
 
 import br.com.conectacampus.model.MovimentoFinanceiro;
 
+/** Consulta lançamentos financeiros publicados em uma planilha CSV. */
 public class FinanceiroGoogleSheetsService {
 
-    public List<MovimentoFinanceiro> listar(String competencia) {
+    private static final String VARIAVEL_URL = "GOOGLE_SHEETS_FINANCEIRO_URL";
 
-        List<MovimentoFinanceiro> movimentos = new ArrayList<>();
+    public List<MovimentoFinanceiro> listar(String competencia) {
+        
+    	List<MovimentoFinanceiro> movimentos = new ArrayList<>();
+        String url = System.getenv(VARIAVEL_URL);
+        
+        if (url == null || url.isBlank()) return movimentos;
 
         try {
+            HttpClient cliente = HttpClient.newBuilder().followRedirects(Redirect.ALWAYS).build();
+            
+            HttpRequest requisicao = HttpRequest.newBuilder().uri(URI.create(url)).header("User-Agent", "Conecta-Campus").GET().build();
+            
+            HttpResponse<String> resposta = cliente.send(requisicao, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
+            
+            if (resposta.statusCode() != 200) return movimentos;
 
-            String url = System.getenv("GOOGLE_SHEETS_FINANCEIRO_URL");
-
-            System.out.println("URL: " + url);
-
-            if (url == null || url.isBlank()) {
-                System.out.println("Variável GOOGLE_SHEETS_FINANCEIRO_URL não encontrada.");
-                return movimentos;
-            }
-
-            HttpClient client = HttpClient.newBuilder()
-                    .followRedirects(Redirect.ALWAYS)
-                    .build();
-
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(url))
-                    .header("User-Agent", "Mozilla/5.0")
-                    .GET()
-                    .build();
-
-            HttpResponse<String> response = client.send(
-                    request,
-                    HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
-
-            System.out.println("Status HTTP: " + response.statusCode());
-
-            if (response.statusCode() != 200) {
-                System.out.println(response.body());
-                return movimentos;
-            }
-
-            BufferedReader reader = new BufferedReader(new StringReader(response.body()));
-
-            // Ignora o cabeçalho
-            reader.readLine();
-
-            String linha;
-
-            while ((linha = reader.readLine()) != null) {
-
-                if (linha.trim().isEmpty())
-                    continue;
-
-                String[] campos = lerCSV(linha);
-
-                if (campos.length < 6)
-                    continue;
-
-                if (competencia != null && !competencia.isBlank()) {
-                    if (!competencia.equals(campos[0].trim()))
-                        continue;
+            try (BufferedReader leitor = new BufferedReader(new StringReader(resposta.body()))) {
+            	
+                leitor.readLine(); // Cabeçalho do CSV.
+                String linha;
+               
+                while ((linha = leitor.readLine()) != null) {
+                    MovimentoFinanceiro movimento = converterLinha(linha, competencia);
+                    if (movimento != null) movimentos.add(movimento);
                 }
-
-                MovimentoFinanceiro mov = new MovimentoFinanceiro();
-
-                mov.setCompetencia(limpar(campos[0]));
-                mov.setData(limpar(campos[1]));
-                mov.setTipo(limpar(campos[2]));
-                mov.setCategoria(limpar(campos[3]));
-                mov.setDescricao(limpar(campos[4]));
-
-                String valor = limpar(campos[5]);
-
-                valor = valor.replace("R$", "");
-                valor = valor.replace(",", ".");
-
-                mov.setValor(new BigDecimal(valor));
-
-                movimentos.add(mov);
             }
-
-            System.out.println("Total de movimentos: " + movimentos.size());
-
         } catch (Exception e) {
-            e.printStackTrace();
+            // A planilha é uma integração externa: a tela exibe estado vazio se ela estiver indisponível.
         }
-
         return movimentos;
     }
 
-    private String limpar(String texto) {
-        return texto.replace("\"", "").trim();
+    private MovimentoFinanceiro converterLinha(String linha, String competencia) {
+       
+    	if (linha == null || linha.isBlank())
+    		return null;
+       
+    	String[] campos = lerCsv(linha);
+       
+        if (campos.length < 6 || (competencia != null && !competencia.isBlank() && !competencia.equals(campos[0].trim()))) return null;
+
+        try {
+            MovimentoFinanceiro movimento = new MovimentoFinanceiro();
+            movimento.setCompetencia(limpar(campos[0]));
+            movimento.setData(limpar(campos[1]));
+            movimento.setTipo(limpar(campos[2]));
+            movimento.setCategoria(limpar(campos[3]));
+            movimento.setDescricao(limpar(campos[4]));
+            movimento.setValor(new BigDecimal(limpar(campos[5]).replace("R$", "").replace(",", ".")));
+           
+            return movimento;
+        
+        } catch (NumberFormatException e) {
+           
+        	return null;
+        }
     }
 
-    private String[] lerCSV(String linha) {
+    private String limpar(String texto) {
+      
+    	return texto.replace("\"", "").trim();
+    }
 
+    private String[] lerCsv(String linha) {
         List<String> campos = new ArrayList<>();
-
         StringBuilder atual = new StringBuilder();
-
-        boolean aspas = false;
-
+        boolean entreAspas = false;
+        
         for (int i = 0; i < linha.length(); i++) {
-
-            char c = linha.charAt(i);
-
-            if (c == '"') {
-                aspas = !aspas;
-            } else if (c == ',' && !aspas) {
-                campos.add(atual.toString());
-                atual.setLength(0);
-            } else {
-                atual.append(c);
-            }
+           
+        	char caractere = linha.charAt(i);
+            if (caractere == '"') entreAspas = !entreAspas;
+            else if (caractere == ',' && !entreAspas) { campos.add(atual.toString()); atual.setLength(0); }
+            else atual.append(caractere);
         }
-
+        
         campos.add(atual.toString());
-
+        
         return campos.toArray(new String[0]);
     }
-
 }

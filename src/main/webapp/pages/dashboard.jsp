@@ -1,136 +1,149 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="br.com.conectacampus.model.Usuario"%>
-<%@ page import="java.util.List"%>
 <%@ page import="br.com.conectacampus.model.MovimentoFinanceiro"%>
+<%@ page import="br.com.conectacampus.model.Usuario"%>
+<%@ page import="java.math.BigDecimal"%>
+<%@ page import="java.util.List"%>
 <%
 Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
 if (usuario == null) {
-	response.sendRedirect(request.getContextPath() + "/login");
-	return;
+    response.sendRedirect(request.getContextPath() + "/login");
+    return;
 }
-Integer totalUsuarios = (Integer) request.getAttribute("totalUsuarios");
-Integer totalComunicados = (Integer) request.getAttribute("totalComunicados");
-Integer totalTopicos = (Integer) request.getAttribute("totalTopicos");
-Integer totalEnquetes = (Integer) request.getAttribute("totalEnquetes");
-Integer totalFeedbacks = (Integer) request.getAttribute("totalFeedbacks");
-int usuarios = totalUsuarios != null ? totalUsuarios : 0;
-int comunicados = totalComunicados != null ? totalComunicados : 0;
-int topicos = totalTopicos != null ? totalTopicos : 0;
-int enquetes = totalEnquetes != null ? totalEnquetes : 0;
-int feedbacks = totalFeedbacks != null ? totalFeedbacks : 0;
+
 List<MovimentoFinanceiro> movimentos = (List<MovimentoFinanceiro>) request.getAttribute("movimentosFinanceiros");
 String competenciaFinanceira = (String) request.getAttribute("competenciaFinanceira");
+BigDecimal totalEntradas = (BigDecimal) request.getAttribute("totalEntradasFinanceiras");
+BigDecimal totalSaidas = (BigDecimal) request.getAttribute("totalSaidasFinanceiras");
+double entradas = totalEntradas != null ? totalEntradas.doubleValue() : 0;
+double saidas = totalSaidas != null ? totalSaidas.doubleValue() : 0;
+
+request.setAttribute("paginaAtiva", "dashboard");
+request.setAttribute("tituloPagina", "Relatório financeiro - Conecta Campus");
 %>
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Dashboard - Conecta Campus</title>
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-	rel="stylesheet">
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
-	rel="stylesheet">
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/css/style.css">
-</head>
-<body>
+<%@ include file="/WEB-INF/includes/header.jsp"%>
 
-	<a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
+<div class="page-header">
+	<h1>Relatório financeiro</h1>
+	<p>Resumo de entradas e saídas da plataforma.</p>
+</div>
 
-	<nav class="navbar">
-		<div class="container-fluid">
-			<a class="navbar-brand"
-				href="${pageContext.request.contextPath}/pages/home.jsp"><i
-				class="bi bi-mortarboard-fill"></i> Conecta Campus</a>
-			<div class="ms-auto d-flex align-items-center gap-3">
-				<span class="navbar-user"><i class="bi bi-person-circle"></i>
-					<%=usuario.getNome()%></span> <a class="btn btn-secondary"
-					href="${pageContext.request.contextPath}/logout">Sair</a>
-			</div>
-		</div>
-	</nav>
+<section class="card mt-4" aria-labelledby="tituloFinanceiro">
+	<div
+		class="card-header d-flex justify-content-between align-items-center">
+		<span id="tituloFinanceiro"> <i class="bi bi-cash-stack"
+			aria-hidden="true"></i> Transparência financeira
+		</span>
 
-	<div class="app-shell">
-		<aside class="sidebar">
-			<ul>
-				<li><a href="${pageContext.request.contextPath}/pages/home.jsp">Home</a></li>
-				<li><a href="${pageContext.request.contextPath}/usuarios">Usuários</a></li>
-				<li><a href="${pageContext.request.contextPath}/comunicados">Comunicados</a></li>
-				<li><a href="${pageContext.request.contextPath}/forum">Fórum</a></li>
-				<li><a href="${pageContext.request.contextPath}/enquetes">Enquetes</a></li>
-				<li><a href="${pageContext.request.contextPath}/feedback">Feedback</a></li>
-				<li><a class="active"
-					href="${pageContext.request.contextPath}/dashboard">Dashboard</a></li>
-			</ul>
-		</aside>
-
-		<main class="content" id="conteudo">
-
-			<div class="page-header">
-				<h1>Dashboard</h1>
-				<p>Resumo da plataforma.</p>
-			</div>
-
-			
-
-			<section class="card mt-4">
-				<div
-					class="card-header d-flex justify-content-between align-items-center">
-					<span><i class="bi bi-cash-stack"></i> Transparência
-						financeira</span>
-					<form method="get"
-						action="${pageContext.request.contextPath}/dashboard"
-						class="d-flex gap-2">
-						<input class="form-control" type="month" name="competencia"
-							value="<%=competenciaFinanceira != null ? competenciaFinanceira : ""%>">
-						<button class="btn btn-outline-primary">Filtrar</button>
-					</form>
-				</div>
-
-				<div class="card-body">
-					<%
-					if (movimentos != null && !movimentos.isEmpty()) {
-					%>
-					<div class="table-responsive">
-						<table class="table">
-							<thead>
-								<tr>
-									<th>Data</th>
-									<th>Tipo</th>
-									<th>Categoria</th>
-									<th>Descrição</th>
-									<th class="text-end">Valor</th>
-								</tr>
-							</thead>
-							<tbody>
-								<%
-								for (MovimentoFinanceiro movimento : movimentos) {
-								%>
-								<tr>
-									<td><%=movimento.getData()%></td>
-									<td><%=movimento.getTipo()%></td>
-									<td><%=movimento.getCategoria()%></td>
-									<td><%=movimento.getDescricao()%></td>
-									<td class="text-end">R$ <%=movimento.getValor()%></td>
-								</tr>
-								<% } %>
-							</tbody>
-						</table>
-					</div>
-					<% } else { %>
-					<p class="text-muted">Nenhum lançamento financeiro encontrado
-						para este período.</p>
-					<% } %>
-				</div>
-			</section>
-
-		</main>
+		<form method="get"
+			action="${pageContext.request.contextPath}/dashboard"
+			class="d-flex gap-2">
+			<label class="visually-hidden" for="competencia">Competência</label>
+			<input class="form-control" id="competencia" type="month"
+				name="competencia"
+				value="<%=competenciaFinanceira != null ? competenciaFinanceira : ""%>">
+			<button class="btn btn-outline-primary">Filtrar</button>
+		</form>
 	</div>
 
-	<script
-		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+	<div class="card-body">
+		<div class="row align-items-center g-4 mb-4">
+			<div class="col-lg-5">
+				<div style="position: relative; height: 240px;">
+					<canvas id="graficoFinanceiro" role="img"
+						aria-label="Gráfico de entradas e saídas financeiras."></canvas>
+				</div>
+			</div>
+
+			<div class="col-lg-7">
+				<h2 class="h5 mb-3">Entradas e saídas</h2>
+				<p class="text-muted mb-3">Resumo dos lançamentos recebidos da
+					planilha financeira para o período selecionado.</p>
+				<div class="d-flex flex-wrap gap-3">
+					<span class="badge text-bg-success p-3"> <i
+						class="bi bi-arrow-down-circle me-1"></i> Entradas: R$ <%=totalEntradas != null ? totalEntradas : "0.00"%>
+					</span> <span class="badge text-bg-danger p-3"> <i
+						class="bi bi-arrow-up-circle me-1"></i> Saídas: R$ <%=totalSaidas != null ? totalSaidas : "0.00"%>
+					</span>
+				</div>
+			</div>
+		</div>
+
+		<% if (movimentos != null && !movimentos.isEmpty()) { %>
+		<div class="table-responsive">
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Data</th>
+						<th>Tipo</th>
+						<th>Categoria</th>
+						<th>Descrição</th>
+						<th class="text-end">Valor</th>
+					</tr>
+				</thead>
+				<tbody>
+					<% for (MovimentoFinanceiro movimento : movimentos) { %>
+					<tr>
+						<td><%=movimento.getData()%></td>
+						<td><%=movimento.getTipo()%></td>
+						<td><%=movimento.getCategoria()%></td>
+						<td><%=movimento.getDescricao()%></td>
+						<td class="text-end">R$ <%=movimento.getValor()%></td>
+					</tr>
+					<% } %>
+				</tbody>
+			</table>
+		</div>
+		<% } else { %>
+		<p class="text-muted">Nenhum lançamento financeiro encontrado para
+			este período.</p>
+		<% } %>
+	</div>
+</section>
+
+</div>
+
+<script
+	src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<script>
+(() => {
+    const canvas = document.getElementById('graficoFinanceiro');
+    if (!canvas || typeof Chart === 'undefined') return;
+
+    new Chart(canvas, {
+        type: 'doughnut',
+        data: {
+            labels: ['Entradas', 'Saídas'],
+            datasets: [{
+                data: [<%=entradas%>, <%=saidas%>],
+                backgroundColor: ['#008a6b', '#dc3545'],
+                borderWidth: 0,
+                hoverOffset: 8
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '65%',
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: { usePointStyle: true, padding: 18 }
+                },
+                tooltip: {
+                    callbacks: {
+                        label(context) {
+                            const valor = context.parsed.toLocaleString('pt-BR', {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2
+                            });
+                            return context.label + ': R$ ' + valor;
+                        }
+                    }
+                }
+            }
+        }
+    });
+})();
+</script>
+
+<%@ include file="/WEB-INF/includes/footer.jsp"%>

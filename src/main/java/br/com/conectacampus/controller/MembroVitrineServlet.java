@@ -22,12 +22,10 @@ public class MembroVitrineServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request,
-            HttpServletResponse response)
-            throws ServletException, IOException {
-        List<Membro> lista = membroService.listar();
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        
+    	List<Membro> lista = membroService.listar();
         request.setAttribute("listaMembros", lista);
-        request.getRequestDispatcher("/pages/membrosVitrine.jsp")
-                .forward(request, response);
+        request.getRequestDispatcher("/pages/membrosVitrine.jsp").forward(request, response);
     }
 }

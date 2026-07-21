@@ -12,9 +12,7 @@ import br.com.conectacampus.model.Usuario;
 
 public class FeedbackDAO {
 
-    // ==========================
     // INSERIR
-    // ==========================
     public boolean inserir(Feedback feedback) {
 
         String sql = """
@@ -45,9 +43,7 @@ public class FeedbackDAO {
         return false;
     }
 
-    // ==========================
     // ATUALIZAR
-    // ==========================
     public boolean atualizar(Feedback feedback) {
 
         String sql = """
@@ -77,9 +73,7 @@ public class FeedbackDAO {
         return false;
     }
 
-    // ==========================
     // EXCLUIR
-    // ==========================
     public boolean excluir(int idFeedback) {
 
         String sql = "DELETE FROM feedbacks WHERE id_feedback=?";
@@ -98,9 +92,7 @@ public class FeedbackDAO {
         return false;
     }
 
-    // ==========================
     // BUSCAR POR ID
-    // ==========================
     public Feedback buscarPorId(int idFeedback) {
 
         Feedback feedback = null;
@@ -150,9 +142,7 @@ public class FeedbackDAO {
         return feedback;
     }
 
-    // ==========================
     // LISTAR
-    // ==========================
     public List<Feedback> listar() {
 
         List<Feedback> lista = new ArrayList<>();
@@ -189,44 +179,6 @@ public class FeedbackDAO {
                     feedback.setUsuario(usuario);
 
                 }
-
-                lista.add(feedback);
-
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return lista;
-    }
-
-    // ==========================
-    // LISTAR POR TIPO
-    // ==========================
-    public List<Feedback> listarPorTipo(String tipo) {
-
-        List<Feedback> lista = new ArrayList<>();
-
-        String sql = "SELECT * FROM feedbacks WHERE tipo=? ORDER BY data_envio DESC";
-
-        try (Connection conn = ConexaoFactory.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setString(1, tipo);
-
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-
-                Feedback feedback = new Feedback();
-
-                feedback.setIdFeedback(rs.getInt("id_feedback"));
-                feedback.setAssunto(rs.getString("assunto"));
-                feedback.setTipo(rs.getString("tipo"));
-                feedback.setMensagem(rs.getString("mensagem"));
-                feedback.setAnonimo(rs.getBoolean("anonimo"));
-                feedback.setDataEnvio(rs.getTimestamp("data_envio").toLocalDateTime());
 
                 lista.add(feedback);
 

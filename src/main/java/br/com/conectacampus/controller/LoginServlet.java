@@ -50,6 +50,7 @@ public class LoginServlet extends HttpServlet {
             session.setAttribute("usuarioLogado", usuario);
 
             response.sendRedirect(request.getContextPath()+"/pages/home.jsp");
+            
         } else {
 
             request.setAttribute("erro", "E-mail ou senha inválidos.");

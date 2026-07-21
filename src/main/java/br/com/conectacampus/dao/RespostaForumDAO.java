@@ -13,23 +13,22 @@ import br.com.conectacampus.model.Usuario;
 
 public class RespostaForumDAO {
 
-    // ==========================
     // INSERIR
-    // ==========================
     public boolean inserir(RespostaForum resposta) {
 
         String sql = """
                 INSERT INTO respostas_forum
-                (resposta,id_usuario,id_forum)
-                VALUES (?,?,?)
+                (resposta,anonimo,id_usuario,id_forum)
+                VALUES (?,?,?,?)
                 """;
 
         try (Connection conn = ConexaoFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, resposta.getResposta());
-            stmt.setInt(2, resposta.getUsuario().getIdUsuario());
-            stmt.setInt(3, resposta.getForum().getIdForum());
+            stmt.setBoolean(2, resposta.isAnonimo());
+            stmt.setInt(3, resposta.getUsuario().getIdUsuario());
+            stmt.setInt(4, resposta.getForum().getIdForum());
 
             return stmt.executeUpdate() > 0;
 
@@ -43,9 +42,7 @@ public class RespostaForumDAO {
 
     }
 
-    // ==========================
     // ATUALIZAR
-    // ==========================
     public boolean atualizar(RespostaForum resposta) {
 
         String sql = """
@@ -72,9 +69,7 @@ public class RespostaForumDAO {
 
     }
 
-    // ==========================
     // EXCLUIR
-    // ==========================
     public boolean excluir(int idResposta) {
 
         String sql = "DELETE FROM respostas_forum WHERE id_resposta=?";
@@ -96,9 +91,7 @@ public class RespostaForumDAO {
 
     }
 
-    // ==========================
     // BUSCAR POR ID
-    // ==========================
     public RespostaForum buscarPorId(int idResposta) {
 
         RespostaForum resposta = null;
@@ -137,6 +130,7 @@ public class RespostaForumDAO {
                 resposta.setIdResposta(rs.getInt("id_resposta"));
                 resposta.setResposta(rs.getString("resposta"));
                 resposta.setDataResposta(rs.getTimestamp("data_resposta").toLocalDateTime());
+                resposta.setAnonimo(rs.getBoolean("anonimo"));
                 resposta.setUsuario(usuario);
                 resposta.setForum(forum);
 
@@ -152,9 +146,7 @@ public class RespostaForumDAO {
 
     }
 
-    // ==========================
     // LISTAR TODAS
-    // ==========================
     public List<RespostaForum> listar() {
 
         List<RespostaForum> lista = new ArrayList<>();
@@ -190,6 +182,7 @@ public class RespostaForumDAO {
                 resposta.setIdResposta(rs.getInt("id_resposta"));
                 resposta.setResposta(rs.getString("resposta"));
                 resposta.setDataResposta(rs.getTimestamp("data_resposta").toLocalDateTime());
+                resposta.setAnonimo(rs.getBoolean("anonimo"));
                 resposta.setUsuario(usuario);
                 resposta.setForum(forum);
 
@@ -207,9 +200,7 @@ public class RespostaForumDAO {
 
     }
 
-    // ==========================
     // LISTAR POR FÓRUM
-    // ==========================
     public List<RespostaForum> listarPorForum(int idForum) {
 
         List<RespostaForum> lista = new ArrayList<>();
@@ -245,6 +236,7 @@ public class RespostaForumDAO {
                 resposta.setIdResposta(rs.getInt("id_resposta"));
                 resposta.setResposta(rs.getString("resposta"));
                 resposta.setDataResposta(rs.getTimestamp("data_resposta").toLocalDateTime());
+                resposta.setAnonimo(rs.getBoolean("anonimo"));
                 resposta.setUsuario(usuario);
                 resposta.setForum(forum);
 

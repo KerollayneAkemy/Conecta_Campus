@@ -21,4 +21,13 @@ public class CategoriaService {
         return categoriaDAO.buscarPorId(id);
     }
 
+    public boolean cadastrar(Categoria categoria) {
+       
+    	return categoria != null && categoria.getNome() != null && !categoria.getNome().isBlank() && categoriaDAO.inserir(categoria);
+    }
+
+    public boolean excluir(int idCategoria) {
+        return idCategoria > 0 && categoriaDAO.excluir(idCategoria);
+    }
+
 }

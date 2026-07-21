@@ -15,9 +15,7 @@ public class FeedbackService {
 
     }
 
-    // ==========================
     // CADASTRAR
-    // ==========================
 
     public boolean cadastrar(Feedback feedback) {
 
@@ -34,9 +32,7 @@ public class FeedbackService {
 
     }
 
-    // ==========================
     // ATUALIZAR
-    // ==========================
 
     public boolean atualizar(Feedback feedback) {
 
@@ -50,9 +46,7 @@ public class FeedbackService {
 
     }
 
-    // ==========================
     // EXCLUIR
-    // ==========================
 
     public boolean excluir(int idFeedback) {
 
@@ -63,9 +57,7 @@ public class FeedbackService {
 
     }
 
-    // ==========================
     // BUSCAR POR ID
-    // ==========================
 
     public Feedback buscarPorId(int idFeedback) {
 
@@ -76,9 +68,7 @@ public class FeedbackService {
 
     }
 
-    // ==========================
     // LISTAR
-    // ==========================
 
     public List<Feedback> listar() {
 

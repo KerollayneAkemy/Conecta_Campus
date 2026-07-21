@@ -25,25 +25,44 @@ public class VotoServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request,
-            HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         Usuario usuario = (Usuario) request.getSession().getAttribute("usuarioLogado");
+      
         if (usuario == null) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
 
+        int idForum;
+       
+        try {
+            idForum = Integer.parseInt(request.getParameter("idForum"));
+        
+        } catch (NumberFormatException e) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+          
+            return;
+        }
+
         OpcaoEnquete opcao = new OpcaoEnquete();
-        opcao.setIdOpcao(Integer.parseInt(request.getParameter("idOpcao")));
+        
+        try {
+            opcao.setIdOpcao(Integer.parseInt(request.getParameter("idOpcao")));
+       
+        } catch (NumberFormatException e) {
+            response.sendRedirect(request.getContextPath() + "/forum?acao=visualizar&id=" + idForum);
+            
+            return;
+        }
 
         Voto voto = new Voto();
         voto.setUsuario(usuario);
         voto.setOpcaoEnquete(opcao);
 
-        votoService.votar(voto);
+        boolean registrado = votoService.votar(voto);
 
-        response.sendRedirect(request.getContextPath() + "/enquetes?acao=listar");
+        response.sendRedirect(request.getContextPath() + "/forum?acao=visualizar&id=" + idForum
+                + (registrado ? "&voto=registrado" : "&voto=ja-realizado"));
     }
 }

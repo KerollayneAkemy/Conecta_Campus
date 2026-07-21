@@ -18,7 +18,7 @@ public class PerfilDAO {
         String sql = "SELECT * FROM perfis WHERE id_perfil = ?";
 
         try (
-            Connection conexao = ConexaoFactory.getConnection();
+        	Connection conexao = ConexaoFactory.getConnection();
             PreparedStatement stmt = conexao.prepareStatement(sql)
         ) {
 

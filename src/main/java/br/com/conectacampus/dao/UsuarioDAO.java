@@ -9,345 +9,411 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.conectacampus.model.Perfil;
+import br.com.conectacampus.model.Cargo;
 import br.com.conectacampus.model.Usuario;
 
 public class UsuarioDAO {
 
-    // ===========================
-    // INSERIR USUÁRIO
-    // ===========================
-    public boolean inserir(Usuario usuario) {
+	// INSERIR USUÁRIO
+	public boolean inserir(Usuario usuario) {
 
-        String sql = """
-                INSERT INTO usuarios
-                (nome,email,senha,curso,setor_institucional,email_institucional,ativo,id_perfil)
-                VALUES (?,?,?,?,?,?,?,?)
-                """;
+		String sql = """
+				INSERT INTO usuarios
+				(nome,email,senha,curso,setor_institucional,email_institucional,ativo,id_perfil,id_cargo)
+				VALUES (?,?,?,?,?,?,?,?,?)
+				""";
 
-        try (Connection conn = ConexaoFactory.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+		try (Connection conn = ConexaoFactory.getConnection();
+				PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setString(1, usuario.getNome());
-            stmt.setString(2, usuario.getEmail());
-            stmt.setString(3, usuario.getSenha());
-            stmt.setString(4, usuario.getCurso());
-            stmt.setString(5, usuario.getSetorInstitucional());
-            stmt.setString(6, usuario.getEmailInstitucional());
-            stmt.setBoolean(7, usuario.isAtivo());
-            stmt.setInt(8, usuario.getPerfil().getIdPerfil());
+			stmt.setString(1, usuario.getNome());
+			stmt.setString(2, usuario.getEmail());
+			stmt.setString(3, usuario.getSenha());
+			stmt.setString(4, usuario.getCurso());
+			stmt.setString(5, usuario.getSetorInstitucional());
+			stmt.setString(6, usuario.getEmailInstitucional());
+			stmt.setBoolean(7, usuario.isAtivo());
+			stmt.setInt(8, usuario.getPerfil().getIdPerfil());
 
-            return stmt.executeUpdate() > 0;
+			if (usuario.getCargo() != null && usuario.getCargo().getIdCargo() > 0) {
+				stmt.setInt(9, usuario.getCargo().getIdCargo());
 
-        } catch (SQLException e) {
+			} else {
+				stmt.setNull(9, java.sql.Types.INTEGER);
+			}
 
-            e.printStackTrace();
+			return stmt.executeUpdate() > 0;
 
-        }
+		} catch (SQLException e) {
 
-        return false;
+			e.printStackTrace();
 
-    }
+		}
 
-    // ===========================
-    // ATUALIZAR
-    // ===========================
-    public boolean atualizar(Usuario usuario) {
+		return false;
 
-        String sql = """
-                UPDATE usuarios
-                SET nome=?,
-                    email=?,
-                    senha=?,
-                    curso=?,
-                    setor_institucional=?,
-                    email_institucional=?,
-                    ativo=?,
-                    id_perfil=?
-                WHERE id_usuario=?
-                """;
+	}
 
-        try (Connection conn = ConexaoFactory.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+	// ATUALIZAR
+	public boolean atualizar(Usuario usuario) {
 
-            stmt.setString(1, usuario.getNome());
-            stmt.setString(2, usuario.getEmail());
-            stmt.setString(3, usuario.getSenha());
-            stmt.setString(4, usuario.getCurso());
-            stmt.setString(5, usuario.getSetorInstitucional());
-            stmt.setString(6, usuario.getEmailInstitucional());
-            stmt.setBoolean(7, usuario.isAtivo());
-            stmt.setInt(8, usuario.getPerfil().getIdPerfil());
-            stmt.setInt(9, usuario.getIdUsuario());
+		String sql = """
+				UPDATE usuarios
+				SET nome=?,
+				    email=?,
+				    senha=?,
+				    curso=?,
+				    setor_institucional=?,
+				    email_institucional=?,
+				    ativo=?,
+				    id_perfil=?,
+				    id_cargo=?
+				WHERE id_usuario=?
+				""";
 
-            return stmt.executeUpdate() > 0;
+		try (Connection conn = ConexaoFactory.getConnection();
+				PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-        } catch (SQLException e) {
+			stmt.setString(1, usuario.getNome());
+			stmt.setString(2, usuario.getEmail());
+			stmt.setString(3, usuario.getSenha());
+			stmt.setString(4, usuario.getCurso());
+			stmt.setString(5, usuario.getSetorInstitucional());
+			stmt.setString(6, usuario.getEmailInstitucional());
+			stmt.setBoolean(7, usuario.isAtivo());
+			stmt.setInt(8, usuario.getPerfil().getIdPerfil());
 
-            e.printStackTrace();
+			if (usuario.getCargo() != null && usuario.getCargo().getIdCargo() > 0) {
+				stmt.setInt(9, usuario.getCargo().getIdCargo());
 
-        }
+			} else {
+				stmt.setNull(9, java.sql.Types.INTEGER);
+			}
 
-        return false;
+			stmt.setInt(10, usuario.getIdUsuario());
 
-    }
+			return stmt.executeUpdate() > 0;
 
-    // ===========================
-    // EXCLUIR
-    // ===========================
-    public boolean excluir(int id) {
+		} catch (SQLException e) {
 
-        String sql = "DELETE FROM usuarios WHERE id_usuario=?";
+			e.printStackTrace();
 
-        try (Connection conn = ConexaoFactory.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+		}
 
-            stmt.setInt(1, id);
+		return false;
 
-            return stmt.executeUpdate() > 0;
+	}
 
-        } catch (SQLException e) {
+	public boolean atualizarAtivo(int idUsuario, boolean ativo) {
+		String sql = "UPDATE usuarios SET ativo=? WHERE id_usuario=?";
 
-            e.printStackTrace();
+		try (Connection conn = ConexaoFactory.getConnection();
+				PreparedStatement stmt = conn.prepareStatement(sql)) {
+			stmt.setBoolean(1, ativo);
+			stmt.setInt(2, idUsuario);
 
-        }
+			return stmt.executeUpdate() > 0;
 
-        return false;
+		} catch (SQLException e) {
+			e.printStackTrace();
 
-    }
-    // ===========================
-    // BUSCAR POR ID
-    // ===========================
-    public Usuario buscarPorId(int id) {
+			return false;
+		}
+	}
 
-        Usuario usuario = null;
+	// BUSCAR POR ID
+	public Usuario buscarPorId(int id) {
 
-        String sql = """
-                SELECT u.*, p.nome AS perfil
-                FROM usuarios u
-                INNER JOIN perfis p
-                    ON u.id_perfil = p.id_perfil
-                WHERE u.id_usuario = ?
-                """;
+		Usuario usuario = null;
 
-        try (Connection conn = ConexaoFactory.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+		String sql = """
+				SELECT u.*, p.nome AS perfil
+				FROM usuarios u
+				INNER JOIN perfis p
+				    ON u.id_perfil = p.id_perfil
+				WHERE u.id_usuario = ?
+				""";
 
-            stmt.setInt(1, id);
+		try (Connection conn = ConexaoFactory.getConnection();
+				PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            try (ResultSet rs = stmt.executeQuery()) {
+			stmt.setInt(1, id);
 
-                if (rs.next()) {
+			try (ResultSet rs = stmt.executeQuery()) {
 
-                    Perfil perfil = new Perfil();
-                    perfil.setIdPerfil(rs.getInt("id_perfil"));
-                    perfil.setNome(rs.getString("perfil"));
+				if (rs.next()) {
 
-                    usuario = new Usuario();
+					Perfil perfil = new Perfil();
+					perfil.setIdPerfil(rs.getInt("id_perfil"));
+					perfil.setNome(rs.getString("perfil"));
 
-                    usuario.setIdUsuario(rs.getInt("id_usuario"));
-                    usuario.setNome(rs.getString("nome"));
-                    usuario.setEmail(rs.getString("email"));
-                    usuario.setSenha(rs.getString("senha"));
-                    usuario.setCurso(rs.getString("curso"));
-                    usuario.setSetorInstitucional(rs.getString("setor_institucional"));
-                    usuario.setEmailInstitucional(rs.getString("email_institucional"));
-                    usuario.setAtivo(rs.getBoolean("ativo"));
+					usuario = new Usuario();
 
-                    Timestamp ultimo = rs.getTimestamp("ultimo_acesso");
-                    if (ultimo != null) {
-                        usuario.setUltimoAcesso(ultimo.toLocalDateTime());
-                    }
+					usuario.setIdUsuario(rs.getInt("id_usuario"));
+					usuario.setNome(rs.getString("nome"));
+					usuario.setEmail(rs.getString("email"));
+					usuario.setSenha(rs.getString("senha"));
+					usuario.setCurso(rs.getString("curso"));
+					usuario.setSetorInstitucional(rs.getString("setor_institucional"));
+					usuario.setEmailInstitucional(rs.getString("email_institucional"));
+					usuario.setFotoPerfil(rs.getString("foto_perfil"));
+					usuario.setCargo(mapearCargo(rs));
+					usuario.setAtivo(rs.getBoolean("ativo"));
 
-                    Timestamp cadastro = rs.getTimestamp("data_cadastro");
-                    if (cadastro != null) {
-                        usuario.setDataCadastro(cadastro.toLocalDateTime());
-                    }
+					Timestamp ultimo = rs.getTimestamp("ultimo_acesso");
 
-                    usuario.setPerfil(perfil);
+					if (ultimo != null) {
+						usuario.setUltimoAcesso(ultimo.toLocalDateTime());
+					}
 
-                }
+					Timestamp cadastro = rs.getTimestamp("data_cadastro");
 
-            }
+					if (cadastro != null) {
+						usuario.setDataCadastro(cadastro.toLocalDateTime());
+					}
 
-        } catch (SQLException e) {
+					usuario.setPerfil(perfil);
 
-            e.printStackTrace();
+				}
 
-        }
+			}
 
-        return usuario;
+		} catch (SQLException e) {
 
-    }
-    // ===========================
-    // BUSCAR POR EMAIL
-    // (LOGIN)
-    // ===========================
-    public Usuario buscarPorEmail(String email) {
+			e.printStackTrace();
 
-        Usuario usuario = null;
+		}
 
-        String sql = """
-                SELECT u.*, p.nome AS perfil
-                FROM usuarios u
-                INNER JOIN perfis p
-                    ON u.id_perfil = p.id_perfil
-                WHERE u.email = ?
-                """;
+		return usuario;
 
-        try (Connection conn = ConexaoFactory.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+	}
 
-            stmt.setString(1, email);
+	// BUSCAR POR EMAIL
+	public Usuario buscarPorEmail(String email) {
 
-            try (ResultSet rs = stmt.executeQuery()) {
+		Usuario usuario = null;
 
-                if (rs.next()) {
+		String sql = """
+				SELECT u.*, p.nome AS perfil
+				FROM usuarios u
+				INNER JOIN perfis p
+				    ON u.id_perfil = p.id_perfil
+				WHERE u.email = ?
+				""";
 
-                    Perfil perfil = new Perfil();
-                    perfil.setIdPerfil(rs.getInt("id_perfil"));
-                    perfil.setNome(rs.getString("perfil"));
+		try (Connection conn = ConexaoFactory.getConnection();
+				PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-                    usuario = new Usuario();
+			stmt.setString(1, email);
 
-                    usuario.setIdUsuario(rs.getInt("id_usuario"));
-                    usuario.setNome(rs.getString("nome"));
-                    usuario.setEmail(rs.getString("email"));
-                    usuario.setSenha(rs.getString("senha"));
-                    usuario.setCurso(rs.getString("curso"));
-                    usuario.setSetorInstitucional(rs.getString("setor_institucional"));
-                    usuario.setEmailInstitucional(rs.getString("email_institucional"));
-                    usuario.setAtivo(rs.getBoolean("ativo"));
+			try (ResultSet rs = stmt.executeQuery()) {
 
-                    Timestamp ultimo = rs.getTimestamp("ultimo_acesso");
-                    if (ultimo != null) {
-                        usuario.setUltimoAcesso(ultimo.toLocalDateTime());
-                    }
+				if (rs.next()) {
 
-                    Timestamp cadastro = rs.getTimestamp("data_cadastro");
-                    if (cadastro != null) {
-                        usuario.setDataCadastro(cadastro.toLocalDateTime());
-                    }
+					Perfil perfil = new Perfil();
+					perfil.setIdPerfil(rs.getInt("id_perfil"));
+					perfil.setNome(rs.getString("perfil"));
 
-                    usuario.setPerfil(perfil);
+					usuario = new Usuario();
 
-                }
+					usuario.setIdUsuario(rs.getInt("id_usuario"));
+					usuario.setNome(rs.getString("nome"));
+					usuario.setEmail(rs.getString("email"));
+					usuario.setSenha(rs.getString("senha"));
+					usuario.setCurso(rs.getString("curso"));
+					usuario.setSetorInstitucional(rs.getString("setor_institucional"));
+					usuario.setEmailInstitucional(rs.getString("email_institucional"));
+					usuario.setFotoPerfil(rs.getString("foto_perfil"));
+					usuario.setCargo(mapearCargo(rs));
+					usuario.setAtivo(rs.getBoolean("ativo"));
 
-            }
+					Timestamp ultimo = rs.getTimestamp("ultimo_acesso");
 
-        } catch (SQLException e) {
+					if (ultimo != null) {
+						usuario.setUltimoAcesso(ultimo.toLocalDateTime());
+					}
 
-            e.printStackTrace();
+					Timestamp cadastro = rs.getTimestamp("data_cadastro");
 
-        }
+					if (cadastro != null) {
+						usuario.setDataCadastro(cadastro.toLocalDateTime());
+					}
 
-        return usuario;
+					usuario.setPerfil(perfil);
 
-    }
-    
- // ===========================
- // LISTAR TODOS
- // ===========================
- public List<Usuario> listar() {
+				}
 
-     List<Usuario> lista = new ArrayList<>();
+			}
 
-     String sql = """
-             SELECT u.*, p.nome AS perfil
-             FROM usuarios u
-             INNER JOIN perfis p
-                 ON u.id_perfil = p.id_perfil
-             ORDER BY u.nome
-             """;
+		} catch (SQLException e) {
 
-     try (Connection conn = ConexaoFactory.getConnection();
-          PreparedStatement stmt = conn.prepareStatement(sql);
-          ResultSet rs = stmt.executeQuery()) {
+			e.printStackTrace();
 
-         while (rs.next()) {
+		}
 
-             Perfil perfil = new Perfil();
-             perfil.setIdPerfil(rs.getInt("id_perfil"));
-             perfil.setNome(rs.getString("perfil"));
+		return usuario;
 
-             Usuario usuario = new Usuario();
+	}
 
-             usuario.setIdUsuario(rs.getInt("id_usuario"));
-             usuario.setNome(rs.getString("nome"));
-             usuario.setEmail(rs.getString("email"));
-             usuario.setSenha(rs.getString("senha"));
-             usuario.setCurso(rs.getString("curso"));
-             usuario.setSetorInstitucional(rs.getString("setor_institucional"));
-             usuario.setEmailInstitucional(rs.getString("email_institucional"));
-             usuario.setAtivo(rs.getBoolean("ativo"));
+	// LISTAR TODOS
+	public List<Usuario> listar() {
 
-             Timestamp ultimo = rs.getTimestamp("ultimo_acesso");
-             if (ultimo != null) {
-                 usuario.setUltimoAcesso(ultimo.toLocalDateTime());
-             }
+		List<Usuario> lista = new ArrayList<>();
 
-             Timestamp cadastro = rs.getTimestamp("data_cadastro");
-             if (cadastro != null) {
-                 usuario.setDataCadastro(cadastro.toLocalDateTime());
-             }
+		String sql = """
+				SELECT u.*, p.nome AS perfil
+				FROM usuarios u
+				INNER JOIN perfis p
+				    ON u.id_perfil = p.id_perfil
+				ORDER BY u.nome
+				""";
 
-             usuario.setPerfil(perfil);
+		try (Connection conn = ConexaoFactory.getConnection();
+				PreparedStatement stmt = conn.prepareStatement(sql);
+				ResultSet rs = stmt.executeQuery()) {
 
-             lista.add(usuario);
+			while (rs.next()) {
 
-         }
+				Perfil perfil = new Perfil();
+				perfil.setIdPerfil(rs.getInt("id_perfil"));
+				perfil.setNome(rs.getString("perfil"));
 
-     } catch (SQLException e) {
-         e.printStackTrace();
-     }
+				Usuario usuario = new Usuario();
 
-     return lista;
+				usuario.setIdUsuario(rs.getInt("id_usuario"));
+				usuario.setNome(rs.getString("nome"));
+				usuario.setEmail(rs.getString("email"));
+				usuario.setSenha(rs.getString("senha"));
+				usuario.setCurso(rs.getString("curso"));
+				usuario.setSetorInstitucional(rs.getString("setor_institucional"));
+				usuario.setEmailInstitucional(rs.getString("email_institucional"));
+				usuario.setFotoPerfil(rs.getString("foto_perfil"));
+				usuario.setCargo(mapearCargo(rs));
+				usuario.setAtivo(rs.getBoolean("ativo"));
 
- }
+				Timestamp ultimo = rs.getTimestamp("ultimo_acesso");
 
- // ===========================
- // QUANTIDADE DE USUÁRIOS
- // ===========================
- public int quantidadeUsuarios() {
+				if (ultimo != null) {
+					usuario.setUltimoAcesso(ultimo.toLocalDateTime());
+				}
 
-     String sql = "SELECT COUNT(*) FROM usuarios";
+				Timestamp cadastro = rs.getTimestamp("data_cadastro");
 
-     try (Connection conn = ConexaoFactory.getConnection();
-          PreparedStatement stmt = conn.prepareStatement(sql);
-          ResultSet rs = stmt.executeQuery()) {
+				if (cadastro != null) {
+					usuario.setDataCadastro(cadastro.toLocalDateTime());
+				}
 
-         if (rs.next()) {
-             return rs.getInt(1);
-         }
+				usuario.setPerfil(perfil);
 
-     } catch (SQLException e) {
-         e.printStackTrace();
-     }
+				lista.add(usuario);
 
-     return 0;
+			}
 
- }
-//===========================
-//ATUALIZAR ÚLTIMO ACESSO
-//===========================
-public boolean atualizarUltimoAcesso(int idUsuario) {
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 
-  String sql = """
-          UPDATE usuarios
-          SET ultimo_acesso = NOW()
-          WHERE id_usuario = ?
-          """;
+		return lista;
 
-  try (Connection conn = ConexaoFactory.getConnection();
-       PreparedStatement stmt = conn.prepareStatement(sql)) {
+	}
 
-      stmt.setInt(1, idUsuario);
+	// QUANTIDADE DE USUÁRIOS
+	public int quantidadeUsuarios() {
 
-      return stmt.executeUpdate() > 0;
+		String sql = "SELECT COUNT(*) FROM usuarios";
 
-  } catch (SQLException e) {
-      e.printStackTrace();
-  }
+		try (Connection conn = ConexaoFactory.getConnection();
+				PreparedStatement stmt = conn.prepareStatement(sql);
+				ResultSet rs = stmt.executeQuery()) {
 
-  return false;
+			if (rs.next()) {
+				return rs.getInt(1);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return 0;
+
+	}
+
+	//ATUALIZAR ÚLTIMO ACESSO
+	public boolean atualizarUltimoAcesso(int idUsuario) {
+
+		String sql = """
+				UPDATE usuarios
+				SET ultimo_acesso = NOW()
+				WHERE id_usuario = ?
+				""";
+
+		try (Connection conn = ConexaoFactory.getConnection();
+				PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+			stmt.setInt(1, idUsuario);
+
+			return stmt.executeUpdate() > 0;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return false;
+	}
+
+	public boolean atualizarPerfil(Usuario usuario) {
+
+		String sql = """
+				UPDATE usuarios
+				SET nome=?, email=?, curso=?, foto_perfil=?
+				WHERE id_usuario=?
+				""";
+
+		try (Connection conn = ConexaoFactory.getConnection();
+				PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+			stmt.setString(1, usuario.getNome());
+			stmt.setString(2, usuario.getEmail());
+			stmt.setString(3, usuario.getCurso());
+			stmt.setString(4, usuario.getFotoPerfil());
+			stmt.setInt(5, usuario.getIdUsuario());
+
+			return stmt.executeUpdate() > 0;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+
+			return false;
+		}
+	}
+
+	public boolean atualizarSenha(int idUsuario, String senhaCriptografada) {
+		String sql = "UPDATE usuarios SET senha=? WHERE id_usuario=?";
+
+		try (Connection conn = ConexaoFactory.getConnection();
+				PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+			stmt.setString(1, senhaCriptografada);
+			stmt.setInt(2, idUsuario);
+
+			return stmt.executeUpdate() > 0;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+
+			return false;
+		}
+	}
+
+	private Cargo mapearCargo(ResultSet rs) throws SQLException {
+		int idCargo = rs.getInt("id_cargo");
+
+		if (rs.wasNull()) 
+			return null;
+
+		Cargo cargo = new Cargo();
+		cargo.setIdCargo(idCargo);
+
+		return cargo;
+	}
 }
- }

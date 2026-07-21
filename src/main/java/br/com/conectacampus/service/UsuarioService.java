@@ -13,9 +13,6 @@ public class UsuarioService {
         this.usuarioDAO = new UsuarioDAO();
     }
 
-    // ==========================
-    // CADASTRAR
-    // ==========================
     public boolean cadastrar(Usuario usuario) {
 
         if (usuario == null) {
@@ -47,9 +44,6 @@ public class UsuarioService {
         return usuarioDAO.inserir(usuario);
     }
 
-    // ==========================
-    // ATUALIZAR
-    // ==========================
     public boolean atualizar(Usuario usuario) {
 
         if (usuario == null) {
@@ -60,24 +54,47 @@ public class UsuarioService {
             return false;
         }
 
-        return usuarioDAO.atualizar(usuario);
-    }
-
-    // ==========================
-    // EXCLUIR
-    // ==========================
-    public boolean excluir(int idUsuario) {
-
-        if (idUsuario <= 0) {
+        if (usuario.getEmail() == null || usuario.getEmail().trim().isEmpty()
+                || usuario.getSenha() == null || usuario.getSenha().isBlank()
+                || usuario.getPerfil() == null) {
             return false;
         }
 
-        return usuarioDAO.excluir(idUsuario);
+        Usuario existente = usuarioDAO.buscarPorEmail(usuario.getEmail().trim());
+        
+        if (existente != null && existente.getIdUsuario() != usuario.getIdUsuario()) {
+            return false;
+        }
+        return usuarioDAO.atualizar(usuario);
     }
 
-    // ==========================
-    // BUSCAR POR ID
-    // ==========================
+    public boolean atualizarPerfil(Usuario usuario) {
+        
+    	if (usuario == null || usuario.getIdUsuario() <= 0
+                || usuario.getNome() == null || usuario.getNome().trim().isEmpty()
+                || usuario.getEmail() == null || usuario.getEmail().trim().isEmpty()) {
+            return false;
+        }
+
+        Usuario existente = usuarioDAO.buscarPorEmail(usuario.getEmail().trim());
+       
+        if (existente != null && existente.getIdUsuario() != usuario.getIdUsuario()) {
+            return false;
+        }
+        return usuarioDAO.atualizarPerfil(usuario);
+    }
+
+    public boolean atualizarSenha(int idUsuario, String senhaCriptografada) {
+      
+    	return idUsuario > 0 && senhaCriptografada != null
+                && !senhaCriptografada.isBlank()
+                && usuarioDAO.atualizarSenha(idUsuario, senhaCriptografada);
+    }
+
+    public boolean atualizarAtivo(int idUsuario, boolean ativo) {
+        return idUsuario > 0 && usuarioDAO.atualizarAtivo(idUsuario, ativo);
+    }
+
     public Usuario buscarPorId(int idUsuario) {
 
         if (idUsuario <= 0) {
@@ -87,9 +104,6 @@ public class UsuarioService {
         return usuarioDAO.buscarPorId(idUsuario);
     }
 
-    // ==========================
-    // BUSCAR POR EMAIL
-    // ==========================
     public Usuario buscarPorEmail(String email) {
 
         if (email == null || email.trim().isEmpty()) {
@@ -99,16 +113,11 @@ public class UsuarioService {
         return usuarioDAO.buscarPorEmail(email.trim());
     }
 
-    // ==========================
-    // LISTAR
-    // ==========================
     public List<Usuario> listar() {
         return usuarioDAO.listar();
     }
 
-    // ==========================
     // QUANTIDADE DE USUÁRIOS
-    // ==========================
     public int quantidadeUsuarios() {
         return usuarioDAO.quantidadeUsuarios();
     }

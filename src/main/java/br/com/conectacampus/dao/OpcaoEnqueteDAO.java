@@ -12,9 +12,7 @@ import br.com.conectacampus.model.OpcaoEnquete;
 
 public class OpcaoEnqueteDAO {
 
-    // ==========================
     // INSERIR
-    // ==========================
     public boolean inserir(OpcaoEnquete opcao) {
 
         String sql = """
@@ -38,9 +36,7 @@ public class OpcaoEnqueteDAO {
         return false;
     }
 
-    // ==========================
     // ATUALIZAR
-    // ==========================
     public boolean atualizar(OpcaoEnquete opcao) {
 
         String sql = """
@@ -64,9 +60,7 @@ public class OpcaoEnqueteDAO {
         return false;
     }
 
-    // ==========================
     // EXCLUIR
-    // ==========================
     public boolean excluir(int idOpcao) {
 
         String sql = "DELETE FROM opcoes_enquete WHERE id_opcao=?";
@@ -85,9 +79,7 @@ public class OpcaoEnqueteDAO {
         return false;
     }
 
-    // ==========================
     // BUSCAR POR ID
-    // ==========================
     public OpcaoEnquete buscarPorId(int idOpcao) {
 
         OpcaoEnquete opcao = null;
@@ -128,9 +120,7 @@ public class OpcaoEnqueteDAO {
         return opcao;
     }
 
-    // ==========================
     // LISTAR TODAS
-    // ==========================
     public List<OpcaoEnquete> listar() {
 
         List<OpcaoEnquete> lista = new ArrayList<>();
@@ -170,9 +160,7 @@ public class OpcaoEnqueteDAO {
         return lista;
     }
 
-    // ==========================
     // LISTAR POR ENQUETE
-    // ==========================
     public List<OpcaoEnquete> listarPorEnquete(int idEnquete) {
 
         List<OpcaoEnquete> lista = new ArrayList<>();
