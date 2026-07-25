@@ -6,14 +6,14 @@ import java.sql.DriverManager;
 public class ConexaoFactory {
 
     private static final String URL =
-            "jdbc:mysql://localhost/database"
+            "jdbc:mysql://localhost:3306/conectacampus"
             + "?useSSL=false"
             + "&allowPublicKeyRetrieval=true"
             + "&serverTimezone=America/Sao_Paulo"
             + "&characterEncoding=UTF-8";
 
-    private static final String USUARIO = "usuario";
-    private static final String SENHA = "senha";
+    private static final String USUARIO = "root";
+    private static final String SENHA = "root";
 
     public static Connection getConnection() {
 
@@ -26,10 +26,14 @@ public class ConexaoFactory {
                     USUARIO,
                     SENHA);
 
+            System.out.println("ConexaoFactory() - 200 OK");
+
             return conexao;
 
         } catch (Exception e) {
 
+            System.out.println("ConexaoFactory() - ERROR");
+            System.out.println(e.getMessage());
             e.printStackTrace();
 
             return null;
