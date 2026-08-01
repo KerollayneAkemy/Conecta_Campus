@@ -45,6 +45,18 @@ public class VotoServlet extends HttpServlet {
             return;
         }
 
+        if ("remover".equals(request.getParameter("acao"))) {
+            try {
+                int idEnquete = Integer.parseInt(request.getParameter("idEnquete"));
+                boolean removeu = votoService.removerVoto(usuario.getIdUsuario(), idEnquete);
+                response.sendRedirect(request.getContextPath() + "/forum?acao=visualizar&id=" + idForum
+                        + (removeu ? "&voto=removido" : "&voto=nao-removido"));
+            } catch (NumberFormatException e) {
+                response.sendRedirect(request.getContextPath() + "/forum?acao=visualizar&id=" + idForum);
+            }
+            return;
+        }
+
         OpcaoEnquete opcao = new OpcaoEnquete();
         
         try {

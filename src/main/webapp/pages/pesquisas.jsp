@@ -1,9 +1,10 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page
-	import="java.util.List,java.util.Set,br.com.conectacampus.model.Pesquisa,br.com.conectacampus.model.Usuario,br.com.conectacampus.util.Autorizacao"%>
+	import="java.util.List,java.util.Set,java.util.Map,br.com.conectacampus.model.Pesquisa,br.com.conectacampus.model.Usuario,br.com.conectacampus.util.Autorizacao"%>
 <%
 List<Pesquisa> pesquisas = (List<Pesquisa>) request.getAttribute("listaPesquisas");
 Set<Integer> respondidas = (Set<Integer>) request.getAttribute("pesquisasRespondidas");
+Map<Integer, Integer> totalRespondidas = (Map<Integer, Integer>) request.getAttribute("totalRespondidas");
 Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
 boolean podeCriar = Autorizacao.podePublicarInstitucional(usuario);
 boolean aluno = Autorizacao.ehAluno(usuario);
@@ -87,6 +88,9 @@ if (podeCriar) {
 				<p class="text-muted flex-grow-1"><%=pesquisa.getDescricao() == null || pesquisa.getDescricao().isBlank() ? "Participe desta pesquisa."
 		: pesquisa.getDescricao()%></p>
 				<small class="text-muted mb-3">Publicada por <%=pesquisa.getUsuario().getNome()%></small>
+				<% if (podeCriar) { %>
+				<span class="text-muted mb-2"><i class="bi bi-check2-circle"></i> <%=totalRespondidas != null ? totalRespondidas.getOrDefault(pesquisa.getIdPesquisa(), 0) : 0%> pessoa(s) concluíram</span>
+				<% } %>
 				<%
 				if (podeCriar) {
 				%><a class="btn btn-outline-primary mb-2"

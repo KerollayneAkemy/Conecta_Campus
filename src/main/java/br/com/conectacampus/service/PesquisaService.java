@@ -2,6 +2,7 @@ package br.com.conectacampus.service;
 
 import java.util.List;
 import java.util.Set;
+import java.util.Map;
 import br.com.conectacampus.dao.PesquisaDAO;
 import br.com.conectacampus.model.Pesquisa;
 
@@ -37,5 +38,6 @@ public class PesquisaService {
 	
 	public Set<Integer> listarRespondidasPorUsuario(int idUsuario) {
 		return pesquisaDAO.listarRespondidasPorUsuario(idUsuario);
-		}
+	}
+	public Map<Integer, Integer> contarRespondidasPorPesquisa() { return pesquisaDAO.contarRespondidasPorPesquisa(); }
 }

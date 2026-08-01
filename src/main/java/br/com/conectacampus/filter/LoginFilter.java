@@ -29,6 +29,8 @@ public class LoginFilter extends HttpFilter implements Filter {
         boolean paginaLivre =
                 uri.endsWith("login")
              || uri.endsWith("cadastro")
+		     || uri.endsWith("esqueci-senha")
+		     || uri.endsWith("redefinir-senha")
              || uri.contains("/css/")
              || uri.contains("/js/")
              || uri.contains("/img/")

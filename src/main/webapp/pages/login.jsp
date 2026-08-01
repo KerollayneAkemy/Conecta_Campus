@@ -44,6 +44,11 @@
 						<%= request.getAttribute("erro") %>
 					</div>
 					<% } %>
+					<% if(request.getAttribute("sucesso") != null){ %>
+					<div class="alert alert-success" role="alert">
+						<%= request.getAttribute("sucesso") %>
+					</div>
+					<% } %>
 
 					<form action="${pageContext.request.contextPath}/login"
 						method="post">
@@ -65,6 +70,7 @@
 							Entrar
 						</button>
 					</form>
+					<a class="d-block text-center mt-3" href="${pageContext.request.contextPath}/esqueci-senha">Esqueci minha senha</a>
 
 					<hr class="my-4">
 

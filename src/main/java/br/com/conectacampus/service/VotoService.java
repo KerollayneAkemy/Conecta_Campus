@@ -34,6 +34,10 @@ public class VotoService {
         return dao.usuarioJaVotou(idUsuario, idOpcao);
     }
 
+    public boolean removerVoto(int idUsuario, int idEnquete) {
+        return idUsuario > 0 && idEnquete > 0 && dao.removerPorUsuarioEnquete(idUsuario, idEnquete);
+    }
+
     public boolean usuarioJaVotouNaEnquete(int idUsuario, int idEnquete) {
         return dao.usuarioJaVotouNaEnquete(idUsuario, idEnquete);
     }

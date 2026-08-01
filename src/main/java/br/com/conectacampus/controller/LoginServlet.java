@@ -28,6 +28,12 @@ public class LoginServlet extends HttpServlet {
             HttpServletResponse response)
             throws ServletException, IOException {
 
+        String mensagem = (String) request.getSession().getAttribute("msgLogin");
+        if (mensagem != null) {
+            request.setAttribute("sucesso", mensagem);
+            request.getSession().removeAttribute("msgLogin");
+        }
+
         request.getRequestDispatcher("/pages/login.jsp")
                .forward(request, response);
 

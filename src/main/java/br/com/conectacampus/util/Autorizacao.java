@@ -43,6 +43,10 @@ public final class Autorizacao {
         return ehAdministrador(usuario) || ehEquipe(usuario) || ehAluno(usuario);
     }
 
+    public static boolean podeAcessarEquipeInterna(Usuario usuario) {
+        return ehAdministrador(usuario) || ehEquipe(usuario);
+    }
+
     public static boolean podeEnviarFeedback(Usuario usuario) {
         return ehAluno(usuario);
     }

@@ -185,6 +185,18 @@ public class VotoDAO {
         return false;
     }
 
+    public boolean removerPorUsuarioEnquete(int idUsuario, int idEnquete) {
+        String sql = "DELETE FROM votos WHERE id_usuario=? AND id_enquete=?";
+        try (Connection conn = ConexaoFactory.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, idUsuario);
+            stmt.setInt(2, idEnquete);
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public boolean usuarioJaVotouNaEnquete(int idUsuario, int idEnquete) {
         String sql = "SELECT 1 FROM votos WHERE id_usuario=? AND id_enquete=?";
 

@@ -142,6 +142,12 @@ if (enquete != null && permiteEnquete) {
 			<i class="bi bi-check-circle-fill" aria-hidden="true"></i> Seu voto
 			já foi contabilizado.
 		</p>
+		<form action="${pageContext.request.contextPath}/votos" method="post" class="mb-3">
+			<input type="hidden" name="acao" value="remover">
+			<input type="hidden" name="idForum" value="<%=topico.getIdForum()%>">
+			<input type="hidden" name="idEnquete" value="<%=enquete.getIdEnquete()%>">
+			<button type="submit" class="btn btn-outline-danger btn-sm"><i class="bi bi-x-circle"></i> Remover meu voto</button>
+		</form>
 		<%
 		}
 		%>

@@ -3,6 +3,7 @@
 <%@ page import="br.com.conectacampus.model.Usuario"%>
 <%@ page import="java.math.BigDecimal"%>
 <%@ page import="java.util.List"%>
+<%@ page import="java.util.Map"%>
 <%
 Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
 if (usuario == null) {
@@ -16,6 +17,7 @@ BigDecimal totalEntradas = (BigDecimal) request.getAttribute("totalEntradasFinan
 BigDecimal totalSaidas = (BigDecimal) request.getAttribute("totalSaidasFinanceiras");
 double entradas = totalEntradas != null ? totalEntradas.doubleValue() : 0;
 double saidas = totalSaidas != null ? totalSaidas.doubleValue() : 0;
+Map<String, BigDecimal> saldoMensal = (Map<String, BigDecimal>) request.getAttribute("saldoMensal");
 
 request.setAttribute("paginaAtiva", "dashboard");
 request.setAttribute("tituloPagina", "Relatório financeiro - Conecta Campus");
@@ -67,6 +69,12 @@ request.setAttribute("tituloPagina", "Relatório financeiro - Conecta Campus");
 				</div>
 			</div>
 		</div>
+
+		<section class="border-top pt-4 mb-4" aria-labelledby="tituloSaldoMensal">
+			<h2 class="h5" id="tituloSaldoMensal"><i class="bi bi-graph-up-arrow" aria-hidden="true"></i> Saldo acumulado por mês</h2>
+			<p class="text-muted">O valor que sobra em um mês é levado para o próximo e reduzido pelas saídas seguintes.</p>
+			<div style="position: relative; height: 300px;"><canvas id="graficoSaldoMensal" role="img" aria-label="Gráfico de linha com o saldo financeiro acumulado de cada mês."></canvas></div>
+		</section>
 
 		<% if (movimentos != null && !movimentos.isEmpty()) { %>
 		<div class="table-responsive">
@@ -142,6 +150,19 @@ request.setAttribute("tituloPagina", "Relatório financeiro - Conecta Campus");
                 }
             }
         }
+    });
+})();
+
+(() => {
+    const canvas = document.getElementById('graficoSaldoMensal');
+    if (!canvas || typeof Chart === 'undefined') return;
+    const labels = [<% if (saldoMensal != null) for (String competencia : saldoMensal.keySet()) { %>'<%=competencia%>',<% } %>];
+    const valores = [<% if (saldoMensal != null) for (BigDecimal saldo : saldoMensal.values()) { %><%=saldo.doubleValue()%>,<% } %>];
+
+    new Chart(canvas, {
+        type: 'line',
+        data: { labels: labels, datasets: [{ label: 'Saldo final', data: valores, borderColor: '#008a6b', backgroundColor: 'rgba(0, 138, 107, 0.12)', fill: true, tension: 0.3, pointRadius: 4 }] },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { tooltip: { callbacks: { label(context) { return 'Saldo: R$ ' + context.parsed.y.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); } } } }, scales: { y: { ticks: { callback(value) { return 'R$ ' + value; } }, grid: { color: '#e9efec' } }, x: { grid: { display: false } } } }
     });
 })();
 </script>

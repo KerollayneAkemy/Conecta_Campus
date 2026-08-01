@@ -8,6 +8,8 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.LinkedHashMap;
 import java.util.Set;
 
 import br.com.conectacampus.model.Pesquisa;
@@ -109,6 +111,17 @@ public class PesquisaDAO {
 		} catch (SQLException e) { e.printStackTrace(); }
 		
 		return ids;
+	}
+
+	public Map<Integer, Integer> contarRespondidasPorPesquisa() {
+		Map<Integer, Integer> totais = new LinkedHashMap<>();
+		String sql = "SELECT id_pesquisa, COUNT(*) AS total FROM pesquisa_respostas GROUP BY id_pesquisa";
+		try (Connection conexao = ConexaoFactory.getConnection(); PreparedStatement stmt = conexao.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
+			while (rs.next()) totais.put(rs.getInt("id_pesquisa"), rs.getInt("total"));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return totais;
 	}
 
 	private Pesquisa mapear(ResultSet rs) throws SQLException {

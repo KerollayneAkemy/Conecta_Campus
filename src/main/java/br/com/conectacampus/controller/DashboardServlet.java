@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.Normalizer;
 import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 import br.com.conectacampus.model.MovimentoFinanceiro;
 import br.com.conectacampus.model.Usuario;
@@ -43,12 +46,15 @@ public class DashboardServlet extends HttpServlet {
 		competencia = competencia == null ? "" : competencia;
 
 		List<MovimentoFinanceiro> movimentos = financeiroService.listar(competencia);
+		List<MovimentoFinanceiro> historicoFinanceiro = financeiroService.listar("");
 		BigDecimal[] totais = calcularTotais(movimentos);
+		Map<String, BigDecimal> saldoMensal = calcularSaldoMensal(historicoFinanceiro);
 
 		request.setAttribute("competenciaFinanceira", competencia);
 		request.setAttribute("movimentosFinanceiros", movimentos);
 		request.setAttribute("totalEntradasFinanceiras", totais[0]);
 		request.setAttribute("totalSaidasFinanceiras", totais[1]);
+		request.setAttribute("saldoMensal", saldoMensal);
 		request.getRequestDispatcher("/pages/dashboard.jsp").forward(request, response);
 	}
 
@@ -76,5 +82,30 @@ public class DashboardServlet extends HttpServlet {
 				.replaceAll("\\p{M}", "")
 				.trim()
 				.toUpperCase();
+	}
+
+	private Map<String, BigDecimal> calcularSaldoMensal(List<MovimentoFinanceiro> movimentos) {
+		Map<String, BigDecimal> variacaoMensal = new TreeMap<>();
+		for (MovimentoFinanceiro movimento : movimentos) {
+			if (movimento.getCompetencia() == null || movimento.getCompetencia().isBlank()
+					|| movimento.getValor() == null || movimento.getTipo() == null) {
+				continue;
+			}
+
+			BigDecimal valor = "SAIDA".equals(normalizarTipo(movimento.getTipo()))
+					? movimento.getValor().negate()
+					: "ENTRADA".equals(normalizarTipo(movimento.getTipo()))
+							? movimento.getValor()
+							: BigDecimal.ZERO;
+			variacaoMensal.merge(movimento.getCompetencia(), valor, BigDecimal::add);
+		}
+
+		Map<String, BigDecimal> saldoAcumuladoPorMes = new LinkedHashMap<>();
+		BigDecimal saldoAcumulado = BigDecimal.ZERO;
+		for (Map.Entry<String, BigDecimal> mes : variacaoMensal.entrySet()) {
+			saldoAcumulado = saldoAcumulado.add(mes.getValue());
+			saldoAcumuladoPorMes.put(mes.getKey(), saldoAcumulado);
+		}
+		return saldoAcumuladoPorMes;
 	}
 }

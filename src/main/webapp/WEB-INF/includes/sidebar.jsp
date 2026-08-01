@@ -41,6 +41,14 @@ boolean alunoMenu = Autorizacao.ehAluno(usuarioMenu);
 		<li><a href="${pageContext.request.contextPath}/pesquisas"><i
 				class="bi bi-clipboard2-check-fill"></i> <span class="link-text">Pesquisas</span></a></li>
 		<%
+		if (adminMenu || equipeMenu) {
+		%>
+		<li><a href="${pageContext.request.contextPath}/equipe-interna"><i
+				class="bi bi-calendar2-week-fill"></i> <span class="link-text">Espaço da equipe</span></a></li>
+		<%
+		}
+		%>
+		<%
 		if (alunoMenu) {
 		%>
 		<li><a href="${pageContext.request.contextPath}/feedback"><i

@@ -40,6 +40,7 @@ public class PesquisaServlet extends HttpServlet {
 
 		request.setAttribute("listaPesquisas", pesquisaService.listar());
 		request.setAttribute("pesquisasRespondidas", pesquisaService.listarRespondidasPorUsuario(usuario.getIdUsuario()));
+		if (Autorizacao.podePublicarInstitucional(usuario)) request.setAttribute("totalRespondidas", pesquisaService.contarRespondidasPorPesquisa());
 		request.getRequestDispatcher("/pages/pesquisas.jsp").forward(request, response);
 	}
 	@Override protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
