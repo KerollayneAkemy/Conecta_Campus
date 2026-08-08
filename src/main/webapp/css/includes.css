@@ -1,0 +1,497 @@
+/* ===========================
+   MODAL DE CONFIRMAÇÃO
+   =========================== */
+.confirm-overlay {
+	position: fixed;
+	inset: 0;
+	z-index: 3000;
+	display: none;
+	align-items: center;
+	justify-content: center;
+	padding: 20px;
+	background: rgba(22, 32, 28, .55);
+	backdrop-filter: blur(3px);
+}
+
+.confirm-overlay.ativo {
+	display: flex;
+}
+
+.confirm-box {
+	width: 100%;
+	max-width: 400px;
+	padding: 28px 26px 22px;
+	background: var(--surface);
+	border-radius: var(--radius);
+	box-shadow: 0 24px 60px rgba(24, 39, 31, .28);
+	text-align: center;
+}
+
+.confirm-icon {
+	display: grid;
+	place-items: center;
+	width: 62px;
+	height: 62px;
+	margin: 0 auto 16px;
+	border-radius: 999px;
+	font-size: 1.8rem;
+	color: #fff;
+	background: var(--danger);
+}
+
+.confirm-box.confirm-neutro .confirm-icon {
+	background: var(--brand-dark);
+}
+
+.confirm-title {
+	margin: 0 0 8px;
+	font-size: 1.15rem;
+	font-weight: 800;
+	color: var(--ink);
+}
+
+.confirm-message {
+	margin: 0 0 22px;
+	color: var(--muted);
+	font-size: .92rem;
+	line-height: 1.5;
+}
+
+.confirm-actions {
+	display: flex;
+	gap: 10px;
+	justify-content: center;
+}
+
+.confirm-actions .btn {
+	flex: 1;
+}
+
+/* ===========================
+   TOAST DE NOTIFICAÇÃO (ALERTAS)
+   =========================== */
+#toastContainer {
+	position: fixed;
+	top: 88px;
+	right: 24px;
+	z-index: 2100;
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	max-width: 360px;
+}
+
+.toast-custom {
+	position: relative;
+	display: flex;
+	align-items: flex-start;
+	gap: 14px;
+	padding: 16px 18px;
+	background: var(--surface);
+	border: 1px solid var(--line);
+	border-left: 5px solid var(--brand);
+	border-radius: var(--radius);
+	box-shadow: var(--shadow);
+	overflow: hidden;
+}
+
+.toast-custom.toast-erro {
+	border-left-color: var(--danger);
+}
+
+.toast-custom.toast-sucesso {
+	border-left-color: var(--brand-dark);
+}
+
+.toast-icon {
+	display: grid;
+	place-items: center;
+	flex: 0 0 38px;
+	width: 38px;
+	height: 38px;
+	border-radius: 999px;
+	font-size: 1.15rem;
+	color: #fff;
+	background: var(--brand-dark);
+}
+
+.toast-erro .toast-icon {
+	background: var(--danger);
+}
+
+.toast-sucesso .toast-icon {
+	background: var(--brand-dark);
+}
+
+.toast-body {
+	flex: 1;
+	padding-right: 18px;
+}
+
+.toast-title {
+	margin: 0 0 2px;
+	font-weight: 800;
+	font-size: .92rem;
+	color: var(--ink);
+}
+
+.toast-message {
+	margin: 0;
+	font-size: .88rem;
+	color: var(--muted);
+	line-height: 1.4;
+}
+
+.toast-close {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	display: grid;
+	place-items: center;
+	width: 26px;
+	height: 26px;
+	border: 0;
+	background: transparent;
+	color: var(--muted);
+	border-radius: 999px;
+	cursor: pointer;
+	font-size: 1.1rem;
+	line-height: 1;
+}
+
+.toast-close:hover {
+	background: var(--surface-2);
+	color: var(--ink);
+}
+
+.toast-progress {
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	height: 3px;
+	width: 100%;
+	background: var(--brand-dark);
+	transform-origin: left;
+}
+
+.toast-erro .toast-progress {
+	background: var(--danger);
+}
+
+.toast-sucesso .toast-progress {
+	background: var(--brand-dark);
+}
+
+@media ( max-width : 576px) {
+	#toastContainer {
+		top: auto;
+		bottom: 16px;
+		right: 16px;
+		left: 16px;
+		max-width: none;
+	}
+}
+
+.account-menu {
+	position: relative;
+}
+
+.account-menu summary {
+	list-style: none;
+}
+
+.account-menu summary::-webkit-details-marker {
+	display: none;
+}
+
+.navbar-profile {
+	display: inline-flex;
+	align-items: center;
+	gap: 10px;
+	max-width: 320px;
+	padding: 6px 10px 6px 6px;
+	border: 1px solid var(--line);
+	border-radius: 12px;
+	color: var(--ink);
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.navbar-profile:hover {
+	color: var(--ink);
+	background: var(--brand-soft);
+	border-color: var(--line);
+}
+
+.navbar-profile:focus-visible {
+	outline: 3px solid rgba(0, 127, 95, .28);
+	outline-offset: 2px;
+}
+
+.navbar-profile-avatar {
+	width: 38px;
+	height: 38px;
+	border-radius: 50%;
+	object-fit: cover;
+	flex: 0 0 auto;
+}
+
+.navbar-profile-initials {
+	display: grid;
+	place-items: center;
+	background: var(--brand-dark);
+	color: #fff;
+	font-size: .78rem;
+	font-weight: 800;
+}
+
+.navbar-profile-text {
+	display: grid;
+	min-width: 0;
+	line-height: 1.2;
+}
+
+.navbar-profile-text strong {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	font-size: .87rem;
+}
+
+.navbar-profile-text small {
+	color: var(--muted);
+	font-size: .69rem;
+	text-transform: capitalize;
+}
+
+.navbar-profile-arrow {
+	color: var(--muted);
+	font-size: .75rem;
+}
+
+.account-menu[open] .navbar-profile {
+	background: var(--brand-soft);
+	border-color: var(--line);
+}
+
+.account-menu[open] .navbar-profile-arrow {
+	transform: rotate(180deg);
+}
+
+.account-menu-panel {
+	position: absolute;
+	top: calc(100% + 10px);
+	right: 0;
+	z-index: 1040;
+	width: 250px;
+	padding: 8px;
+	border: 1px solid var(--line);
+	border-radius: 12px;
+	background: #fff;
+	box-shadow: var(--shadow);
+}
+
+.account-menu-title {
+	margin: 6px 8px 8px;
+	color: var(--muted);
+	font-size: .72rem;
+	font-weight: 800;
+	text-transform: uppercase;
+	letter-spacing: .06em;
+}
+
+.account-menu-panel a {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 10px;
+	border-radius: 8px;
+	color: var(--ink);
+	font-weight: 700;
+	text-decoration: none;
+}
+
+.account-menu-panel a:hover {
+	background: var(--brand-soft);
+	color: var(--brand-dark);
+}
+
+.account-menu-panel .account-menu-exit {
+	margin-top: 4px;
+	border-top: 1px solid var(--line);
+	border-radius: 0;
+	color: var(--danger);
+}
+
+.account-menu-panel .account-menu-exit:hover {
+	background: #fff1f0;
+	color: var(--danger);
+}
+
+/* Layout compartilhado do header, navbar e sidebar */
+#appShell {
+	display: block;
+}
+
+/* Sidebar agora nasce em top:0, por trás da navbar (z-index menor),
+   com padding-top empurrando o conteúdo dela para baixo da navbar.
+   Isso elimina a costura entre navbar e sidebar. */
+#sidebarMenu {
+	position: fixed;
+	top: 72px;
+	left: 0;
+	height: calc(100vh - 72px);
+	width: 76px;
+	padding-top: 38px;
+	background: var(--surface);
+	border-top: 1px solid #d5ddd8;
+	transition: width 0.28s ease, box-shadow 0.28s ease;
+	z-index: 1020;
+	box-shadow: none;
+	overflow-x: hidden;
+	overflow-y: auto;
+	scrollbar-width: thin;
+	scrollbar-color: #aeb8b2 transparent;
+}
+
+.account-view-form {
+	margin: 0;
+}
+
+.account-view-button {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	width: 100%;
+	padding: 10px;
+	border: 0;
+	border-radius: 8px;
+	background: transparent;
+	color: var(--brand-dark);
+	font: inherit;
+	font-weight: 700;
+	text-align: left;
+	cursor: pointer;
+}
+
+.account-view-button:hover {
+	background: var(--brand-soft);
+}
+
+.account-view-button:focus-visible {
+	outline: 3px solid rgba(0, 127, 95, .28);
+	outline-offset: 1px;
+}
+
+#sidebarMenu::-webkit-scrollbar {
+	width: 5px;
+}
+
+#sidebarMenu::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+#sidebarMenu::-webkit-scrollbar-thumb {
+	background: #aeb8b2;
+	border-radius: 999px;
+}
+
+#appShell.sidebar-aberta #sidebarMenu {
+	width: 272px;
+	box-shadow: 8px 0 30px rgba(0, 0, 0, .22);
+}
+
+#sidebarMenu a {
+	justify-content: center;
+	padding-left: 0;
+	padding-right: 0;
+}
+
+#sidebarMenu .link-text {
+	display: none;
+	white-space: nowrap;
+}
+
+#appShell.sidebar-aberta #sidebarMenu a {
+	justify-content: flex-start;
+	padding-left: 14px;
+	padding-right: 14px;
+}
+
+#appShell.sidebar-aberta #sidebarMenu .link-text {
+	display: inline;
+}
+
+#sidebarOverlay {
+	position: fixed;
+	top: 72px;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba(15, 23, 20, .45);
+	z-index: 1015;
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity 0.28s ease;
+}
+
+#appShell.sidebar-aberta #sidebarOverlay {
+	opacity: 1;
+	pointer-events: auto;
+}
+
+main.content {
+	width: 100%;
+	margin-left: 76px;
+}
+
+#sidebarToggle {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 40px;
+	height: 40px;
+	padding: 0;
+	margin: 0;
+	background: transparent;
+	border: 1px solid transparent;
+	border-radius: 8px;
+	font-size: 1.3rem;
+	line-height: 1;
+	cursor: pointer;
+}
+
+#sidebarToggle:hover {
+	background: #e8f7f1;
+	border-color: #dbe5df;
+}
+
+/* Navbar acima da sidebar em z-index, mesma cor/sem borda,
+   para as duas parecerem uma peça só */
+.navbar {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	width: 100%;
+	z-index: 1030;
+	border-bottom: none;
+	box-shadow: none;
+	background: var(--surface);
+}
+
+body {
+	padding-top: 72px;
+}
+
+@media (max-width: 992px) {
+	main.content {
+		margin-left: 0;
+	}
+	#sidebarMenu {
+		width: 0;
+	}
+	#appShell.sidebar-aberta #sidebarMenu {
+		width: 272px;
+	}
+}

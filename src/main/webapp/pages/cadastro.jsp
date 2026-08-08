@@ -18,7 +18,7 @@ boolean cadastroAdministrativo = Autorizacao.ehAdministrador(usuarioLogado);
 	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
 	rel="stylesheet">
 <link rel="stylesheet"
-	href="${pageContext.request.contextPath}/css/login.css">
+	href="${pageContext.request.contextPath}/css/login.css?v=7">
 </head>
 <body>
 	<a class="skip-link" href="#conteudo">Ir para o formulário</a>
@@ -43,8 +43,7 @@ boolean cadastroAdministrativo = Autorizacao.ehAdministrador(usuarioLogado);
 		: "Cadastro exclusivo para alunos. Use um e-mail @gmail.com."%></p>
 					<%
 					if (request.getAttribute("erro") != null) {
-					%><div
-						class="alert alert-danger" role="alert"><%=request.getAttribute("erro")%></div>
+					%><div class="alert alert-danger" role="alert"><%=request.getAttribute("erro")%></div>
 					<%
 					}
 					%>
@@ -71,7 +70,8 @@ boolean cadastroAdministrativo = Autorizacao.ehAdministrador(usuarioLogado);
 						<div class="mb-4">
 							<label class="form-label" for="senha">Senha</label><input
 								type="password" class="form-control" id="senha" name="senha"
-								autocomplete="new-password" minlength="6" required>
+								autocomplete="new-password" minlength="6" placeholder="••••••••"
+								required>
 						</div>
 						<%
 						if (cadastroAdministrativo) {
@@ -88,6 +88,50 @@ boolean cadastroAdministrativo = Autorizacao.ehAdministrador(usuarioLogado);
 						<%
 						}
 						%>
+						<div class="registration-preferences mb-4">
+							<div class="registration-preferences-title">
+								<span>Preferências da conta</span> <small>Revise antes
+									de continuar</small>
+							</div>
+							<div class="terms-consent">
+								<span class="preference-icon preference-icon-shield"
+									aria-hidden="true"> <i class="bi bi-shield-check"></i>
+								</span>
+								<div class="preference-content">
+									<div class="form-check">
+										<input class="form-check-input" type="checkbox"
+											id="aceiteTermos" name="aceiteTermos" value="true" required>
+										<label class="form-check-label" for="aceiteTermos"> <strong>Li
+												e aceito os termos</strong> <span>Confirmo que li e concordo
+												com os <a href="${pageContext.request.contextPath}/termos"
+												target="_blank" rel="opener" id="linkTermos">Termos de
+													Uso e a Política de Privacidade</a>.
+										</span>
+										</label>
+									</div>
+									<p class="terms-help mb-0">
+										<i class="bi bi-asterisk" aria-hidden="true"></i> Obrigatório
+										para criar a conta
+									</p>
+								</div>
+							</div>
+							<div class="email-preference">
+								<span class="preference-icon" aria-hidden="true"> <i
+									class="bi bi-envelope-paper"></i>
+								</span>
+								<div class="preference-content">
+									<div class="form-check form-switch">
+										<input class="form-check-input" type="checkbox" role="switch"
+											id="notificarComunicados" name="notificarComunicados"
+											value="true"> <label class="form-check-label"
+											for="notificarComunicados"> <strong>Receber
+												comunicados por e-mail</strong> <span>Quero ser avisado quando
+												um novo comunicado for publicado.</span>
+										</label>
+									</div>
+								</div>
+							</div>
+						</div>
 						<button type="submit" class="btn btn-primary w-100">
 							<i class="bi bi-check-circle" aria-hidden="true"></i> Cadastrar
 						</button>
@@ -104,6 +148,43 @@ boolean cadastroAdministrativo = Autorizacao.ehAdministrador(usuarioLogado);
 	</main>
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+	<script>
+		(() => {
+			const form = document.querySelector('form[action$="/cadastro"]');
+			const chave = 'conectaCampus.cadastro.rascunho';
+			const campos = ['nome', 'curso', 'email', 'perfil', 'aceiteTermos', 'notificarComunicados'];
+
+			function salvarRascunho() {
+				const dados = { salvoEm: Date.now() };
+				campos.forEach(id => {
+					const campo = document.getElementById(id);
+					if (campo) dados[id] = campo.type === 'checkbox' ? campo.checked : campo.value;
+				});
+				sessionStorage.setItem(chave, JSON.stringify(dados));
+			}
+
+			function restaurarRascunho() {
+				try {
+					const dados = JSON.parse(sessionStorage.getItem(chave));
+					if (!dados || Date.now() - dados.salvoEm > 30 * 60 * 1000) return;
+					campos.forEach(id => {
+						const campo = document.getElementById(id);
+						if (!campo || dados[id] === undefined) return;
+						if (campo.type === 'checkbox') campo.checked = Boolean(dados[id]);
+						else campo.value = dados[id];
+					});
+				} catch (erro) {
+					sessionStorage.removeItem(chave);
+				}
+			}
+
+			restaurarRascunho();
+			form?.addEventListener('input', salvarRascunho);
+			form?.addEventListener('change', salvarRascunho);
+			document.getElementById('linkTermos')?.addEventListener('click', salvarRascunho);
+
+		})();
+	</script>
 	<%
 	if (cadastroAdministrativo) {
 	%><script>

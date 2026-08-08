@@ -107,25 +107,6 @@ public class ComunicadoDAO {
         return false;
     }
 
-    // INCREMENTAR VISUALIZAÇÕES
-    public boolean incrementarVisualizacao(int idComunicado) {
-
-        String sql = "UPDATE comunicados SET visualizacoes = visualizacoes + 1 WHERE id_comunicado=?";
-
-        try (Connection conn = ConexaoFactory.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setInt(1, idComunicado);
-
-            return stmt.executeUpdate() > 0;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return false;
-    }
-
     // BUSCAR POR ID
     public Comunicado buscarPorId(int idComunicado) {
 

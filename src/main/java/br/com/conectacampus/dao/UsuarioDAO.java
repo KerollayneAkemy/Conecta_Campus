@@ -19,8 +19,8 @@ public class UsuarioDAO {
 
 		String sql = """
 				INSERT INTO usuarios
-				(nome,email,senha,curso,setor_institucional,email_institucional,ativo,id_perfil,id_cargo)
-				VALUES (?,?,?,?,?,?,?,?,?)
+				(nome,email,senha,curso,setor_institucional,email_institucional,ativo,id_perfil,id_cargo,notificar_comunicados)
+				VALUES (?,?,?,?,?,?,?,?,?,?)
 				""";
 
 		try (Connection conn = ConexaoFactory.getConnection();
@@ -41,6 +41,7 @@ public class UsuarioDAO {
 			} else {
 				stmt.setNull(9, java.sql.Types.INTEGER);
 			}
+			stmt.setBoolean(10, usuario.isNotificarComunicados());
 
 			return stmt.executeUpdate() > 0;
 
@@ -159,6 +160,7 @@ public class UsuarioDAO {
 					usuario.setFotoPerfil(rs.getString("foto_perfil"));
 					usuario.setCargo(mapearCargo(rs));
 					usuario.setAtivo(rs.getBoolean("ativo"));
+					usuario.setNotificarComunicados(rs.getBoolean("notificar_comunicados"));
 
 					Timestamp ultimo = rs.getTimestamp("ultimo_acesso");
 
@@ -226,6 +228,7 @@ public class UsuarioDAO {
 					usuario.setFotoPerfil(rs.getString("foto_perfil"));
 					usuario.setCargo(mapearCargo(rs));
 					usuario.setAtivo(rs.getBoolean("ativo"));
+					usuario.setNotificarComunicados(rs.getBoolean("notificar_comunicados"));
 
 					Timestamp ultimo = rs.getTimestamp("ultimo_acesso");
 
@@ -290,6 +293,7 @@ public class UsuarioDAO {
 				usuario.setFotoPerfil(rs.getString("foto_perfil"));
 				usuario.setCargo(mapearCargo(rs));
 				usuario.setAtivo(rs.getBoolean("ativo"));
+				usuario.setNotificarComunicados(rs.getBoolean("notificar_comunicados"));
 
 				Timestamp ultimo = rs.getTimestamp("ultimo_acesso");
 
@@ -317,27 +321,6 @@ public class UsuarioDAO {
 
 	}
 
-	// QUANTIDADE DE USUÁRIOS
-	public int quantidadeUsuarios() {
-
-		String sql = "SELECT COUNT(*) FROM usuarios";
-
-		try (Connection conn = ConexaoFactory.getConnection();
-				PreparedStatement stmt = conn.prepareStatement(sql);
-				ResultSet rs = stmt.executeQuery()) {
-
-			if (rs.next()) {
-				return rs.getInt(1);
-			}
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return 0;
-
-	}
-
 	//ATUALIZAR ÚLTIMO ACESSO
 	public boolean atualizarUltimoAcesso(int idUsuario) {
 
@@ -361,11 +344,39 @@ public class UsuarioDAO {
 		return false;
 	}
 
+	public List<Usuario> listarInscritosComunicados() {
+		List<Usuario> destinatarios = new ArrayList<>();
+		String sql = """
+				SELECT nome, email
+				FROM usuarios
+				WHERE ativo = TRUE
+				  AND notificar_comunicados = TRUE
+				  AND email IS NOT NULL
+				  AND email <> ''
+				ORDER BY id_usuario
+				""";
+
+		try (Connection conn = ConexaoFactory.getConnection();
+				PreparedStatement stmt = conn.prepareStatement(sql);
+				ResultSet rs = stmt.executeQuery()) {
+			while (rs.next()) {
+				Usuario usuario = new Usuario();
+				usuario.setNome(rs.getString("nome"));
+				usuario.setEmail(rs.getString("email"));
+				destinatarios.add(usuario);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return destinatarios;
+	}
+
 	public boolean atualizarPerfil(Usuario usuario) {
 
 		String sql = """
 				UPDATE usuarios
-				SET nome=?, email=?, curso=?, foto_perfil=?
+				SET nome=?, email=?, curso=?, foto_perfil=?, notificar_comunicados=?
 				WHERE id_usuario=?
 				""";
 
@@ -376,7 +387,8 @@ public class UsuarioDAO {
 			stmt.setString(2, usuario.getEmail());
 			stmt.setString(3, usuario.getCurso());
 			stmt.setString(4, usuario.getFotoPerfil());
-			stmt.setInt(5, usuario.getIdUsuario());
+			stmt.setBoolean(5, usuario.isNotificarComunicados());
+			stmt.setInt(6, usuario.getIdUsuario());
 
 			return stmt.executeUpdate() > 0;
 

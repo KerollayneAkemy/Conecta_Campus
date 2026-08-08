@@ -1,0 +1,326 @@
+@media (prefers-reduced-motion: reduce) {
+	*, *::before, *::after {
+		scroll-behavior: auto !important;
+		transition: none !important;
+		animation: none !important;
+	}
+}
+
+/* Tablets e telas menores: sidebar passa a funcionar como painel lateral. */
+@media (max-width: 992px) {
+	img,
+	video,
+	iframe,
+	canvas {
+		max-width: 100%;
+	}
+
+	.row > *,
+	.card,
+	.card-body {
+		min-width: 0;
+	}
+
+	h1, h2, h3, h4, h5, h6,
+	p, a, td, th {
+		overflow-wrap: anywhere;
+	}
+
+	body {
+		overflow-x: hidden;
+	}
+
+	.navbar .container-fluid {
+		padding-inline: 20px;
+	}
+
+	#sidebarToggle {
+		display: inline-flex;
+	}
+
+	#sidebarMenu {
+		top: 72px;
+		width: 0;
+		height: calc(100dvh - 72px);
+		padding: 24px 0;
+		border-top: 1px solid var(--line);
+		box-shadow: none;
+	}
+
+	#appShell.sidebar-aberta #sidebarMenu {
+		width: min(320px, 84vw);
+		padding-inline: 16px;
+		box-shadow: 12px 0 30px rgba(15, 23, 20, .22);
+	}
+
+	#sidebarMenu ul {
+		display: block;
+	}
+
+	#sidebarMenu a,
+	#appShell.sidebar-aberta #sidebarMenu a {
+		justify-content: flex-start;
+		padding: 11px 14px;
+	}
+
+	#sidebarMenu .link-text,
+	#appShell.sidebar-aberta #sidebarMenu .link-text {
+		display: inline;
+	}
+
+	main.content,
+	.content,
+	body > .content {
+		width: 100%;
+		max-width: 100%;
+		margin-left: 0;
+		padding: 24px;
+	}
+
+	.page-header,
+	.hero-panel {
+		align-items: flex-start;
+		flex-direction: column;
+	}
+
+	.page-header > .btn,
+	.page-header > .action-row {
+		align-self: stretch;
+	}
+
+	.table-responsive {
+		width: 100%;
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
+	}
+
+	.table-responsive > .table {
+		min-width: 680px;
+	}
+
+	.card-header.d-flex {
+		flex-wrap: wrap;
+	}
+
+	.card-header .search-input {
+		flex: 1 1 240px;
+	}
+
+	.card-header > form.d-flex {
+		flex: 1 1 100%;
+		flex-wrap: wrap;
+	}
+
+	.card-header > form.d-flex .form-control,
+	.card-header > form.d-flex .form-select {
+		flex: 1 1 180px;
+	}
+
+	.account-menu-panel {
+		max-width: calc(100vw - 32px);
+	}
+}
+
+/* Celulares. */
+@media (max-width: 576px) {
+	.navbar .container-fluid {
+		min-height: 72px;
+		padding-inline: 12px;
+		gap: 8px;
+	}
+
+	.navbar-start,
+	.navbar-actions {
+		gap: 6px;
+	}
+
+	.navbar-brand {
+		gap: 7px;
+	}
+
+	.navbar-brand small,
+	.navbar-profile-text,
+	.navbar-profile-arrow {
+		display: none;
+	}
+
+	.brand-mark {
+		width: 34px;
+		height: 34px;
+	}
+
+	.navbar-brand strong {
+		font-size: .86rem;
+	}
+
+	.navbar-profile {
+		padding: 4px;
+		border-color: transparent;
+	}
+
+	.navbar-profile-avatar {
+		width: 36px;
+		height: 36px;
+	}
+
+	.account-menu-panel {
+		position: fixed;
+		top: 66px;
+		right: 10px;
+		width: min(250px, calc(100vw - 20px));
+	}
+
+	main.content,
+	.content,
+	body > .content {
+		padding: 16px 12px 28px;
+	}
+
+	.page-header,
+	.hero-panel {
+		gap: 14px;
+		margin-bottom: 18px;
+	}
+
+	.page-title {
+		font-size: clamp(1.65rem, 9vw, 2.15rem);
+		line-height: 1.12;
+	}
+
+	.page-subtitle {
+		font-size: .94rem;
+	}
+
+	.hero-panel {
+		padding: 20px;
+	}
+
+	.card-header {
+		padding: 14px 16px;
+	}
+
+	.card-header.d-flex {
+		align-items: stretch !important;
+		flex-direction: column;
+	}
+
+	.card-header .search-input,
+	.card-header > form.d-flex,
+	.card-header > form.d-flex .form-control,
+	.card-header > form.d-flex .form-select,
+	.card-header > form.d-flex .btn {
+		width: 100%;
+	}
+
+	.card-body {
+		padding: 16px;
+	}
+
+	.metric-card .card-body {
+		align-items: flex-start;
+	}
+
+	.metric-value {
+		font-size: 1.65rem;
+	}
+
+	.form-control,
+	.form-select {
+		font-size: 16px;
+	}
+
+	.search-input {
+		max-width: 100%;
+	}
+
+	.action-row {
+		width: 100%;
+	}
+
+	.action-row > .btn,
+	.page-header > .btn {
+		width: 100%;
+	}
+
+	.forum-topic > .d-flex {
+		align-items: stretch !important;
+		flex-direction: column;
+	}
+
+	.forum-topic .action-row {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	.table-responsive {
+		margin-inline: -4px;
+		width: calc(100% + 8px);
+		scrollbar-width: thin;
+		scrollbar-color: #aeb8b2 transparent;
+	}
+
+	.table-responsive::-webkit-scrollbar {
+		height: 5px;
+	}
+
+	.table-responsive::-webkit-scrollbar-thumb {
+		background: #aeb8b2;
+		border-radius: 999px;
+	}
+
+	.table td,
+	.table th {
+		padding: 12px 14px;
+	}
+
+	.list-group-item {
+		padding: 15px 16px;
+	}
+
+	.confirm-overlay {
+		padding: 14px;
+	}
+
+	.confirm-box {
+		padding: 24px 18px 18px;
+	}
+
+	.confirm-actions {
+		flex-direction: column-reverse;
+	}
+
+	#toastContainer {
+		top: auto;
+		right: 12px;
+		bottom: 12px;
+		left: 12px;
+		max-width: none;
+	}
+
+	.btn,
+	#sidebarMenu a,
+	.account-menu-panel a,
+	.account-view-button {
+		min-height: 44px;
+	}
+}
+
+/* Celulares muito estreitos. */
+@media (max-width: 390px) {
+	.navbar-brand strong {
+		display: none;
+	}
+
+	#sidebarToggle {
+		width: 36px;
+		height: 36px;
+	}
+
+	.page-title {
+		font-size: 1.55rem;
+	}
+
+	.card-body {
+		padding: 14px;
+	}
+}

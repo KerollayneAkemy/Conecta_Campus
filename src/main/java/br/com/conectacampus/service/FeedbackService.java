@@ -32,20 +32,6 @@ public class FeedbackService {
 
     }
 
-    // ATUALIZAR
-
-    public boolean atualizar(Feedback feedback) {
-
-        if (feedback == null)
-            return false;
-
-        if (feedback.getIdFeedback() <= 0)
-            return false;
-
-        return feedbackDAO.atualizar(feedback);
-
-    }
-
     // EXCLUIR
 
     public boolean excluir(int idFeedback) {

@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="br.com.conectacampus.model.Usuario"%>
+<%@ page import="br.com.conectacampus.util.Autorizacao"%>
 <%
     Usuario usuarioNavbar = (Usuario) session.getAttribute("usuarioLogado");
     if (usuarioNavbar == null) {
@@ -13,6 +14,9 @@
     String perfilUsuario = usuarioNavbar.getPerfil() == null ? "Conta" : usuarioNavbar.getPerfil().getNome().replace("_", " ");
     String fotoPerfilNavbar = usuarioNavbar.getFotoPerfil();
     boolean temFotoPerfil = fotoPerfilNavbar != null && !fotoPerfilNavbar.isBlank();
+    boolean administradorReal = Autorizacao.ehAdministradorReal(usuarioNavbar);
+    boolean modoAlunoAtivo = administradorReal && Boolean.TRUE.equals(session.getAttribute("modoAlunoAtivo"));
+    if (modoAlunoAtivo) perfilUsuario = "VISÃO DE ALUNO";
 %>
 <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
 
@@ -50,7 +54,18 @@
 				<div class="account-menu-panel">
 					<p class="account-menu-title">Minha conta</p>
 					<a href="${pageContext.request.contextPath}/perfil"><i
-						class="bi bi-person-gear" aria-hidden="true"></i> Meu perfil</a> <a
+						class="bi bi-person-gear" aria-hidden="true"></i> Meu perfil</a>
+					<% if (administradorReal) { %>
+					<form action="${pageContext.request.contextPath}/modo-aluno" method="post"
+						class="account-view-form">
+						<button type="submit" class="account-view-button">
+							<i class="bi <%=modoAlunoAtivo ? "bi-shield-check" : "bi-mortarboard"%>"
+								aria-hidden="true"></i>
+							<%=modoAlunoAtivo ? "Voltar para visão de admin" : "Visualizar como aluno"%>
+						</button>
+					</form>
+					<% } %>
+					<a
 						class="account-menu-exit"
 						href="${pageContext.request.contextPath}/logout"><i
 						class="bi bi-box-arrow-right" aria-hidden="true"></i> Sair</a>

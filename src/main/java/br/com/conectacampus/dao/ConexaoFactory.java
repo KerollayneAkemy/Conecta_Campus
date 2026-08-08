@@ -26,8 +26,6 @@ public class ConexaoFactory {
                     USUARIO,
                     SENHA);
 
-            System.out.println("ConexaoFactory() - 200 OK");
-
             return conexao;
 
         } catch (Exception e) {

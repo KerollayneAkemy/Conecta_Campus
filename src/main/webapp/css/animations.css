@@ -1,0 +1,103 @@
+/* Animações compartilhadas dos componentes presentes nos includes. */
+
+@keyframes overlayIn {
+	from { opacity: 0; }
+	to { opacity: 1; }
+}
+
+@keyframes boxIn {
+	from {
+		opacity: 0;
+		transform: translateY(-12px) scale(.97);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0) scale(1);
+	}
+}
+
+@keyframes toastIn {
+	from {
+		opacity: 0;
+		transform: translateX(24px);
+	}
+	to {
+		opacity: 1;
+		transform: translateX(0);
+	}
+}
+
+@keyframes toastOut {
+	from {
+		opacity: 1;
+		transform: translateX(0);
+	}
+	to {
+		opacity: 0;
+		transform: translateX(24px);
+	}
+}
+
+@keyframes toastProgress {
+	from { transform: scaleX(1); }
+	to { transform: scaleX(0); }
+}
+
+@keyframes sidebarTextIn {
+	from {
+		opacity: 0;
+		transform: translateX(-8px);
+	}
+	to {
+		opacity: 1;
+		transform: translateX(0);
+	}
+}
+
+.confirm-overlay.ativo {
+	animation: overlayIn .2s ease both;
+}
+
+.confirm-overlay.ativo .confirm-box {
+	animation: boxIn .25s ease both;
+}
+
+.toast-custom {
+	animation: toastIn .35s ease both;
+}
+
+.toast-custom.toast-saindo {
+	animation: toastOut .3s ease both;
+}
+
+.toast-progress {
+	animation: toastProgress 6s linear forwards;
+}
+
+#sidebarMenu {
+	transition: width .28s ease, box-shadow .28s ease;
+}
+
+#sidebarOverlay {
+	transition: opacity .28s ease;
+}
+
+#sidebarMenu a {
+	transition: color .2s ease, background-color .2s ease, transform .2s ease;
+}
+
+#sidebarMenu a:hover {
+	transform: translateX(2px);
+}
+
+#appShell.sidebar-aberta #sidebarMenu .link-text {
+	animation: sidebarTextIn .22s ease both;
+}
+
+#sidebarToggle i {
+	transition: transform .28s ease;
+}
+
+#appShell.sidebar-aberta #sidebarToggle i {
+	transform: rotate(90deg);
+}

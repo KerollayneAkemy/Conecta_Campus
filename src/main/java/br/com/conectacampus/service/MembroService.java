@@ -33,8 +33,4 @@ public class MembroService {
         return membroDAO.listar();
     }
 
-    public int quantidadeMembros() {
-        return membroDAO.quantidadeMembros();
-    }
-
 }

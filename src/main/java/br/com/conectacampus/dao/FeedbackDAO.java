@@ -43,36 +43,6 @@ public class FeedbackDAO {
         return false;
     }
 
-    // ATUALIZAR
-    public boolean atualizar(Feedback feedback) {
-
-        String sql = """
-                UPDATE feedbacks
-                SET assunto=?,
-                    tipo=?,
-                    mensagem=?,
-                    anonimo=?
-                WHERE id_feedback=?
-                """;
-
-        try (Connection conn = ConexaoFactory.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setString(1, feedback.getAssunto());
-            stmt.setString(2, feedback.getTipo());
-            stmt.setString(3, feedback.getMensagem());
-            stmt.setBoolean(4, feedback.isAnonimo());
-            stmt.setInt(5, feedback.getIdFeedback());
-
-            return stmt.executeUpdate() > 0;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return false;
-    }
-
     // EXCLUIR
     public boolean excluir(int idFeedback) {
 

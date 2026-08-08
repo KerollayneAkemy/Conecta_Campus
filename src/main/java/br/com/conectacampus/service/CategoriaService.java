@@ -17,10 +17,6 @@ public class CategoriaService {
         return categoriaDAO.listar();
     }
 
-    public Categoria buscarPorId(int id) {
-        return categoriaDAO.buscarPorId(id);
-    }
-
     public boolean cadastrar(Categoria categoria) {
        
     	return categoria != null && categoria.getNome() != null && !categoria.getNome().isBlank() && categoriaDAO.inserir(categoria);

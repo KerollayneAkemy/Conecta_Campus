@@ -70,7 +70,7 @@ public class PerfilServlet extends HttpServlet {
 		
 		usuario.setNome(nome.trim());
 		usuario.setEmail(email.trim().toLowerCase());
-		usuario.setCurso(request.getParameter("curso"));
+		usuario.setNotificarComunicados("true".equals(request.getParameter("notificarComunicados")));
 
 		Part foto = request.getPart("foto");
 		

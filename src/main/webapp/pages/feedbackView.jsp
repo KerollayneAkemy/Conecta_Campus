@@ -5,21 +5,22 @@
 <%@ page import="br.com.conectacampus.util.Autorizacao"%>
 <%@ page import="java.time.format.DateTimeFormatter"%>
 <%
-    List<Feedback> feedbacks = (List<Feedback>) request.getAttribute("listaFeedbacks");
-    String filtroTipo = (String) request.getAttribute("filtroTipo");
-    if (filtroTipo == null) filtroTipo = "";
+List<Feedback> feedbacks = (List<Feedback>) request.getAttribute("listaFeedbacks");
+String filtroTipo = (String) request.getAttribute("filtroTipo");
+if (filtroTipo == null)
+	filtroTipo = "";
 
-    Integer totalFeedbacks = (Integer) request.getAttribute("totalFeedbacks");
-    Integer totalSugestoes = (Integer) request.getAttribute("totalSugestoes");
-    Integer totalElogios = (Integer) request.getAttribute("totalElogios");
-    Integer totalReclamacoes = (Integer) request.getAttribute("totalReclamacoes");
+Integer totalFeedbacks = (Integer) request.getAttribute("totalFeedbacks");
+Integer totalSugestoes = (Integer) request.getAttribute("totalSugestoes");
+Integer totalElogios = (Integer) request.getAttribute("totalElogios");
+Integer totalReclamacoes = (Integer) request.getAttribute("totalReclamacoes");
 
-    DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-    Usuario usuarioFeedback = (Usuario) session.getAttribute("usuarioLogado");
-    boolean podeExcluirFeedback = Autorizacao.ehAdministrador(usuarioFeedback);
+DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+Usuario usuarioFeedback = (Usuario) session.getAttribute("usuarioLogado");
+boolean podeExcluirFeedback = Autorizacao.ehAdministrador(usuarioFeedback);
 
-    request.setAttribute("paginaAtiva", "feedbackview");
-    request.setAttribute("tituloPagina", "Visualizar Feedbacks - Conecta Campus");
+request.setAttribute("paginaAtiva", "feedbackview");
+request.setAttribute("tituloPagina", "Visualizar Feedbacks - Conecta Campus");
 %>
 <%@ include file="/WEB-INF/includes/header.jsp"%>
 
@@ -101,10 +102,14 @@
 <div class="card">
 	<div
 		class="card-header d-flex flex-wrap justify-content-between align-items-center gap-3">
-		<span> Lista de feedbacks <% if (!filtroTipo.isEmpty()) { %> <span
+		<span> Lista de feedbacks <%
+		if (!filtroTipo.isEmpty()) {
+		%> <span
 			class="badge bg-secondary ms-2">Filtro: <%=filtroTipo%></span> <a
 			href="${pageContext.request.contextPath}/feedbackview?acao=listar"
-			class="ms-2" style="font-size: .8rem;">(limpar filtro)</a> <% } %>
+			class="ms-2" style="font-size: .8rem;">(limpar filtro)</a> <%
+ }
+ %>
 		</span> <label class="visually-hidden" for="pesquisa">Pesquisar
 			feedback</label> <input id="pesquisa" class="form-control search-input"
 			type="search" placeholder="Pesquisar..."
@@ -125,23 +130,36 @@
 			</thead>
 			<tbody>
 				<%
-                if (feedbacks != null && !feedbacks.isEmpty()) {
-                    for (Feedback f : feedbacks) {
-                        String badgeClasse;
-                        switch (f.getTipo()) {
-                            case "ELOGIO": badgeClasse = "bg-success"; break;
-                            case "RECLAMACAO": badgeClasse = "bg-danger"; break;
-                            default: badgeClasse = "bg-info";
-                        }
-                %>
+				if (feedbacks != null && !feedbacks.isEmpty()) {
+					for (Feedback f : feedbacks) {
+						String badgeClasse;
+						switch (f.getTipo()) {
+					case "ELOGIO" :
+						badgeClasse = "bg-success";
+						break;
+					case "RECLAMACAO" :
+						badgeClasse = "bg-danger";
+						break;
+					default :
+						badgeClasse = "bg-info";
+						}
+				%>
 				<tr class="feedback-row">
 					<td><i class="bi bi-envelope me-2" aria-hidden="true"></i><%=f.getAssunto() != null ? f.getAssunto() : "(sem assunto)"%></td>
 					<td><span class="badge <%=badgeClasse%>"><%=f.getTipo()%></span></td>
 					<td>
-						<% if (f.isAnonimo()) { %> <span class="text-muted"><i
-							class="bi bi-incognito me-1" aria-hidden="true"></i>Anônimo</span> <% } else if (f.getUsuario() != null) { %>
-						<%=f.getUsuario().getNome()%> <% } else { %> <span
-						class="text-muted">—</span> <% } %>
+						<%
+						if (f.isAnonimo()) {
+						%> <span class="text-muted"><i
+							class="bi bi-incognito me-1" aria-hidden="true"></i>Anônimo</span> <%
+ } else if (f.getUsuario() != null) {
+ %>
+						<%=f.getUsuario().getNome()%> <%
+ } else {
+ %> <span
+						class="text-muted">—</span> <%
+ }
+ %>
 					</td>
 					<td><%=f.getDataEnvio() != null ? f.getDataEnvio().format(fmt) : "-"%></td>
 					<td>
@@ -150,21 +168,25 @@
 								aria-label="Ver feedback <%=f.getIdFeedback()%>"
 								href="${pageContext.request.contextPath}/feedbackview?acao=visualizar&id=<%=f.getIdFeedback()%>"><i
 								class="bi bi-eye" aria-hidden="true"></i></a>
-							<% if (podeExcluirFeedback) { %><a
+							<%
+							if (podeExcluirFeedback) {
+							%><a
 								class="btn btn-sm btn-outline-danger"
 								aria-label="Excluir feedback <%=f.getIdFeedback()%>"
 								href="${pageContext.request.contextPath}/feedbackview?acao=excluir&id=<%=f.getIdFeedback()%>"
 								data-confirm="true"
 								data-confirm-message="Deseja realmente excluir este feedback?"><i
 								class="bi bi-trash" aria-hidden="true"></i></a>
-							<% } %>
+							<%
+							}
+							%>
 						</div>
 					</td>
 				</tr>
 				<%
-                    }
-                } else {
-                %>
+				}
+				} else {
+				%>
 				<tr>
 					<td colspan="5">
 						<div class="empty-state">
@@ -173,19 +195,21 @@
 						</div>
 					</td>
 				</tr>
-				<% } %>
+				<%
+				}
+				%>
 			</tbody>
 		</table>
 	</div>
 </div>
 
 <script>
-document.getElementById("pesquisa").addEventListener("input", function () {
-    var termo = this.value.toLowerCase();
-    document.querySelectorAll(".feedback-row").forEach(function (linha) {
-        linha.hidden = !linha.textContent.toLowerCase().includes(termo);
-    });
-});
+	document.getElementById("pesquisa").addEventListener("input", function() {
+		var termo = this.value.toLowerCase();
+		document.querySelectorAll(".feedback-row").forEach(function(linha) {
+			linha.hidden = !linha.textContent.toLowerCase().includes(termo);
+		});
+	});
 </script>
 
 <%@ include file="/WEB-INF/includes/footer.jsp"%>

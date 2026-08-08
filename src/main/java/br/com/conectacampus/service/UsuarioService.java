@@ -117,9 +117,8 @@ public class UsuarioService {
         return usuarioDAO.listar();
     }
 
-    // QUANTIDADE DE USUÁRIOS
-    public int quantidadeUsuarios() {
-        return usuarioDAO.quantidadeUsuarios();
+    public List<Usuario> listarInscritosComunicados() {
+        return usuarioDAO.listarInscritosComunicados();
     }
 
 }

@@ -12,6 +12,7 @@ boolean admin = Autorizacao.ehAdministrador(usuario);
 DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy 'às' HH:mm");
 request.setAttribute("tituloPagina", "Área da equipe - Conecta Campus");
 %>
+<% request.setAttribute("paginaAtiva", "equipe-interna"); %>
 <%@ include file="/WEB-INF/includes/header.jsp"%>
 
 <div class="page-header">

@@ -42,6 +42,11 @@ public class CadastroServlet extends HttpServlet {
         Usuario administrador = (Usuario) request.getSession().getAttribute("usuarioLogado");
         boolean cadastroAdministrativo = Autorizacao.ehAdministrador(administrador);
 
+        if (!"true".equals(request.getParameter("aceiteTermos"))) {
+            exibirErro(request, response, "Para criar a conta, leia e aceite os Termos de Uso e a Política de Privacidade.");
+            return;
+        }
+
         if (nome == null || nome.isBlank() || senha == null || senha.length() < 6) {
             exibirErro(request, response, "Preencha todos os campos. A senha deve ter pelo menos 6 caracteres.");
             return;
@@ -75,6 +80,11 @@ public class CadastroServlet extends HttpServlet {
             return;
         }
 
+        if (usuarioService.buscarPorEmail(email) != null) {
+            exibirErro(request, response, "Este e-mail já está cadastrado.");
+            return;
+        }
+
         Usuario usuario = new Usuario();
         usuario.setNome(nome.trim());
         usuario.setEmail(email);
@@ -82,11 +92,16 @@ public class CadastroServlet extends HttpServlet {
         usuario.setCurso(request.getParameter("curso"));
         usuario.setAtivo(true);
         usuario.setPerfil(perfil);
+        usuario.setNotificarComunicados("true".equals(request.getParameter("notificarComunicados")));
         if (equipe) usuario.setEmailInstitucional(email);
 
         try {
-            if (usuarioService.cadastrar(usuario)) response.sendRedirect(request.getContextPath() + "/login");
-            else exibirErro(request, response, "E-mail já cadastrado ou dados inválidos.");
+            if (usuarioService.cadastrar(usuario)) {
+                request.getSession().setAttribute("cadastroConcluido", Boolean.TRUE);
+                response.sendRedirect(request.getContextPath() + "/login");
+            } else {
+                exibirErro(request, response, "Não foi possível concluir o cadastro. Tente novamente.");
+            }
         } catch (Exception e) {
             getServletContext().log("Erro ao cadastrar usuário", e);
             exibirErro(request, response, "Não foi possível concluir o cadastro. Verifique se o banco foi atualizado.");

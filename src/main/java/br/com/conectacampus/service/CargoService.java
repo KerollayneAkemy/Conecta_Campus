@@ -33,8 +33,4 @@ public class CargoService {
         return cargoDAO.listar();
     }
 
-    public int quantidadeCargos() {
-        return cargoDAO.quantidadeCargos();
-    }
-
 }

@@ -8,11 +8,15 @@ import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import br.com.conectacampus.model.Comunicado;
 import br.com.conectacampus.model.Usuario;
 import br.com.conectacampus.service.CategoriaService;
 import br.com.conectacampus.service.ComunicadoService;
+import br.com.conectacampus.service.EmailService;
+import br.com.conectacampus.service.UsuarioService;
 import br.com.conectacampus.util.Autorizacao;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -28,12 +32,27 @@ public class ComunicadoServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private ComunicadoService comunicadoService;
 	private CategoriaService categoriaService;
+	private UsuarioService usuarioService;
+	private EmailService emailService;
+	private ExecutorService executorNotificacoes;
 	private static final Set<String> TIPOS_IMAGEM = Set.of("image/jpeg", "image/png", "image/gif", "image/webp");
 
 	@Override
 	public void init() {
 		comunicadoService = new ComunicadoService();
 		categoriaService = new CategoriaService();
+		usuarioService = new UsuarioService();
+		emailService = new EmailService();
+		executorNotificacoes = Executors.newSingleThreadExecutor(r -> {
+			Thread thread = new Thread(r, "notificacoes-comunicados");
+			thread.setDaemon(true);
+			return thread;
+		});
+	}
+
+	@Override
+	public void destroy() {
+		if (executorNotificacoes != null) executorNotificacoes.shutdown();
 	}
 
 	@Override
@@ -199,6 +218,10 @@ public class ComunicadoServlet extends HttpServlet {
 			}
 			boolean sucesso = atualizar ? comunicadoService.atualizar(comunicado) : comunicadoService.cadastrar(comunicado);
 
+			if (sucesso && !atualizar && "ATIVO".equalsIgnoreCase(comunicado.getStatus())) {
+				agendarNotificacoes(request, comunicado);
+			}
+
 			request.getSession().setAttribute(sucesso ? "msgSucesso" : "msgErro",
 					sucesso ? (atualizar ? "Comunicado atualizado com sucesso." : "Comunicado publicado com sucesso.")
 							: "Não foi possível salvar o comunicado.");
@@ -209,5 +232,31 @@ public class ComunicadoServlet extends HttpServlet {
 		}
 
 		response.sendRedirect(request.getContextPath() + "/comunicados?acao=listar");
+	}
+
+	private void agendarNotificacoes(HttpServletRequest request, Comunicado comunicado) {
+		List<Usuario> destinatarios = usuarioService.listarInscritosComunicados();
+		if (destinatarios.isEmpty()) return;
+
+		String link = urlBase(request) + request.getContextPath()
+				+ "/comunicados?acao=visualizar&id=" + comunicado.getIdComunicado();
+		String titulo = comunicado.getTitulo();
+		String mensagem = comunicado.getMensagem();
+
+		executorNotificacoes.submit(() -> {
+			for (Usuario destinatario : destinatarios) {
+				emailService.enviarComunicado(destinatario.getEmail(), destinatario.getNome(), titulo, mensagem, link);
+			}
+		});
+	}
+
+	private String urlBase(HttpServletRequest request) {
+		StringBuilder url = new StringBuilder(request.getScheme()).append("://").append(request.getServerName());
+		int porta = request.getServerPort();
+		if (("http".equalsIgnoreCase(request.getScheme()) && porta != 80)
+				|| ("https".equalsIgnoreCase(request.getScheme()) && porta != 443)) {
+			url.append(':').append(porta);
+		}
+		return url.toString();
 	}
 }

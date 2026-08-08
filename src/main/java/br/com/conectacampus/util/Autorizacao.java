@@ -8,19 +8,37 @@ public final class Autorizacao {
     public static final String EQUIPE = "EQUIPE_INSTITUCIONAL";
     public static final String ALUNO = "ALUNO";
 
+    private static final ThreadLocal<Boolean> VISUALIZACAO_ALUNO = ThreadLocal.withInitial(() -> false);
+
     private Autorizacao() {
     }
 
     public static boolean ehAdministrador(Usuario usuario) {
-        return temPerfil(usuario, ADMINISTRADOR);
+        return !visualizandoComoAluno() && ehAdministradorReal(usuario);
     }
 
     public static boolean ehEquipe(Usuario usuario) {
-        return temPerfil(usuario, EQUIPE);
+        return !visualizandoComoAluno() && temPerfil(usuario, EQUIPE);
     }
 
     public static boolean ehAluno(Usuario usuario) {
-        return temPerfil(usuario, ALUNO);
+        return visualizandoComoAluno() || temPerfil(usuario, ALUNO);
+    }
+
+    public static boolean ehAdministradorReal(Usuario usuario) {
+        return temPerfil(usuario, ADMINISTRADOR);
+    }
+
+    public static void iniciarVisualizacaoAluno() {
+        VISUALIZACAO_ALUNO.set(true);
+    }
+
+    public static void encerrarVisualizacaoAluno() {
+        VISUALIZACAO_ALUNO.remove();
+    }
+
+    public static boolean visualizandoComoAluno() {
+        return Boolean.TRUE.equals(VISUALIZACAO_ALUNO.get());
     }
 
     public static boolean podePublicarInstitucional(Usuario usuario) {

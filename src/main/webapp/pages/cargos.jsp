@@ -2,10 +2,10 @@
 <%@ page import="java.util.List"%>
 <%@ page import="br.com.conectacampus.model.Cargo"%>
 <%
-    List<Cargo> cargos = (List<Cargo>) request.getAttribute("listaCargos");
+List<Cargo> cargos = (List<Cargo>) request.getAttribute("listaCargos");
 
-    request.setAttribute("paginaAtiva", "cargos");
-    request.setAttribute("tituloPagina", "Cargos - Conecta Campus");
+request.setAttribute("paginaAtiva", "cargos");
+request.setAttribute("tituloPagina", "Cargos - Conecta Campus");
 %>
 <%@ include file="/WEB-INF/includes/header.jsp"%>
 
@@ -60,9 +60,9 @@
 			</thead>
 			<tbody>
 				<%
-                if (cargos != null && !cargos.isEmpty()) {
-                    for (Cargo c : cargos) {
-                %>
+				if (cargos != null && !cargos.isEmpty()) {
+					for (Cargo c : cargos) {
+				%>
 				<tr class="cargo-row">
 					<td><i class="bi bi-briefcase-fill me-2" aria-hidden="true"></i><%=c.getNome()%></td>
 					<td><%=c.getDescricao() != null ? c.getDescricao() : "-"%></td>
@@ -82,9 +82,9 @@
 					</td>
 				</tr>
 				<%
-                    }
-                } else {
-                %>
+				}
+				} else {
+				%>
 				<tr>
 					<td colspan="3">
 						<div class="empty-state">
@@ -93,19 +93,21 @@
 						</div>
 					</td>
 				</tr>
-				<% } %>
+				<%
+				}
+				%>
 			</tbody>
 		</table>
 	</div>
 </div>
 
 <script>
-document.getElementById("pesquisa").addEventListener("input", function () {
-    var termo = this.value.toLowerCase();
-    document.querySelectorAll(".cargo-row").forEach(function (linha) {
-        linha.hidden = !linha.textContent.toLowerCase().includes(termo);
-    });
-});
+	document.getElementById("pesquisa").addEventListener("input", function() {
+		var termo = this.value.toLowerCase();
+		document.querySelectorAll(".cargo-row").forEach(function(linha) {
+			linha.hidden = !linha.textContent.toLowerCase().includes(termo);
+		});
+	});
 </script>
 
 <%@ include file="/WEB-INF/includes/footer.jsp"%>

@@ -1,13 +1,13 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="br.com.conectacampus.model.Cargo"%>
 <%
-    Cargo cargo = (Cargo) request.getAttribute("cargo");
-    String nomeAtual = (cargo != null) ? cargo.getNome() : "";
-    String descricaoAtual = (cargo != null) ? cargo.getDescricao() : "";
-    String idCargoAtual = (cargo != null) ? String.valueOf(cargo.getIdCargo()) : "";
+Cargo cargo = (Cargo) request.getAttribute("cargo");
+String nomeAtual = (cargo != null) ? cargo.getNome() : "";
+String descricaoAtual = (cargo != null) ? cargo.getDescricao() : "";
+String idCargoAtual = (cargo != null) ? String.valueOf(cargo.getIdCargo()) : "";
 
-    request.setAttribute("paginaAtiva", "cargos");
-    request.setAttribute("tituloPagina", "Cadastrar Cargo - Conecta Campus");
+request.setAttribute("paginaAtiva", "cargos");
+request.setAttribute("tituloPagina", "Cadastrar Cargo - Conecta Campus");
 %>
 <%@ include file="/WEB-INF/includes/header.jsp"%>
 
@@ -37,12 +37,18 @@
 			<div class="card-body">
 				<form method="post"
 					action="${pageContext.request.contextPath}/cargos" novalidate>
-					<% if (cargo != null) { %>
+					<%
+					if (cargo != null) {
+					%>
 					<input type="hidden" name="idCargo" value="<%=idCargoAtual%>">
 					<input type="hidden" name="acao" value="atualizar">
-					<% } else { %>
+					<%
+					} else {
+					%>
 					<input type="hidden" name="acao" value="cadastrar">
-					<% } %>
+					<%
+					}
+					%>
 
 					<div class="mb-3">
 						<label for="nome" class="form-label">Nome do cargo <span

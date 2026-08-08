@@ -13,6 +13,12 @@
 
         appShell.classList.toggle('sidebar-aberta', deveAbrir);
 
+		try {
+			sessionStorage.setItem('conectaCampus.sidebarAberta', String(deveAbrir));
+		} catch (e) {
+			/* Mantém o menu funcional quando o armazenamento está indisponível. */
+		}
+
         if (toggleBtn) {
             toggleBtn.setAttribute('aria-expanded', String(deveAbrir));
             toggleBtn.setAttribute('aria-label', deveAbrir ? 'Fechar menu' : 'Abrir menu');
@@ -24,6 +30,16 @@
             toggleSidebar(false);
         }
     });
+
+	document.addEventListener('click', function (e) {
+		var linkSidebar = e.target.closest('#sidebarMenu a');
+		if (!linkSidebar || !window.matchMedia('(max-width: 992px)').matches) return;
+		try {
+			sessionStorage.setItem('conectaCampus.sidebarAberta', 'false');
+		} catch (erro) {
+			/* A navegação continua normalmente sem armazenamento. */
+		}
+	});
 
     function fecharToast(botao) {
         var toast = botao.closest('.toast-custom');

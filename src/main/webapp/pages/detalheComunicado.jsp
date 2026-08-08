@@ -3,6 +3,9 @@
 <%
 Comunicado comunicado = (Comunicado) request.getAttribute("comunicado");
 %>
+<%
+request.setAttribute("paginaAtiva", "comunicados");
+%>
 <%@ include file="/WEB-INF/includes/header.jsp"%>
 <article class="card mx-auto"
 	style="max-width: 880px; overflow: hidden;">
@@ -15,6 +18,7 @@ Comunicado comunicado = (Comunicado) request.getAttribute("comunicado");
 	<%
 	}
 	%>
+	
 	<div class="card-body p-4 p-md-5">
 		<div class="d-flex flex-wrap gap-2 mb-3">
 			<span class="badge bg-light text-dark border"><%=comunicado.getNomeCategoria()%></span><span
@@ -22,14 +26,15 @@ Comunicado comunicado = (Comunicado) request.getAttribute("comunicado");
 		: ("MEDIA".equals(comunicado.getPrioridade()) ? "bg-warning text-dark" : "bg-secondary")%>">Prioridade:
 				<%=comunicado.getPrioridade()%></span>
 		</div>
+		
 		<h1 class="page-title mb-3"><%=comunicado.getTitulo()%></h1>
-		<p
-			style="white-space: pre-line; line-height: 1.75; font-size: 1.05rem"><%=comunicado.getMensagem()%></p>
+		<p	style="white-space: pre-line; line-height: 1.75; font-size: 1.05rem"><%=comunicado.getMensagem()%></p>
 		<hr class="my-4">
+		
 		<a class="btn btn-outline-primary"
 			href="${pageContext.request.contextPath}/comunicados"><i
-			class="bi bi-arrow-left" aria-hidden="true"></i> Voltar aos
-			comunicados</a>
+			class="bi bi-arrow-left" aria-hidden="true"></i> Voltar aos comunicados</a>
 	</div>
+	
 </article>
 <%@ include file="/WEB-INF/includes/footer.jsp"%>

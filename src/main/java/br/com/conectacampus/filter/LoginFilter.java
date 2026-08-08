@@ -26,11 +26,16 @@ public class LoginFilter extends HttpFilter implements Filter {
 
         String uri = request.getRequestURI();
 
+        String contexto = request.getContextPath();
+        boolean paginaInicial = uri.equals(contexto) || uri.equals(contexto + "/") || uri.endsWith("/index.jsp");
+
         boolean paginaLivre =
-                uri.endsWith("login")
+                paginaInicial
+             || uri.endsWith("login")
              || uri.endsWith("cadastro")
 		     || uri.endsWith("esqueci-senha")
 		     || uri.endsWith("redefinir-senha")
+		     || uri.endsWith("termos")
              || uri.contains("/css/")
              || uri.contains("/js/")
              || uri.contains("/img/")

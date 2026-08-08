@@ -183,27 +183,6 @@ public class MembroDAO {
 
     }
 
-    // QUANTIDADE DE MEMBROS
-    public int quantidadeMembros() {
-
-        String sql = "SELECT COUNT(*) FROM membro";
-
-        try (Connection conn = ConexaoFactory.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
-
-            if (rs.next()) {
-                return rs.getInt(1);
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return 0;
-
-    }
-
     // MAPEAR RESULTSET -> MEMBRO
     private Membro mapear(ResultSet rs) throws SQLException {
 

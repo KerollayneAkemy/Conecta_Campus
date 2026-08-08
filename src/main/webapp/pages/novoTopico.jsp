@@ -8,6 +8,9 @@ if (usuario == null) {
 	return;
 }
 %>
+<%
+request.setAttribute("paginaAtiva", "forum");
+%>
 <%@ include file="/WEB-INF/includes/header.jsp"%>
 <div class="page-header">
 	<div>
@@ -22,9 +25,13 @@ if (usuario == null) {
 
 <div class="card">
 	<div class="card-body">
-		<% if (request.getAttribute("erro") != null) { %>
+		<%
+		if (request.getAttribute("erro") != null) {
+		%>
 		<div class="alert alert-danger" role="alert"><%=request.getAttribute("erro")%></div>
-		<% } %>
+		<%
+		}
+		%>
 		<form action="${pageContext.request.contextPath}/forum" method="post">
 			<input type="hidden" name="acao" value="salvar"> <input
 				type="hidden" name="idUsuario" value="<%=usuario.getIdUsuario()%>">
@@ -47,7 +54,9 @@ if (usuario == null) {
 					placeholder="Ex.: Dúvida sobre calendário de provas" required>
 			</div>
 
-			<% if (Autorizacao.podePublicarInstitucional(usuario)) { %>
+			<%
+			if (Autorizacao.podePublicarInstitucional(usuario)) {
+			%>
 			<details class="mb-3" id="dadosEnquete">
 				<summary class="fw-semibold">Adicionar enquete a este
 					tópico (opcional)</summary>
@@ -69,7 +78,9 @@ if (usuario == null) {
 						name="opcoesEnquete" rows="4" placeholder="Opção 1&#10;Opção 2"></textarea>
 				</div>
 			</details>
-			<% } %>
+			<%
+			}
+			%>
 
 			<div class="mb-3">
 				<label class="form-label" for="mensagem">Mensagem</label>
@@ -91,21 +102,20 @@ if (usuario == null) {
 </div>
 
 <script>
-const tipoInteracao = document.getElementById('tipoInteracao');
-const dadosEnquete = document.getElementById('dadosEnquete');
-const perguntaEnquete = document.getElementById('perguntaEnquete');
-const opcoesEnquete = document.getElementById('opcoesEnquete');
-function ajustarTipoInteracao() {
-    const usaEnquete = tipoInteracao.value !== 'RESPOSTAS';
-    dadosEnquete.hidden = !usaEnquete;
-    dadosEnquete.open = usaEnquete;
-    dadosEnquete.querySelector('summary').textContent = usaEnquete
-        ? 'Dados da enquete (obrigatórios)'
-        : 'Dados da enquete';
-    perguntaEnquete.required = usaEnquete;
-    opcoesEnquete.required = usaEnquete;
-}
-tipoInteracao.addEventListener('change', ajustarTipoInteracao);
-ajustarTipoInteracao();
+	const tipoInteracao = document.getElementById('tipoInteracao');
+	const dadosEnquete = document.getElementById('dadosEnquete');
+	const perguntaEnquete = document.getElementById('perguntaEnquete');
+	const opcoesEnquete = document.getElementById('opcoesEnquete');
+	function ajustarTipoInteracao() {
+		const usaEnquete = tipoInteracao.value !== 'RESPOSTAS';
+		dadosEnquete.hidden = !usaEnquete;
+		dadosEnquete.open = usaEnquete;
+		dadosEnquete.querySelector('summary').textContent = usaEnquete ? 'Dados da enquete (obrigatórios)'
+				: 'Dados da enquete';
+		perguntaEnquete.required = usaEnquete;
+		opcoesEnquete.required = usaEnquete;
+	}
+	tipoInteracao.addEventListener('change', ajustarTipoInteracao);
+	ajustarTipoInteracao();
 </script>
 <%@ include file="/WEB-INF/includes/footer.jsp"%>

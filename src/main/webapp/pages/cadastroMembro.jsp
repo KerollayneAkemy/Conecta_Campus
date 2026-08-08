@@ -45,9 +45,13 @@ request.setAttribute("tituloPagina", (membro != null ? "Editar" : "Cadastrar") +
 					action="${pageContext.request.contextPath}/membros">
 					<input type="hidden" name="acao"
 						value="<%=membro != null ? "atualizar" : "cadastrar"%>">
-					<% if (membro != null) { %>
+					<%
+					if (membro != null) {
+					%>
 					<input type="hidden" name="idMembro" value="<%=idMembroAtual%>">
-					<% } %>
+					<%
+					}
+					%>
 
 					<div class="mb-3">
 						<label for="idUsuarioEquipe" class="form-label">Conta
@@ -55,8 +59,11 @@ request.setAttribute("tituloPagina", (membro != null ? "Editar" : "Cadastrar") +
 						</label> <select class="form-select" id="idUsuarioEquipe"
 							name="idUsuarioEquipe" required>
 							<option value="">Selecione uma pessoa da equipe...</option>
-							<% if (listaUsuariosEquipe != null) for (Usuario usuarioEquipe : listaUsuariosEquipe) {
-                                boolean selecionado = membro != null && usuarioEquipe.getEmail().equalsIgnoreCase(membro.getEmail()); %>
+							<%
+							if (listaUsuariosEquipe != null)
+								for (Usuario usuarioEquipe : listaUsuariosEquipe) {
+									boolean selecionado = membro != null && usuarioEquipe.getEmail().equalsIgnoreCase(membro.getEmail());
+							%>
 							<option value="<%=usuarioEquipe.getIdUsuario()%>"
 								data-nome="<%=usuarioEquipe.getNome()%>"
 								data-email="<%=usuarioEquipe.getEmail()%>"
@@ -64,7 +71,9 @@ request.setAttribute("tituloPagina", (membro != null ? "Editar" : "Cadastrar") +
 								<%=usuarioEquipe.getNome()%> —
 								<%=usuarioEquipe.getEmail()%>
 							</option>
-							<% } %>
+							<%
+							}
+							%>
 						</select>
 						<div class="form-text">A lista mostra apenas contas ativas
 							com e-mail @conecta.com.br.</div>
@@ -98,10 +107,15 @@ request.setAttribute("tituloPagina", (membro != null ? "Editar" : "Cadastrar") +
 							class="text-danger">*</span></label> <select class="form-select"
 							id="idCargo" name="idCargo" required>
 							<option value="">Selecione um cargo...</option>
-							<% if (listaCargos != null) for (Cargo cargo : listaCargos) { %>
+							<%
+							if (listaCargos != null)
+								for (Cargo cargo : listaCargos) {
+							%>
 							<option value="<%=cargo.getIdCargo()%>"
 								<%=cargo.getIdCargo() == idCargoAtual ? "selected" : ""%>><%=cargo.getNome()%></option>
-							<% } %>
+							<%
+							}
+							%>
 						</select>
 					</div>
 

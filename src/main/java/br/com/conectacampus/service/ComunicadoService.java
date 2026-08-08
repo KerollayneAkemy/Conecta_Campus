@@ -40,11 +40,6 @@ public class ComunicadoService {
         return comunicadoDAO.excluir(idComunicado);
     }
 
-    public boolean incrementarVisualizacao(int idComunicado) {
-        
-    	return comunicadoDAO.incrementarVisualizacao(idComunicado);
-    }
-
     public Comunicado buscarPorId(int idComunicado) {
        
     	return comunicadoDAO.buscarPorId(idComunicado);

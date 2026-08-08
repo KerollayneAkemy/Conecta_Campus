@@ -68,31 +68,4 @@ public class CategoriaDAO {
 		return lista;
 	}
 
-	// BUSCAR POR ID
-	public Categoria buscarPorId(int id) {
-
-		Categoria categoria = null;
-
-		String sql = "SELECT id_categoria, nome FROM categorias WHERE id_categoria = ?";
-
-		try (Connection conn = ConexaoFactory.getConnection();
-				PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-			stmt.setInt(1, id);
-
-			try (ResultSet rs = stmt.executeQuery()) {
-				if (rs.next()) {
-					categoria = new Categoria();
-					categoria.setIdCategoria(rs.getInt("id_categoria"));
-					categoria.setNome(rs.getString("nome"));
-				}
-			}
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return categoria;
-	}
-
 }

@@ -10,40 +10,6 @@ import br.com.conectacampus.model.Perfil;
 
 public class PerfilDAO {
 
-    // Buscar perfil pelo ID
-    public Perfil buscarPorId(int idPerfil) {
-
-        Perfil perfil = null;
-
-        String sql = "SELECT * FROM perfis WHERE id_perfil = ?";
-
-        try (
-        	Connection conexao = ConexaoFactory.getConnection();
-            PreparedStatement stmt = conexao.prepareStatement(sql)
-        ) {
-
-            stmt.setInt(1, idPerfil);
-
-            ResultSet rs = stmt.executeQuery();
-
-            if (rs.next()) {
-
-                perfil = new Perfil();
-
-                perfil.setIdPerfil(rs.getInt("id_perfil"));
-                perfil.setNome(rs.getString("nome"));
-
-            }
-
-        } catch (Exception e) {
-
-            e.printStackTrace();
-
-        }
-
-        return perfil;
-    }
-
     // Listar todos os perfis
     public List<Perfil> listar() {
 

@@ -7,28 +7,24 @@ import br.com.conectacampus.model.Perfil;
 
 public class PerfilService {
 
-    private final PerfilDAO dao;
+	private final PerfilDAO dao;
 
-    public PerfilService() {
-        this.dao = new PerfilDAO();
-    }
+	public PerfilService() {
+		this.dao = new PerfilDAO();
+	}
 
-    public Perfil buscarPorId(int id) {
-        return dao.buscarPorId(id);
-    }
+	public List<Perfil> listar() {
+		return dao.listar();
+	}
 
-    public List<Perfil> listar() {
-        return dao.listar();
-    }
+	public Perfil buscarPorNome(String nome) {
+		for (Perfil perfil : listar()) {
 
-    public Perfil buscarPorNome(String nome) {
-        for (Perfil perfil : listar()) {
-            
-        	if (perfil.getNome().equalsIgnoreCase(nome)) {
-                return perfil;
-            }
-        }
-        return null;
-    }
+			if (perfil.getNome().equalsIgnoreCase(nome)) {
+				return perfil;
+			}
+		}
+		return null;
+	}
 
 }

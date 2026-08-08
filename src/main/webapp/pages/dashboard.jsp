@@ -7,8 +7,8 @@
 <%
 Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
 if (usuario == null) {
-    response.sendRedirect(request.getContextPath() + "/login");
-    return;
+	response.sendRedirect(request.getContextPath() + "/login");
+	return;
 }
 
 List<MovimentoFinanceiro> movimentos = (List<MovimentoFinanceiro>) request.getAttribute("movimentosFinanceiros");
@@ -70,13 +70,23 @@ request.setAttribute("tituloPagina", "Relatório financeiro - Conecta Campus");
 			</div>
 		</div>
 
-		<section class="border-top pt-4 mb-4" aria-labelledby="tituloSaldoMensal">
-			<h2 class="h5" id="tituloSaldoMensal"><i class="bi bi-graph-up-arrow" aria-hidden="true"></i> Saldo acumulado por mês</h2>
-			<p class="text-muted">O valor que sobra em um mês é levado para o próximo e reduzido pelas saídas seguintes.</p>
-			<div style="position: relative; height: 300px;"><canvas id="graficoSaldoMensal" role="img" aria-label="Gráfico de linha com o saldo financeiro acumulado de cada mês."></canvas></div>
+		<section class="border-top pt-4 mb-4"
+			aria-labelledby="tituloSaldoMensal">
+			<h2 class="h5" id="tituloSaldoMensal">
+				<i class="bi bi-graph-up-arrow" aria-hidden="true"></i> Saldo
+				acumulado por mês
+			</h2>
+			<p class="text-muted">O valor que sobra em um mês é levado para o
+				próximo e reduzido pelas saídas seguintes.</p>
+			<div style="position: relative; height: 300px;">
+				<canvas id="graficoSaldoMensal" role="img"
+					aria-label="Gráfico de linha com o saldo financeiro acumulado de cada mês."></canvas>
+			</div>
 		</section>
 
-		<% if (movimentos != null && !movimentos.isEmpty()) { %>
+		<%
+		if (movimentos != null && !movimentos.isEmpty()) {
+		%>
 		<div class="table-responsive">
 			<table class="table">
 				<thead>
@@ -89,7 +99,9 @@ request.setAttribute("tituloPagina", "Relatório financeiro - Conecta Campus");
 					</tr>
 				</thead>
 				<tbody>
-					<% for (MovimentoFinanceiro movimento : movimentos) { %>
+					<%
+					for (MovimentoFinanceiro movimento : movimentos) {
+					%>
 					<tr>
 						<td><%=movimento.getData()%></td>
 						<td><%=movimento.getTipo()%></td>
@@ -97,14 +109,20 @@ request.setAttribute("tituloPagina", "Relatório financeiro - Conecta Campus");
 						<td><%=movimento.getDescricao()%></td>
 						<td class="text-end">R$ <%=movimento.getValor()%></td>
 					</tr>
-					<% } %>
+					<%
+					}
+					%>
 				</tbody>
 			</table>
 		</div>
-		<% } else { %>
+		<%
+		} else {
+		%>
 		<p class="text-muted">Nenhum lançamento financeiro encontrado para
 			este período.</p>
-		<% } %>
+		<%
+		}
+		%>
 	</div>
 </section>
 
@@ -156,8 +174,10 @@ request.setAttribute("tituloPagina", "Relatório financeiro - Conecta Campus");
 (() => {
     const canvas = document.getElementById('graficoSaldoMensal');
     if (!canvas || typeof Chart === 'undefined') return;
-    const labels = [<% if (saldoMensal != null) for (String competencia : saldoMensal.keySet()) { %>'<%=competencia%>',<% } %>];
-    const valores = [<% if (saldoMensal != null) for (BigDecimal saldo : saldoMensal.values()) { %><%=saldo.doubleValue()%>,<% } %>];
+    const labels = [<%if (saldoMensal != null)
+	for (String competencia : saldoMensal.keySet()) {%>'<%=competencia%>',<%}%>];
+    const valores = [<%if (saldoMensal != null)
+	for (BigDecimal saldo : saldoMensal.values()) {%><%=saldo.doubleValue()%>,<%}%>];
 
     new Chart(canvas, {
         type: 'line',

@@ -8,22 +8,13 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-/**
- * Mantém URLs antigas compatíveis. As enquetes agora pertencem a tópicos do Fórum.
- */
-@WebServlet("/enquetes")
-public class EnqueteServlet extends HttpServlet {
+@WebServlet("/termos")
+public class TermosServlet extends HttpServlet {
+
     private static final long serialVersionUID = 1L;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        
-    	response.sendRedirect(request.getContextPath() + "/forum");
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-       
-    	response.sendRedirect(request.getContextPath() + "/forum");
+        request.getRequestDispatcher("/pages/termos.jsp").forward(request, response);
     }
 }

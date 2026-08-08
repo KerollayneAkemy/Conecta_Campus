@@ -7,6 +7,7 @@ if (usuario == null) {
 	return;
 }
 %>
+<% request.setAttribute("paginaAtiva", "feedback"); %>
 <%@ include file="/WEB-INF/includes/header.jsp"%>
 <div class="row justify-content-center">
 	<div class="col-lg-8">

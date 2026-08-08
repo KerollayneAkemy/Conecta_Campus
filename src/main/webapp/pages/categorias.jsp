@@ -7,6 +7,9 @@ List<Categoria> categorias = (List<Categoria>) request.getAttribute("listaCatego
 Usuario usuarioCategorias = (Usuario) session.getAttribute("usuarioLogado");
 boolean podeExcluirCategoria = Autorizacao.ehAdministrador(usuarioCategorias);
 %>
+<%
+request.setAttribute("paginaAtiva", "categorias");
+%>
 <%@ include file="/WEB-INF/includes/header.jsp"%>
 <div class="page-header">
 	<div>
@@ -44,8 +47,12 @@ boolean podeExcluirCategoria = Autorizacao.ehAdministrador(usuarioCategorias);
 			%> <a class="text-danger ms-1"
 			href="${pageContext.request.contextPath}/categorias?acao=excluir&id=<%=c.getIdCategoria()%>"
 			data-confirm="true" data-confirm-message="Excluir categoria?"><i
-				class="bi bi-x-lg"></i></a> <% } %></span>
-		<% } %>
+				class="bi bi-x-lg"></i></a> <%
+ }
+ %></span>
+		<%
+		}
+		%>
 	</div>
 </div>
 <%@ include file="/WEB-INF/includes/footer.jsp"%>

@@ -14,63 +14,11 @@ if (usuarioLogado == null) {
 String nomeExibicao = usuario.getNome() == null || usuario.getNome().isBlank() ? "Usuário" : usuario.getNome();
 String inicial = String.valueOf(nomeExibicao.trim().charAt(0)).toUpperCase();
 boolean contaAtiva = usuario.isAtivo();
+request.setAttribute("cssPagina", "editarUsuario.css");
+request.setAttribute("paginaAtiva", "usuarios");
 %>
 <%@ include file="/WEB-INF/includes/header.jsp"%>
-<style>
-.editar-usuario {
-	max-width: 980px
-}
 
-.resumo-conta {
-	display: flex;
-	align-items: center;
-	gap: 1rem;
-	padding: 1.1rem 1.25rem;
-	margin-bottom: 1rem;
-	border: 1px solid var(--line);
-	border-radius: 14px;
-	background: linear-gradient(110deg, #f3fbf8, #fff)
-}
-
-.resumo-avatar {
-	width: 52px;
-	height: 52px;
-	border-radius: 50%;
-	display: grid;
-	place-items: center;
-	background: var(--brand-dark);
-	color: #fff;
-	font-weight: 800;
-	font-size: 1.15rem
-}
-
-.resumo-conta p {
-	margin: 0;
-	color: var(--muted)
-}
-
-.form-secao {
-	padding: 1.15rem 0;
-	border-top: 1px solid var(--line)
-}
-
-.form-secao:first-of-type {
-	border-top: 0;
-	padding-top: .25rem
-}
-
-.form-secao-titulo {
-	margin: 0 0 .25rem;
-	font-size: 1rem;
-	font-weight: 800
-}
-
-.form-secao-ajuda {
-	margin: 0 0 1rem;
-	color: var(--muted);
-	font-size: .9rem
-}
-</style>
 <div class="editar-usuario">
 	<div class="page-header">
 		<div>

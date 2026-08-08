@@ -175,25 +175,4 @@ public class CargoDAO {
 
     }
 
-    // QUANTIDADE DE CARGOS
-    public int quantidadeCargos() {
-
-        String sql = "SELECT COUNT(*) FROM cargo";
-
-        try (Connection conn = ConexaoFactory.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
-
-            if (rs.next()) {
-                return rs.getInt(1);
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return 0;
-
-    }
-
 }

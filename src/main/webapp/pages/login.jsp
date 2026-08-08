@@ -12,7 +12,7 @@
 	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
 	rel="stylesheet">
 <link rel="stylesheet"
-	href="${pageContext.request.contextPath}/css/login.css">
+	href="${pageContext.request.contextPath}/css/login.css?v=4">
 </head>
 <body>
 	<a class="skip-link" href="#conteudo">Ir para o formulário</a>
@@ -86,5 +86,10 @@
 
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+	<% if (Boolean.TRUE.equals(request.getAttribute("cadastroConcluido"))) { %>
+	<script>
+		sessionStorage.removeItem('conectaCampus.cadastro.rascunho');
+	</script>
+	<% } %>
 </body>
 </html>

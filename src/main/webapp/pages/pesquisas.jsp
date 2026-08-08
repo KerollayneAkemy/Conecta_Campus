@@ -78,8 +78,7 @@ if (podeCriar) {
 						class="badge <%=respondida ? "text-bg-primary" : aberta ? "text-bg-success" : "text-bg-secondary"%>"><%=respondida ? "RESPONDIDA" : pesquisa.getStatus()%></span>
 					<%
 					if (pesquisa.getDataLimite() != null) {
-					%><small
-						class="text-muted">Até <%=pesquisa.getDataLimite()%></small>
+					%><small class="text-muted">Até <%=pesquisa.getDataLimite()%></small>
 					<%
 					}
 					%>
@@ -88,9 +87,15 @@ if (podeCriar) {
 				<p class="text-muted flex-grow-1"><%=pesquisa.getDescricao() == null || pesquisa.getDescricao().isBlank() ? "Participe desta pesquisa."
 		: pesquisa.getDescricao()%></p>
 				<small class="text-muted mb-3">Publicada por <%=pesquisa.getUsuario().getNome()%></small>
-				<% if (podeCriar) { %>
-				<span class="text-muted mb-2"><i class="bi bi-check2-circle"></i> <%=totalRespondidas != null ? totalRespondidas.getOrDefault(pesquisa.getIdPesquisa(), 0) : 0%> pessoa(s) concluíram</span>
-				<% } %>
+				<%
+				if (podeCriar) {
+				%>
+				<span class="text-muted mb-2"><i class="bi bi-check2-circle"></i>
+					<%=totalRespondidas != null ? totalRespondidas.getOrDefault(pesquisa.getIdPesquisa(), 0) : 0%>
+					pessoa(s) concluíram</span>
+				<%
+				}
+				%>
 				<%
 				if (podeCriar) {
 				%><a class="btn btn-outline-primary mb-2"
@@ -106,8 +111,8 @@ if (podeCriar) {
 					rel="noopener noreferrer">Responder pesquisa</a>
 				<%
 				if (aluno) {
-				%><form
-					action="${pageContext.request.contextPath}/pesquisas" method="post">
+				%><form action="${pageContext.request.contextPath}/pesquisas"
+					method="post">
 					<input type="hidden" name="acao" value="marcarRespondida"><input
 						type="hidden" name="idPesquisa"
 						value="<%=pesquisa.getIdPesquisa()%>">
@@ -122,15 +127,22 @@ if (podeCriar) {
 				} else if (respondida) {
 				%><span class="btn btn-success disabled"><i
 					class="bi bi-check2-circle"></i> Pesquisa respondida</span>
-				<% } %>
+				<%
+				}
+				%>
 			</div>
 		</article>
 	</div>
-	<% } } else { %><div class="col-12">
+	<%
+	}
+	} else {
+	%><div class="col-12">
 		<div class="empty-state">
 			<h2 class="h5">Nenhuma pesquisa disponível</h2>
 		</div>
 	</div>
-	<% } %>
+	<%
+	}
+	%>
 </section>
 <%@ include file="/WEB-INF/includes/footer.jsp"%>

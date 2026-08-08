@@ -28,10 +28,16 @@ public class LoginServlet extends HttpServlet {
             HttpServletResponse response)
             throws ServletException, IOException {
 
-        String mensagem = (String) request.getSession().getAttribute("msgLogin");
+        HttpSession session = request.getSession();
+        String mensagem = (String) session.getAttribute("msgLogin");
         if (mensagem != null) {
             request.setAttribute("sucesso", mensagem);
-            request.getSession().removeAttribute("msgLogin");
+            session.removeAttribute("msgLogin");
+        }
+
+        if (Boolean.TRUE.equals(session.getAttribute("cadastroConcluido"))) {
+            request.setAttribute("cadastroConcluido", Boolean.TRUE);
+            session.removeAttribute("cadastroConcluido");
         }
 
         request.getRequestDispatcher("/pages/login.jsp")

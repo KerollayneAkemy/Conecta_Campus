@@ -24,6 +24,7 @@ boolean usuarioJaVotou = Boolean.TRUE.equals(request.getAttribute("usuarioJaVoto
 boolean editando = "editar".equals(request.getParameter("acao"));
 boolean administrador = Autorizacao.ehAdministrador(usuario);
 %>
+<% request.setAttribute("paginaAtiva", "forum"); %>
 <%@ include file="/WEB-INF/includes/header.jsp"%>
 <%
 if (editando) {

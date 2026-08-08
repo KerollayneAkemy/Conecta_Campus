@@ -17,6 +17,7 @@ session.removeAttribute("perfilErro");
 session.removeAttribute("perfilSucesso");
 request.setAttribute("paginaAtiva", "perfil");
 request.setAttribute("tituloPagina", "Meu perfil - Conecta Campus");
+request.setAttribute("cssPagina", "perfil.css");
 %>
 <%@ include file="/WEB-INF/includes/header.jsp"%>
 <div class="page-header">
@@ -48,11 +49,11 @@ if (sucesso != null) {
 				<form action="${pageContext.request.contextPath}/perfil"
 					method="post" enctype="multipart/form-data">
 					<input type="hidden" name="acao" value="dados">
-					<div class="d-flex align-items-center gap-3 mb-4">
+					<div
+						class="d-flex align-items-center gap-3 mb-4 profile-photo-editor">
 						<%
 						if (usuarioPerfil.getFotoPerfil() != null && !usuarioPerfil.getFotoPerfil().isBlank()) {
-						%><img
-							class="profile-avatar"
+						%><img class="profile-avatar"
 							src="${pageContext.request.contextPath}/<%= esc(usuarioPerfil.getFotoPerfil()) %>"
 							alt="Foto de perfil">
 						<%
@@ -84,14 +85,31 @@ if (sucesso != null) {
 						</div>
 						<div class="col-md-6">
 							<label class="form-label" for="curso">Curso</label><input
-								class="form-control" id="curso" name="curso"
-								value="<%=esc(usuarioPerfil.getCurso())%>">
+								class="form-control" id="curso"
+								value="<%=esc(usuarioPerfil.getCurso())%>" disabled
+								aria-describedby="cursoAjuda">
+							<div class="form-text" id="cursoAjuda">O curso é definido
+								no cadastro e não pode ser alterado pelo perfil.</div>
 						</div>
 						<div class="col-md-6">
 							<label class="form-label">Perfil de acesso</label><input
 								class="form-control"
 								value="<%=usuarioPerfil.getPerfil() != null ? esc(usuarioPerfil.getPerfil().getNome()) : ""%>"
 								disabled>
+						</div>
+						<div class="col-12">
+							<div class="email-preference profile-email-preference">
+								<div class="form-check form-switch">
+									<input class="form-check-input" type="checkbox" role="switch"
+										id="notificarComunicados" name="notificarComunicados"
+										value="true"
+										<%=usuarioPerfil.isNotificarComunicados() ? "checked" : ""%>>
+									<label class="form-check-label" for="notificarComunicados">
+										<strong>Notificações de comunicados</strong> <span>Receber
+											um e-mail quando um novo comunicado ativo for publicado.</span>
+									</label>
+								</div>
+							</div>
 						</div>
 					</div>
 					<button class="btn btn-primary mt-4" type="submit">

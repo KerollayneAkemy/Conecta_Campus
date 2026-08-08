@@ -13,22 +13,6 @@ public class RespostaForumService {
         return dao.inserir(resposta);
     }
 
-    public boolean atualizar(RespostaForum resposta) {
-        return dao.atualizar(resposta);
-    }
-
-    public boolean excluir(int id) {
-        return dao.excluir(id);
-    }
-
-    public RespostaForum buscarPorId(int id) {
-        return dao.buscarPorId(id);
-    }
-
-    public List<RespostaForum> listar() {
-        return dao.listar();
-    }
-
     public List<RespostaForum> listarPorForum(int idForum) {
         return dao.listarPorForum(idForum);
     }

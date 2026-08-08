@@ -17,6 +17,7 @@ public class Usuario {
     private LocalDateTime ultimoAcesso;
     private LocalDateTime dataCadastro;
     private Perfil perfil;
+    private boolean notificarComunicados;
 
     public Usuario() {
     }
@@ -135,6 +136,14 @@ public class Usuario {
 
     public void setPerfil(Perfil perfil) {
         this.perfil = perfil;
+    }
+
+    public boolean isNotificarComunicados() {
+        return notificarComunicados;
+    }
+
+    public void setNotificarComunicados(boolean notificarComunicados) {
+        this.notificarComunicados = notificarComunicados;
     }
 
     @Override

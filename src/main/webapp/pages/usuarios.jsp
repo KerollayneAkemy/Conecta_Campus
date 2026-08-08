@@ -18,6 +18,7 @@ if (usuarios != null) for (Usuario item : usuarios) {
     if (item.isAtivo()) totalAtivos++; else totalInativos++;
 }
 %>
+<% request.setAttribute("paginaAtiva", "usuarios"); %>
 <%@ include file="/WEB-INF/includes/header.jsp"%>
 <div class="page-header">
 	<div>
