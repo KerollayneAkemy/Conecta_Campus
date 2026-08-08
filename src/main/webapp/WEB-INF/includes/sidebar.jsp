@@ -3,9 +3,19 @@
 <%@ page import="br.com.conectacampus.util.Autorizacao"%>
 <%
 Usuario usuarioMenu = (Usuario) session.getAttribute("usuarioLogado");
-boolean adminMenu = Autorizacao.ehAdministrador(usuarioMenu);
-boolean equipeMenu = Autorizacao.ehEquipe(usuarioMenu);
-boolean alunoMenu = Autorizacao.ehAluno(usuarioMenu);
+
+// Papel real do usuário (nunca muda)
+boolean adminRealMenu = Autorizacao.ehAdministrador(usuarioMenu);
+
+// Papel simulado (só existe se o admin escolheu "ver como")
+String papelSimuladoMenu = (String) session.getAttribute("papelSimulado");
+
+// Papel EFETIVO usado para montar o menu:
+// se for admin de verdade e tiver escolhido simular, usa o simulado;
+// caso contrário, usa o papel real.
+boolean adminMenu = adminRealMenu && papelSimuladoMenu == null;
+boolean equipeMenu = (adminRealMenu && "EQUIPE".equals(papelSimuladoMenu)) || (!adminRealMenu && Autorizacao.ehEquipe(usuarioMenu));
+boolean alunoMenu = (adminRealMenu && "ALUNO".equals(papelSimuladoMenu)) || (!adminRealMenu && Autorizacao.ehAluno(usuarioMenu));
 %>
 <aside class="sidebar" id="sidebarMenu" aria-label="Menu principal">
 	<ul>
@@ -40,14 +50,6 @@ boolean alunoMenu = Autorizacao.ehAluno(usuarioMenu);
 				class="bi bi-chat-left-text-fill"></i> <span class="link-text">Fórum</span></a></li>
 		<li><a href="${pageContext.request.contextPath}/pesquisas"><i
 				class="bi bi-clipboard2-check-fill"></i> <span class="link-text">Pesquisas</span></a></li>
-		<%
-		if (adminMenu || equipeMenu) {
-		%>
-		<li><a href="${pageContext.request.contextPath}/equipe-interna"><i
-				class="bi bi-calendar2-week-fill"></i> <span class="link-text">Espaço da equipe</span></a></li>
-		<%
-		}
-		%>
 		<%
 		if (alunoMenu) {
 		%>

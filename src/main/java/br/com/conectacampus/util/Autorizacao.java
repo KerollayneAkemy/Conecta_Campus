@@ -48,7 +48,7 @@ public final class Autorizacao {
     }
 
     public static boolean podeEnviarFeedback(Usuario usuario) {
-        return ehAluno(usuario);
+    	return ehAdministrador(usuario) || ehAluno(usuario);
     }
 
     public static boolean ehRepresentante(Usuario usuario) {
