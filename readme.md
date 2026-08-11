@@ -214,3 +214,7 @@ Projeto acadêmico desenvolvido durante uma formação em tecnologia.
 ## Licença
 
 Este repositório não contém, no momento, um arquivo de licença de software. Antes de copiar, redistribuir ou utilizar o projeto para fins comerciais, solicite autorização aos autores e defina formalmente os termos de uso.
+
+## Deploy com Git e Docker
+
+O projeto possui uma configuracao de producao com containers separados para a aplicacao Java/Tomcat e para o MySQL, volumes persistentes e importacao do banco existente pelo DBeaver. Consulte [DEPLOY_VPS.md](DEPLOY_VPS.md) para instalar na VPS e atualizar com `git pull` + Docker Compose.

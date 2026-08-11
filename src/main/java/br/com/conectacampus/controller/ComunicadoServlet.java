@@ -18,6 +18,7 @@ import br.com.conectacampus.service.ComunicadoService;
 import br.com.conectacampus.service.EmailService;
 import br.com.conectacampus.service.UsuarioService;
 import br.com.conectacampus.util.Autorizacao;
+import br.com.conectacampus.util.UploadStorage;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.annotation.MultipartConfig;
@@ -204,9 +205,7 @@ public class ComunicadoServlet extends HttpServlet {
 				}
 				String extensao = imagem.getContentType().substring(imagem.getContentType().lastIndexOf('/') + 1);
 
-				Path pasta = Path.of(getServletContext().getRealPath("/uploads/comunicados"));
-
-				Files.createDirectories(pasta);
+				Path pasta = UploadStorage.pasta(getServletContext(), "comunicados");
 
 				String arquivo = UUID.randomUUID() + "." + extensao;
 

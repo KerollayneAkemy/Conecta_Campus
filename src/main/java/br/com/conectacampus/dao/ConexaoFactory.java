@@ -5,15 +5,16 @@ import java.sql.DriverManager;
 
 public class ConexaoFactory {
 
-    private static final String URL =
+    private static final String URL = configuracao(
+            "DB_URL",
             "jdbc:mysql://localhost:3306/conectacampus"
-            + "?useSSL=false"
-            + "&allowPublicKeyRetrieval=true"
-            + "&serverTimezone=America/Sao_Paulo"
-            + "&characterEncoding=UTF-8";
+                    + "?useSSL=false"
+                    + "&allowPublicKeyRetrieval=true"
+                    + "&serverTimezone=America%2FManaus"
+                    + "&characterEncoding=UTF-8");
 
-    private static final String USUARIO = "root";
-    private static final String SENHA = "root";
+    private static final String USUARIO = configuracao("DB_USER", "root");
+    private static final String SENHA = configuracao("DB_PASSWORD", "root");
 
     public static Connection getConnection() {
 
@@ -21,23 +22,21 @@ public class ConexaoFactory {
 
             Class.forName("com.mysql.cj.jdbc.Driver");
 
-            Connection conexao = DriverManager.getConnection(
-                    URL,
-                    USUARIO,
-                    SENHA);
-
-            return conexao;
+            return DriverManager.getConnection(URL, USUARIO, SENHA);
 
         } catch (Exception e) {
-
-            System.out.println("ConexaoFactory() - ERROR");
-            System.out.println(e.getMessage());
-            e.printStackTrace();
-
-            return null;
+            throw new IllegalStateException("Nao foi possivel conectar ao banco de dados.", e);
 
         }
 
+    }
+
+    private static String configuracao(String nome, String padrao) {
+        String valor = System.getenv(nome);
+        if (valor == null || valor.isBlank()) {
+            valor = System.getProperty(nome);
+        }
+        return valor == null || valor.isBlank() ? padrao : valor.trim();
     }
 
 }

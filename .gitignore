@@ -2,3 +2,10 @@
 .project
 .settings/
 build/
+target/
+.env
+.env.*
+!.env.example
+*.log
+*.sql
+backups/

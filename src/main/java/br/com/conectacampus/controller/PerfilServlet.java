@@ -12,6 +12,7 @@ import org.mindrot.jbcrypt.BCrypt;
 
 import br.com.conectacampus.model.Usuario;
 import br.com.conectacampus.service.UsuarioService;
+import br.com.conectacampus.util.UploadStorage;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
@@ -84,8 +85,7 @@ public class PerfilServlet extends HttpServlet {
 			}
 			
 			String extensao = foto.getContentType().substring(foto.getContentType().lastIndexOf('/') + 1);
-			Path pasta = Path.of(getServletContext().getRealPath("/uploads/perfis"));
-			Files.createDirectories(pasta);
+			Path pasta = UploadStorage.pasta(getServletContext(), "perfis");
 			String arquivo = UUID.randomUUID() + "." + extensao;
 			
 			try (InputStream conteudo = foto.getInputStream()) {

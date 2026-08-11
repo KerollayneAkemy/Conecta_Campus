@@ -1,0 +1,12 @@
+.git
+.gitignore
+.settings
+build
+target
+.env
+.env.*
+!.env.example
+readme.md
+DEPLOY_VPS.md
+backups
+*.sql
