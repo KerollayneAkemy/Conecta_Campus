@@ -15,5 +15,6 @@ fi
 
 git pull --ff-only
 docker compose config --quiet
+sh migrate-db.sh
 docker compose up -d --build --remove-orphans
 docker compose ps

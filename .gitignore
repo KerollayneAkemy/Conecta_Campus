@@ -8,4 +8,6 @@ target/
 !.env.example
 *.log
 *.sql
+!migrations/
+!migrations/*.sql
 backups/
