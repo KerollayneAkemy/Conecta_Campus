@@ -18,6 +18,10 @@ tokenRecuperacao = tokenRecuperacao == null ? ""
 	rel="stylesheet">
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/css/login.css?v=4">
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/css/passwordToggle.css?v=1">
+<script defer
+	src="${pageContext.request.contextPath}/js/passwordToggle.js?v=1"></script>
 </head>
 <body>
 	<main class="container-fluid auth-layout">

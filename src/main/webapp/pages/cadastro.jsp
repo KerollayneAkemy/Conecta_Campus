@@ -19,6 +19,10 @@ boolean cadastroAdministrativo = Autorizacao.ehAdministrador(usuarioLogado);
 	rel="stylesheet">
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/css/login.css?v=7">
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/css/passwordToggle.css?v=1">
+<script defer
+	src="${pageContext.request.contextPath}/js/passwordToggle.js?v=1"></script>
 </head>
 <body>
 	<a class="skip-link" href="#conteudo">Ir para o formulário</a>

@@ -17,6 +17,10 @@
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/css/<%=request.getAttribute("cssPagina")%>?v=11">
 <% } %>
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/css/passwordToggle.css?v=1">
+<script defer
+	src="${pageContext.request.contextPath}/js/passwordToggle.js?v=1"></script>
 </head>
 <body>
 
