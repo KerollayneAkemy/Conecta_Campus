@@ -158,10 +158,6 @@ to {
 }
 
 @media (max-width: 576px) {
-	.membros-vitrine-header {
-		margin-top: 24px;
-	}
-
 	.abas-cargo {
 		gap: 8px;
 		margin-bottom: 20px;

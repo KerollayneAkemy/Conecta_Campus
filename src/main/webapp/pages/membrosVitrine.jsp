@@ -27,7 +27,7 @@ request.setAttribute("cssPagina", "membrosVitrine.css");
 %>
 <%@ include file="/WEB-INF/includes/header.jsp"%>
 
-<div class="page-header membros-vitrine-header">
+<div class="page-header">
 	<div>
 		<p class="eyebrow">Comunidade</p>
 		<h1 class="page-title">

@@ -12,7 +12,7 @@
 	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
 	rel="stylesheet">
 <link rel="stylesheet"
-	href="${pageContext.request.contextPath}/css/style.css?v=11">
+	href="${pageContext.request.contextPath}/css/style.css?v=12">
 <% if (request.getAttribute("cssPagina") != null) { %>
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/css/<%=request.getAttribute("cssPagina")%>?v=11">
