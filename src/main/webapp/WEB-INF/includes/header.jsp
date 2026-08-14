@@ -15,7 +15,7 @@
 	href="${pageContext.request.contextPath}/css/style.css?v=11">
 <% if (request.getAttribute("cssPagina") != null) { %>
 <link rel="stylesheet"
-	href="${pageContext.request.contextPath}/css/<%=request.getAttribute("cssPagina")%>?v=10">
+	href="${pageContext.request.contextPath}/css/<%=request.getAttribute("cssPagina")%>?v=11">
 <% } %>
 </head>
 <body>
