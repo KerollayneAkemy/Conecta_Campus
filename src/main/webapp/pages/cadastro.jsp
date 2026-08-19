@@ -46,7 +46,7 @@ boolean cadastroAdministrativo = Autorizacao.ehAdministrador(usuarioLogado);
 					<h2>Criar conta</h2>
 					<p class="subtitulo"><%=cadastroAdministrativo
 		? "Cadastro administrativo de contas."
-		: "Cadastro exclusivo para alunos. Use um e-mail @gmail.com."%></p>
+		: "Cadastro exclusivo para alunos."%></p>
 					<%
 					if (request.getAttribute("erro") != null) {
 					%><div class="alert alert-danger" role="alert"><%=request.getAttribute("erro")%></div>
