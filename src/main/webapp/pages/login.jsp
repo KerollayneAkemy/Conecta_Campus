@@ -12,7 +12,7 @@
 	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
 	rel="stylesheet">
 <link rel="stylesheet"
-	href="${pageContext.request.contextPath}/css/login.css?v=4">
+	href="${pageContext.request.contextPath}/css/login.css?v=5">
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/css/passwordToggle.css?v=1">
 <script defer
@@ -76,13 +76,21 @@
 					</form>
 					<a class="d-block text-center mt-3" href="${pageContext.request.contextPath}/esqueci-senha">Esqueci minha senha</a>
 
-					<hr class="my-4">
-
-					<p class="text-center mb-3">Ainda não possui cadastro?</p>
-					<a href="${pageContext.request.contextPath}/cadastro"
-						class="btn btn-outline-primary w-100"> <i
-						class="bi bi-person-plus" aria-hidden="true"></i> Criar conta
-					</a>
+					<section class="signup-cta" aria-labelledby="signup-title">
+						<div class="signup-cta-copy">
+							<span class="signup-cta-icon" aria-hidden="true">
+								<i class="bi bi-person-plus"></i>
+							</span>
+							<div>
+								<h3 id="signup-title">Primeiro acesso?</h3>
+								<p>Crie sua conta para participar da comunidade do campus.</p>
+							</div>
+						</div>
+						<a href="${pageContext.request.contextPath}/cadastro"
+							class="btn btn-outline-primary w-100 signup-cta-button">
+							Criar conta <i class="bi bi-arrow-right" aria-hidden="true"></i>
+						</a>
+					</section>
 				</div>
 			</section>
 		</div>

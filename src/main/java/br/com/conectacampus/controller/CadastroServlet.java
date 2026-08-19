@@ -47,8 +47,14 @@ public class CadastroServlet extends HttpServlet {
             return;
         }
 
-        if (nome == null || nome.isBlank() || senha == null || senha.length() < 6) {
-            exibirErro(request, response, "Preencha todos os campos. A senha deve ter pelo menos 6 caracteres.");
+        if (nome == null || nome.isBlank()) {
+            exibirErro(request, response, "Preencha todos os campos obrigatórios.");
+            return;
+        }
+
+        if (!senhaForte(senha)) {
+            exibirErro(request, response,
+                    "Use uma senha forte com pelo menos 8 caracteres, incluindo letra maiúscula, letra minúscula, número e caractere especial.");
             return;
         }
 
@@ -97,8 +103,13 @@ public class CadastroServlet extends HttpServlet {
 
         try {
             if (usuarioService.cadastrar(usuario)) {
-                request.getSession().setAttribute("cadastroConcluido", Boolean.TRUE);
-                response.sendRedirect(request.getContextPath() + "/login");
+                if (cadastroAdministrativo) {
+                    request.getSession().setAttribute("msgSucesso", "Usuário cadastrado com sucesso.");
+                    response.sendRedirect(request.getContextPath() + "/usuarios?acao=listar");
+                } else {
+                    request.getSession().setAttribute("cadastroConcluido", Boolean.TRUE);
+                    response.sendRedirect(request.getContextPath() + "/login");
+                }
             } else {
                 exibirErro(request, response, "Não foi possível concluir o cadastro. Tente novamente.");
             }
@@ -112,5 +123,26 @@ public class CadastroServlet extends HttpServlet {
             throws ServletException, IOException {
         request.setAttribute("erro", mensagem);
         request.getRequestDispatcher("/pages/cadastro.jsp").forward(request, response);
+    }
+
+    private boolean senhaForte(String senha) {
+        if (senha == null || senha.codePointCount(0, senha.length()) < 8) return false;
+
+        boolean temMaiuscula = false;
+        boolean temMinuscula = false;
+        boolean temNumero = false;
+        boolean temEspecial = false;
+
+        for (int i = 0; i < senha.length();) {
+            int caractere = senha.codePointAt(i);
+            if (Character.isUpperCase(caractere)) temMaiuscula = true;
+            else if (Character.isLowerCase(caractere)) temMinuscula = true;
+            else if (Character.isDigit(caractere)) temNumero = true;
+            else if (!Character.isWhitespace(caractere)) temEspecial = true;
+
+            i += Character.charCount(caractere);
+        }
+
+        return temMaiuscula && temMinuscula && temNumero && temEspecial;
     }
 }

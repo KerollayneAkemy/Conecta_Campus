@@ -133,6 +133,93 @@ body {
     box-shadow: 0 0 0 4px rgba(0, 127, 95, .16);
 }
 
+.password-strength {
+	--strength-color: #9aa59f;
+	margin-top: 12px;
+	padding: 14px;
+	background: #f8faf9;
+	border: 1px solid var(--line);
+	border-radius: var(--radius);
+}
+
+.password-strength[data-strength="weak"] {
+	--strength-color: #b42318;
+}
+
+.password-strength[data-strength="medium"] {
+	--strength-color: #b7791f;
+}
+
+.password-strength[data-strength="strong"] {
+	--strength-color: var(--brand);
+	background: var(--brand-soft);
+	border-color: rgba(0, 127, 95, .34);
+}
+
+.password-strength-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	margin-bottom: 9px;
+	font-size: .78rem;
+}
+
+.password-strength-header span {
+	color: var(--muted);
+	font-weight: 700;
+}
+
+.password-strength-header strong {
+	color: var(--strength-color);
+	font-size: .78rem;
+}
+
+.password-strength-meter {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 6px;
+	margin-bottom: 12px;
+}
+
+.password-strength-bar {
+	height: 5px;
+	background: #dbe3df;
+	border-radius: 999px;
+	transition: background-color .2s ease;
+}
+
+.password-strength-bar.is-active {
+	background: var(--strength-color);
+}
+
+.password-requirements {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 7px 12px;
+	margin: 0;
+	padding: 0;
+	color: var(--muted);
+	font-size: .76rem;
+	list-style: none;
+}
+
+.password-requirements li {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.password-requirements li.is-met {
+	color: var(--brand-dark);
+	font-weight: 700;
+}
+
+.password-requirements i {
+	flex: 0 0 auto;
+	font-size: .72rem;
+}
+
 .btn {
     min-height: 52px;
     border-radius: var(--radius);
@@ -163,6 +250,60 @@ body {
 a {
     color: var(--brand-dark);
     font-weight: 800;
+}
+
+.signup-cta {
+	margin-top: 26px;
+	padding: 20px;
+	background: var(--brand-soft);
+	border: 1px solid rgba(0, 127, 95, .20);
+	border-radius: 12px;
+}
+
+.signup-cta-copy {
+	display: flex;
+	align-items: flex-start;
+	gap: 12px;
+	margin-bottom: 16px;
+}
+
+.signup-cta-icon {
+	display: inline-flex;
+	flex: 0 0 40px;
+	align-items: center;
+	justify-content: center;
+	width: 40px;
+	height: 40px;
+	color: #fff;
+	background: var(--brand-dark);
+	border-radius: 50%;
+	font-size: 1.05rem;
+}
+
+.signup-cta h3 {
+	margin: 0 0 3px;
+	color: var(--ink);
+	font-size: 1rem;
+	font-weight: 800;
+}
+
+.signup-cta p {
+	margin: 0;
+	color: var(--muted);
+	font-size: .86rem;
+	line-height: 1.45;
+}
+
+.signup-cta-button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	background: var(--surface);
+}
+
+.signup-cta-button:hover {
+	background: var(--brand-dark);
 }
 
 .alert {
@@ -227,6 +368,14 @@ input:focus-visible {
 	.card-login {
 		padding: 26px 20px;
 		box-shadow: none;
+	}
+
+	.signup-cta {
+		padding: 16px;
+	}
+
+	.password-requirements {
+		grid-template-columns: 1fr;
 	}
 }
 

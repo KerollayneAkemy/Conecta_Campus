@@ -18,11 +18,13 @@ boolean cadastroAdministrativo = Autorizacao.ehAdministrador(usuarioLogado);
 	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
 	rel="stylesheet">
 <link rel="stylesheet"
-	href="${pageContext.request.contextPath}/css/login.css?v=7">
+	href="${pageContext.request.contextPath}/css/login.css?v=8">
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/css/passwordToggle.css?v=1">
 <script defer
 	src="${pageContext.request.contextPath}/js/passwordToggle.js?v=1"></script>
+<script defer
+	src="${pageContext.request.contextPath}/js/passwordStrength.js?v=1"></script>
 </head>
 <body>
 	<a class="skip-link" href="#conteudo">Ir para o formulário</a>
@@ -74,8 +76,28 @@ boolean cadastroAdministrativo = Autorizacao.ehAdministrador(usuarioLogado);
 						<div class="mb-4">
 							<label class="form-label" for="senha">Senha</label><input
 								type="password" class="form-control" id="senha" name="senha"
-								autocomplete="new-password" minlength="6" placeholder="••••••••"
+								autocomplete="new-password" minlength="8" placeholder="••••••••"
+								aria-describedby="password-strength-label password-requirements"
 								required>
+							<div class="password-strength" id="password-strength" data-strength="empty">
+								<div class="password-strength-header">
+									<span>Força da senha</span>
+									<strong id="password-strength-label" aria-live="polite">Digite uma senha</strong>
+								</div>
+								<div class="password-strength-meter" aria-hidden="true">
+									<span class="password-strength-bar"></span>
+									<span class="password-strength-bar"></span>
+									<span class="password-strength-bar"></span>
+									<span class="password-strength-bar"></span>
+								</div>
+								<ul class="password-requirements" id="password-requirements">
+									<li data-password-rule="length"><i class="bi bi-circle" aria-hidden="true"></i> 8 caracteres</li>
+									<li data-password-rule="uppercase"><i class="bi bi-circle" aria-hidden="true"></i> Letra maiúscula</li>
+									<li data-password-rule="lowercase"><i class="bi bi-circle" aria-hidden="true"></i> Letra minúscula</li>
+									<li data-password-rule="number"><i class="bi bi-circle" aria-hidden="true"></i> Número</li>
+									<li data-password-rule="special"><i class="bi bi-circle" aria-hidden="true"></i> Caractere especial</li>
+								</ul>
+							</div>
 						</div>
 						<%
 						if (cadastroAdministrativo) {
@@ -141,11 +163,24 @@ boolean cadastroAdministrativo = Autorizacao.ehAdministrador(usuarioLogado);
 						</button>
 					</form>
 					<hr class="my-4">
+					<%
+					if (cadastroAdministrativo) {
+					%>
+					<a href="${pageContext.request.contextPath}/usuarios?acao=listar"
+						class="btn btn-outline-primary w-100"><i
+						class="bi bi-arrow-left" aria-hidden="true"></i> Voltar para
+						usuários</a>
+					<%
+					} else {
+					%>
 					<p class="text-center mb-3">Já possui conta?</p>
 					<a href="${pageContext.request.contextPath}/login"
 						class="btn btn-outline-primary w-100"><i
 						class="bi bi-box-arrow-in-right" aria-hidden="true"></i> Fazer
 						login</a>
+					<%
+					}
+					%>
 				</div>
 			</section>
 		</div>
