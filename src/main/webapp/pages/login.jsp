@@ -101,6 +101,7 @@
 	<% if (Boolean.TRUE.equals(request.getAttribute("cadastroConcluido"))) { %>
 	<script>
 		sessionStorage.removeItem('conectaCampus.cadastro.rascunho');
+		sessionStorage.removeItem('conectaCampus.cadastro.rascunho.aluno');
 	</script>
 	<% } %>
 </body>

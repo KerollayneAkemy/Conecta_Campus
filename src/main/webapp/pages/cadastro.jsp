@@ -190,8 +190,13 @@ boolean cadastroAdministrativo = Autorizacao.ehAdministrador(usuarioLogado);
 	<script>
 		(() => {
 			const form = document.querySelector('form[action$="/cadastro"]');
-			const chave = 'conectaCampus.cadastro.rascunho';
+			const chaveLegada = 'conectaCampus.cadastro.rascunho';
+			const chave = 'conectaCampus.cadastro.rascunho.<%=cadastroAdministrativo ? "administrativo" : "aluno"%>';
 			const campos = ['nome', 'curso', 'email', 'perfil', 'aceiteTermos', 'notificarComunicados'];
+
+			// Remove rascunhos da versão anterior, que misturava cadastro
+			// administrativo e cadastro normal na mesma chave.
+			sessionStorage.removeItem(chaveLegada);
 
 			function salvarRascunho() {
 				const dados = { salvoEm: Date.now() };
@@ -205,7 +210,11 @@ boolean cadastroAdministrativo = Autorizacao.ehAdministrador(usuarioLogado);
 			function restaurarRascunho() {
 				try {
 					const dados = JSON.parse(sessionStorage.getItem(chave));
-					if (!dados || Date.now() - dados.salvoEm > 30 * 60 * 1000) return;
+					if (!dados) return;
+					if (Date.now() - dados.salvoEm > 30 * 60 * 1000) {
+						sessionStorage.removeItem(chave);
+						return;
+					}
 					campos.forEach(id => {
 						const campo = document.getElementById(id);
 						if (!campo || dados[id] === undefined) return;

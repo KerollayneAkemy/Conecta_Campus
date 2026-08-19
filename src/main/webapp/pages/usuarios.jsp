@@ -8,6 +8,11 @@ if (usuarioLogado == null) {
 	response.sendRedirect(request.getContextPath() + "/login");
 	return;
 }
+boolean limparRascunhoCadastro = Boolean.TRUE.equals(
+		session.getAttribute("limparRascunhoCadastroAdministrativo"));
+if (limparRascunhoCadastro) {
+	session.removeAttribute("limparRascunhoCadastroAdministrativo");
+}
 List<Usuario> usuarios = (List<Usuario>) request.getAttribute("listaUsuarios");
 if (usuarios == null) {
 	usuarios = (List<Usuario>) request.getAttribute("usuarios");
@@ -161,4 +166,10 @@ document.getElementById("pesquisa").addEventListener("input", function () {
     });
 });
 </script>
+<% if (limparRascunhoCadastro) { %>
+<script>
+sessionStorage.removeItem('conectaCampus.cadastro.rascunho');
+sessionStorage.removeItem('conectaCampus.cadastro.rascunho.administrativo');
+</script>
+<% } %>
 <%@ include file="/WEB-INF/includes/footer.jsp"%>

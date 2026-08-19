@@ -105,6 +105,7 @@ public class CadastroServlet extends HttpServlet {
             if (usuarioService.cadastrar(usuario)) {
                 if (cadastroAdministrativo) {
                     request.getSession().setAttribute("msgSucesso", "Usuário cadastrado com sucesso.");
+                    request.getSession().setAttribute("limparRascunhoCadastroAdministrativo", Boolean.TRUE);
                     response.sendRedirect(request.getContextPath() + "/usuarios?acao=listar");
                 } else {
                     request.getSession().setAttribute("cadastroConcluido", Boolean.TRUE);
